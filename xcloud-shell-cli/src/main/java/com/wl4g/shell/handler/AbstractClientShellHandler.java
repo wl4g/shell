@@ -253,7 +253,7 @@ public abstract class AbstractClientShellHandler extends AbstractShellHandler im
 		writeStdin(new MetaSignal());
 
 		// Set history persist file
-		File file = new File(USER_HOME + "/.devops/shell/history");
+		File file = new File(USER_HOME + "/.wl4g/shell/history");
 		if (!file.getParentFile().exists()) {
 			state(file.getParentFile().mkdirs(),
 					format("Failed to create, for directory: '%s'", file.getParentFile().getAbsolutePath()));
