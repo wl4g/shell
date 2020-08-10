@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wl4g.shell.config;
+package com.wl4g.shell.cli.config;
 
 import static com.wl4g.components.common.lang.Assert2.*;
 
@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.wl4g.shell.config.AbstractConfiguration;
+import com.wl4g.shell.config.BaseShellProperties;
 
 /**
  * Shell properties configuration
@@ -37,7 +37,7 @@ import com.wl4g.shell.config.AbstractConfiguration;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "configuration")
-public class Configuration extends AbstractConfiguration {
+public class CliShellConfiguration extends BaseShellProperties {
 
 	final private static long serialVersionUID = -24798955162679115L;
 
@@ -72,13 +72,13 @@ public class Configuration extends AbstractConfiguration {
 		this.banner = banner;
 	}
 
-	public static Configuration create() {
-		return create(Configuration.class.getClassLoader().getResource(DEFAULT_CONFIG));
+	public static CliShellConfiguration create() {
+		return create(CliShellConfiguration.class.getClassLoader().getResource(DEFAULT_CONFIG));
 	}
 
-	public static Configuration create(URL url) {
+	public static CliShellConfiguration create(URL url) {
 		try {
-			return Util.read(url, AbstractConfiguration.class, Configuration.class);
+			return Util.read(url, BaseShellProperties.class, CliShellConfiguration.class);
 		} catch (Exception e) {
 			throw new IllegalStateException(e);
 		}

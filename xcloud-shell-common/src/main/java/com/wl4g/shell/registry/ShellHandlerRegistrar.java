@@ -33,7 +33,7 @@ import com.wl4g.shell.annotation.ShellMethod;
  * @version v1.0 2019年4月14日
  * @since
  */
-public abstract class ShellHandlerRegistrar implements Serializable {
+public class ShellHandlerRegistrar implements Serializable {
 	final private static long serialVersionUID = -8763772555086222131L;
 
 	/**

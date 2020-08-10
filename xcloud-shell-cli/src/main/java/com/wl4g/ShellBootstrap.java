@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wl4g.shell;
+package com.wl4g;
 
-import com.wl4g.shell.handler.InteractiveClientShellHandler;
+import com.wl4g.shell.cli.RunnerBuilder;
+import com.wl4g.shell.cli.handler.InteractiveCliShellHandler;
 
 /**
  * Shell bootstrap program for client.
@@ -45,7 +46,7 @@ public class ShellBootstrap {
 	 *      start for Github</a>
 	 */
 	public static void main(String[] args) {
-		RunnerBuilder.builder().provider(InteractiveClientShellHandler.class).build().run(args);
+		RunnerBuilder.builder().provider(InteractiveCliShellHandler.class).build().run(args);
 	}
 
 }

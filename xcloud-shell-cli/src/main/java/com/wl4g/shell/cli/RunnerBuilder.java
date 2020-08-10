@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wl4g.shell;
+package com.wl4g.shell.cli;
 
 import java.lang.reflect.Constructor;
 import java.net.URL;
@@ -21,8 +21,8 @@ import java.net.URL;
 import static com.wl4g.components.common.lang.Assert2.*;
 import static org.apache.commons.lang3.StringUtils.*;
 
-import com.wl4g.shell.config.Configuration;
-import com.wl4g.shell.handler.CliShellHandler;
+import com.wl4g.shell.cli.config.CliShellConfiguration;
+import com.wl4g.shell.cli.handler.CliShellHandler;
 
 /**
  * Runner builder
@@ -59,14 +59,14 @@ public abstract class RunnerBuilder {
 
 	public CliShellHandler build() {
 		try {
-			Configuration config = Configuration.create();
+			CliShellConfiguration config = CliShellConfiguration.create();
 			if (isNotBlank(conf)) {
-				config = Configuration.create(new URL("file://" + conf));
+				config = CliShellConfiguration.create(new URL("file://" + conf));
 			}
 			notNull(provider, "provider is null, please check configure");
 			notNull(config, "config is null, please check configure");
 
-			Constructor<? extends CliShellHandler> constr = provider.getConstructor(Configuration.class);
+			Constructor<? extends CliShellHandler> constr = provider.getConstructor(CliShellConfiguration.class);
 			return constr.newInstance(new Object[] { config });
 		} catch (Exception e) {
 			throw new IllegalStateException(e);

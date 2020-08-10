@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Map.Entry;
@@ -30,7 +29,7 @@ import java.util.Optional;
 
 import static java.lang.String.format;
 import static java.lang.System.*;
-
+import static java.util.Locale.US;
 import static org.apache.commons.lang3.StringUtils.*;
 import static org.apache.commons.lang3.exception.ExceptionUtils.getRootCauseMessage;
 import static com.wl4g.components.common.lang.Assert2.*;
@@ -41,7 +40,7 @@ import static com.wl4g.shell.utils.ShellUtils.*;
 
 import com.wl4g.components.common.reflect.TypeUtils2;
 import com.wl4g.shell.annotation.ShellOption;
-import com.wl4g.shell.config.AbstractConfiguration;
+import com.wl4g.shell.config.BaseShellProperties;
 import com.wl4g.shell.exception.ShellException;
 import com.wl4g.shell.registry.ShellHandlerRegistrar;
 import com.wl4g.shell.registry.TargetMethodWrapper;
@@ -49,13 +48,13 @@ import com.wl4g.shell.registry.TargetMethodWrapper.TargetParameter;
 import com.wl4g.shell.utils.LineUtils;
 
 /**
- * Abstract shell component actuator handler.
+ * Generic abstract shell component actuator handler.
  * 
  * @author Wangl.sir <983708408@qq.com>
  * @version v1.0 2019年4月14日
  * @since
  */
-public abstract class AbstractShellHandler implements ShellHandler {
+public abstract class GenericShellHandler implements ShellHandler {
 
 	/**
 	 * Enable shell console debug.
@@ -70,12 +69,12 @@ public abstract class AbstractShellHandler implements ShellHandler {
 	/**
 	 * Shell configuration
 	 */
-	final protected AbstractConfiguration config;
+	final protected BaseShellProperties config;
 
-	public AbstractShellHandler(AbstractConfiguration config, ShellHandlerRegistrar registry) {
-		notNull(registry, "Registry must not be null");
-		notNull(config, "Registry must not be null");
-		this.registrar = registry;
+	public GenericShellHandler(BaseShellProperties config, ShellHandlerRegistrar registrar) {
+		notNullOf(registrar, "registrar");
+		notNullOf(config, "config");
+		this.registrar = registrar;
 		this.config = config;
 	}
 
@@ -272,7 +271,7 @@ public abstract class AbstractShellHandler implements ShellHandler {
 	 */
 	protected int ensureDetermineServPort(String appName) {
 		hasLength(appName, "appName must not be empty");
-		String origin = trimToEmpty(appName).toUpperCase(Locale.ENGLISH);
+		String origin = trimToEmpty(appName).toUpperCase(US);
 
 		CRC32 crc32 = new CRC32();
 		crc32.update(origin.getBytes(Charset.forName("UTF-8")));

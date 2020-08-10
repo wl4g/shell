@@ -1,42 +1,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>xcloud-shell</artifactId>
-	<packaging>pom</packaging>
-	<name>XCloud Shell</name>
-	<description>A Open Source command-line tool based on spring cloud service, which is similar to the way spark-shell works.</description>
-	<url>https://xcloud.wl4g.com</url>
+	<artifactId>xcloud-shell-springboot</artifactId>
+	<packaging>jar</packaging>
+	<name>XCloud Shell Springboot</name>
+	<url>http://xcloud.wl4g.com</url>
 	<parent>
 		<groupId>com.wl4g</groupId>
-		<artifactId>xcloud-parent</artifactId>
+		<artifactId>xcloud-shell</artifactId>
 		<version>master</version>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<modules>
-		<module>xcloud-shell-common</module>
-		<module>xcloud-shell-core</module>
-		<module>xcloud-shell-springboot</module>
-		<module>xcloud-shell-example</module>
-		<module>xcloud-shell-cli</module>
-	</modules>
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
 	</properties>
-	<repositories>
-		<repository>
-			<id>aliyun-public</id>
-			<name>Aliyun public</name>
-			<url>https://maven.aliyun.com/repository/public</url>
-		</repository>
-		<repository>
-			<id>spring-snapshots</id>
-			<name>Spring Snapshots</name>
-			<url>https://repo.spring.io/libs-snapshot</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -48,6 +25,20 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+	<dependencies>
+		<dependency>
+			<groupId>com.wl4g</groupId>
+			<artifactId>xcloud-shell-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
@@ -56,8 +47,6 @@
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
-					<showWarnings>true</showWarnings>
-					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
 			<plugin>

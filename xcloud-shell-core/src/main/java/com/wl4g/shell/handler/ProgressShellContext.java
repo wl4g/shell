@@ -38,7 +38,7 @@ import com.wl4g.shell.signal.ProgressSignal;
  * @version 2020年2月3日 v1.0.0
  * @see
  */
-public class ProgressShellContext extends AbstractShellContext {
+public class ProgressShellContext extends BaseShellContext {
 	final public static int DEFAULT_WHOLE = 100;
 
 	/**
@@ -49,7 +49,7 @@ public class ProgressShellContext extends AbstractShellContext {
 	private ProgressShellContext() {
 	}
 
-	ProgressShellContext(AbstractShellContext context) {
+	ProgressShellContext(BaseShellContext context) {
 		super(context);
 	}
 

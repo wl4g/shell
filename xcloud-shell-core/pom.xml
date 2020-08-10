@@ -30,14 +30,6 @@
 			<groupId>com.wl4g</groupId>
 			<artifactId>xcloud-shell-common</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context-support</artifactId>
-		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

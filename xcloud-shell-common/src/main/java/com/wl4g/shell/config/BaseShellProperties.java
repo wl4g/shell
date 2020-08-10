@@ -16,19 +16,21 @@
 package com.wl4g.shell.config;
 
 import static com.wl4g.components.common.lang.Assert2.*;
+import static com.wl4g.components.common.serialize.JacksonUtils.toJSONString;
 import static java.lang.Integer.parseInt;
+import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.isNumeric;
 
 import java.io.Serializable;
 
 /**
- * Abstract shell configuration
+ * Base shell properties configuration
  * 
  * @author wangl.sir
  * @version v1.0 2019年5月8日
  * @since
  */
-public abstract class AbstractConfiguration implements Serializable {
+public abstract class BaseShellProperties implements Serializable {
 
 	final private static long serialVersionUID = -5897277204687388946L;
 
@@ -47,9 +49,7 @@ public abstract class AbstractConfiguration implements Serializable {
 	 */
 	private String portRange;
 
-	//
-	// Temporary
-	//
+	// --- Temporary. ---
 
 	/**
 	 * Begin listen socket port
@@ -61,7 +61,7 @@ public abstract class AbstractConfiguration implements Serializable {
 	 */
 	private transient int endPort;
 
-	public AbstractConfiguration() {
+	public BaseShellProperties() {
 		setPortRange(DEFAULT_PORT_BEGIN + ":" + DEFAULT_PORT_END);
 	}
 
@@ -76,8 +76,7 @@ public abstract class AbstractConfiguration implements Serializable {
 		int begin = parseInt(part[0]);
 		int end = parseInt(part[1]);
 		isTrue(begin > 1024 && begin < 65535 && end > 1024 && end < 65535 && end > begin,
-				String.format(
-						"Both start and end ports must be between 1024 and 65535, And the end port must be greater than the begin port, actual is %s",
+				format("Both start and end ports must be between 1024 and 65535, And the end port must be greater than the begin port, actual is %s",
 						portRange));
 		this.portRange = portRange;
 		this.beginPort = begin;
@@ -90,6 +89,11 @@ public abstract class AbstractConfiguration implements Serializable {
 
 	public int getEndPort() {
 		return endPort;
+	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName().concat(" - ").concat(toJSONString(this));
 	}
 
 }

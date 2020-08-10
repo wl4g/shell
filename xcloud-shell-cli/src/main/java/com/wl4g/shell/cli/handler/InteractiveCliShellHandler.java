@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wl4g.shell.handler;
+package com.wl4g.shell.cli.handler;
 
 import static org.apache.commons.lang3.StringUtils.*;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.wl4g.shell.config.Configuration;
+import com.wl4g.shell.cli.config.CliShellConfiguration;
 import com.wl4g.shell.signal.AckInterruptSignal;
 import com.wl4g.shell.signal.AskInterruptSignal;
 import com.wl4g.shell.signal.BOFStdoutSignal;
@@ -33,7 +33,7 @@ import com.wl4g.shell.signal.StdoutSignal;
 
 import static com.wl4g.components.common.cli.ProcessUtils.*;
 import static com.wl4g.shell.cli.BuiltInCommand.*;
-import static com.wl4g.shell.config.DefaultShellHandlerRegistrar.getSingle;
+import static com.wl4g.shell.cli.config.CliShellHandlerRegistrar.getSingle;
 import static com.wl4g.shell.utils.ShellUtils.isTrue;
 import static java.lang.String.format;
 import static java.lang.System.*;
@@ -47,7 +47,7 @@ import org.jline.reader.UserInterruptException;
  * @version v1.0 2019年4月14日
  * @since
  */
-public class InteractiveClientShellHandler extends AbstractClientShellHandler {
+public class InteractiveCliShellHandler extends ClientCliShellHandler {
 
 	/** Running status. */
 	final private AtomicBoolean running = new AtomicBoolean(false);
@@ -61,7 +61,7 @@ public class InteractiveClientShellHandler extends AbstractClientShellHandler {
 	/** Payload command last sent timestamp, for timeout check. */
 	private long lastCmdSentTime = 0L;
 
-	public InteractiveClientShellHandler(Configuration config) {
+	public InteractiveCliShellHandler(CliShellConfiguration config) {
 		super(config);
 	}
 
@@ -184,7 +184,7 @@ public class InteractiveClientShellHandler extends AbstractClientShellHandler {
 
 	/**
 	 * Pause wait for completed. </br>
-	 * {@link AbstractClientShellHandler#wakeup()}
+	 * {@link ClientCliShellHandler#wakeup()}
 	 */
 	private void paused() {
 		printDebug(format("waitForCompleted: %s, completed: %s", this, pauseState));
@@ -194,7 +194,7 @@ public class InteractiveClientShellHandler extends AbstractClientShellHandler {
 	/**
 	 * Wake-up for lineReader watching. </br>
 	 * 
-	 * {@link AbstractClientShellHandler#waitForComplished()}
+	 * {@link ClientCliShellHandler#waitForComplished()}
 	 */
 	private void wakeup() {
 		printDebug(format("Wakeup: %s, completed: %s", this, pauseState));

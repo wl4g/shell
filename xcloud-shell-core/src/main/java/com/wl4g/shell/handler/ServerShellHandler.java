@@ -15,25 +15,26 @@
  */
 package com.wl4g.shell.handler;
 
+import static com.wl4g.components.common.lang.Assert2.hasTextOf;
 import static com.wl4g.components.common.log.SmartLoggerFactory.getLogger;
 
+import java.io.Closeable;
+
 import org.slf4j.Logger;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.util.Assert;
 
 import com.wl4g.shell.config.ShellProperties;
-import com.wl4g.shell.handler.AbstractShellHandler;
-import com.wl4g.shell.handler.EmbeddedServerShellHandler.ServerShellMessageChannel;
+import com.wl4g.shell.handler.GenericShellHandler;
+import com.wl4g.shell.handler.EmbeddedShellHandlerServer.ServerShellMessageChannel;
 import com.wl4g.shell.registry.ShellHandlerRegistrar;
 
 /**
- * Abstract shell component processor
+ * Server abstract shell component handler
  * 
  * @author Wangl.sir <983708408@qq.com>
  * @version v1.0 2019年4月14日
  * @since
  */
-public abstract class AbstractServerShellHandler extends AbstractShellHandler implements DisposableBean {
+abstract class ServerShellHandler extends GenericShellHandler implements Closeable {
 	final protected Logger log = getLogger(getClass());
 
 	/**
@@ -42,25 +43,23 @@ public abstract class AbstractServerShellHandler extends AbstractShellHandler im
 	final private ThreadLocal<ServerShellMessageChannel> clientContext = new InheritableThreadLocal<>();
 
 	/**
-	 * Shell properties configuration
-	 */
-	final private ShellProperties config;
-
-	/**
 	 * Spring application name.
 	 */
 	final private String appName;
 
-	public AbstractServerShellHandler(ShellProperties config, String appName, ShellHandlerRegistrar registry) {
-		super(config, registry);
-		Assert.notNull(config, "config must not be null");
-		Assert.hasText(appName, "appName must not be null");
-		this.config = config;
+	public ServerShellHandler(ShellProperties config, String appName, ShellHandlerRegistrar registrar) {
+		super(config, registrar);
+		hasTextOf(appName, "appName");
 		this.appName = appName;
 	}
 
+	/**
+	 * Gets {@link ShellProperties} configuration
+	 * 
+	 * @return
+	 */
 	protected ShellProperties getConfig() {
-		return config;
+		return (ShellProperties) config;
 	}
 
 	protected String getAppName() {

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wl4g.shell.command;
+package com.wl4g.shell.cli.command;
 
 import static java.lang.System.*;
 import static java.util.Objects.isNull;
@@ -37,8 +37,8 @@ import static org.apache.commons.lang3.StringUtils.*;
 import com.wl4g.shell.annotation.ShellMethod;
 import com.wl4g.shell.cli.BuiltInCommand;
 import com.wl4g.shell.cli.HelpOptions;
-import com.wl4g.shell.config.DefaultShellHandlerRegistrar;
-import com.wl4g.shell.handler.AbstractClientShellHandler;
+import com.wl4g.shell.cli.config.CliShellHandlerRegistrar;
+import com.wl4g.shell.cli.handler.ClientCliShellHandler;
 import com.wl4g.shell.utils.LineUtils;
 
 import static com.wl4g.components.common.cli.StandardFormatter.getHelpFormat;
@@ -66,17 +66,17 @@ public class DefaultBuiltInCommand extends BuiltInCommand {
 	/**
 	 * Shell handler bean registry
 	 */
-	final protected DefaultShellHandlerRegistrar registry;
+	final protected CliShellHandlerRegistrar registry;
 
 	/**
 	 * Line process runner.
 	 */
-	final protected AbstractClientShellHandler runner;
+	final protected ClientCliShellHandler runner;
 
-	public DefaultBuiltInCommand(AbstractClientShellHandler runner) {
+	public DefaultBuiltInCommand(ClientCliShellHandler runner) {
 		notNull(runner, "runner is null, please check configure");
 		this.runner = runner;
-		this.registry = (DefaultShellHandlerRegistrar) runner.getRegistrar();
+		this.registry = (CliShellHandlerRegistrar) runner.getRegistrar();
 		notNull(registry, "Registry must not be null");
 	}
 
@@ -116,7 +116,7 @@ public class DefaultBuiltInCommand extends BuiltInCommand {
 	}
 
 	/**
-	 * See:[{@link AbstractClientShellHandler#submit}.MARK0]
+	 * See:[{@link ClientCliShellHandler#submit}.MARK0]
 	 * 
 	 * @return
 	 */

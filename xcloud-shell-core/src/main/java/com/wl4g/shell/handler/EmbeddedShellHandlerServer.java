@@ -22,9 +22,6 @@ import com.wl4g.shell.registry.TargetMethodWrapper;
 import com.wl4g.shell.signal.*;
 
 import org.slf4j.Logger;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.util.Assert;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -41,23 +38,24 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 import static com.wl4g.components.common.lang.Assert2.notNullOf;
+import static com.wl4g.components.common.lang.Assert2.state;
 import static com.wl4g.components.common.log.SmartLoggerFactory.getLogger;
 import static com.wl4g.shell.signal.ChannelState.*;
 import static java.lang.String.format;
 import static java.lang.Thread.sleep;
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.apache.commons.lang3.exception.ExceptionUtils.*;
-import static org.springframework.util.Assert.state;
 
 /**
- * Socket server shell processor
+ * Embedded shell handle server
  * 
  * @author Wangl.sir <983708408@qq.com>
  * @version v1.0 2019年5月1日
  * @since
  */
-public class EmbeddedServerShellHandler extends AbstractServerShellHandler implements ApplicationRunner, Runnable {
+public class EmbeddedShellHandlerServer extends ServerShellHandler implements Runnable {
 
 	/**
 	 * Current server shellRunning status.
@@ -77,15 +75,14 @@ public class EmbeddedServerShellHandler extends AbstractServerShellHandler imple
 	 */
 	private Thread boss;
 
-	public EmbeddedServerShellHandler(ShellProperties config, String appName, ShellHandlerRegistrar registry) {
-		super(config, appName, registry);
+	public EmbeddedShellHandlerServer(ShellProperties config, String appName, ShellHandlerRegistrar registrar) {
+		super(config, appName, registrar);
 	}
 
 	// Start server
-	@Override
-	public void run(ApplicationArguments args) throws Exception {
+	public void start() throws Exception {
 		if (shellRunning.compareAndSet(false, true)) {
-			Assert.state(ss == null, "server socket already listen ?");
+			state(isNull(ss), "server socket already listen ?");
 
 			// Determine server port.
 			int bindPort = ensureDetermineServPort(getAppName());
@@ -94,18 +91,14 @@ public class EmbeddedServerShellHandler extends AbstractServerShellHandler imple
 			ss.setSoTimeout(0); // Infinite timeout
 			log.info("Shell Console started on port(s): {}", bindPort);
 
-			this.boss = new Thread(this, getClass().getSimpleName() + "-boss");
-			this.boss.setDaemon(true);
-			this.boss.start();
+			boss = new Thread(this, getClass().getSimpleName() + "-boss");
+			boss.setDaemon(true);
+			boss.start();
 		}
 	}
 
 	@Override
-	public void destroy() throws Exception {
-		close();
-	}
-
-	protected void close() {
+	public void close() {
 		if (shellRunning.compareAndSet(true, false)) {
 			try {
 				boss.interrupt();
@@ -136,7 +129,7 @@ public class EmbeddedServerShellHandler extends AbstractServerShellHandler imple
 		}
 	}
 
-	// Accepting channel connect
+	// Accepting connect processing
 	@Override
 	public void run() {
 		while (!boss.isInterrupted() && shellRunning.get()) {
@@ -175,26 +168,26 @@ public class EmbeddedServerShellHandler extends AbstractServerShellHandler imple
 	@Override
 	protected void preHandleInput(TargetMethodWrapper tm, List<Object> args) {
 		// Get current context
-		AbstractShellContext context = getClient().getContext();
+		BaseShellContext context = getClient().getContext();
 
 		// Bind target method
 		context.setTarget(tm);
 
 		// Resolving args with {@link AbstractShellContext}
-		AbstractShellContext updateContext = resolveInjectArgsForShellContextIfNecceary(context, tm, args);
+		BaseShellContext updateContext = resolveInjectArgsForShellContextIfNecceary(context, tm, args);
 		// Inject update actual context
 		getClient().setContext(updateContext);
 	}
 
 	/**
 	 * If necessary, resolving whether the shell method parameters have
-	 * {@link AbstractShellContext} instances and inject.
+	 * {@link BaseShellContext} instances and inject.
 	 * 
 	 * @param context
 	 * @param tm
 	 * @param args
 	 */
-	private AbstractShellContext resolveInjectArgsForShellContextIfNecceary(AbstractShellContext context, TargetMethodWrapper tm,
+	private BaseShellContext resolveInjectArgsForShellContextIfNecceary(BaseShellContext context, TargetMethodWrapper tm,
 			List<Object> args) {
 
 		// Find parameter: ShellContext index and class
@@ -260,11 +253,11 @@ public class EmbeddedServerShellHandler extends AbstractServerShellHandler imple
 		final private ExecutorService currentWorker;
 
 		/** Current shell context */
-		AbstractShellContext currentContext;
+		BaseShellContext currentContext;
 
 		public ServerShellMessageChannel(ShellHandlerRegistrar registrar, Socket client, Function<String, Object> func) {
 			super(registrar, client, func);
-			this.currentContext = new AbstractShellContext(this) {
+			this.currentContext = new BaseShellContext(this) {
 			};
 			this.currentWorker = new ThreadPoolExecutor(1, 1, 0, SECONDS, new LinkedBlockingDeque<>(1), new ThreadFactory() {
 				final private AtomicInteger counter = new AtomicInteger(0);
@@ -279,11 +272,11 @@ public class EmbeddedServerShellHandler extends AbstractServerShellHandler imple
 			});
 		}
 
-		AbstractShellContext getContext() {
+		BaseShellContext getContext() {
 			return currentContext;
 		}
 
-		void setContext(AbstractShellContext context) {
+		void setContext(BaseShellContext context) {
 			notNullOf(context, "ShellContext");
 			this.currentContext = context;
 		}

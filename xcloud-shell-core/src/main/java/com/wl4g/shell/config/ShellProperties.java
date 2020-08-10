@@ -15,12 +15,13 @@
  */
 package com.wl4g.shell.config;
 
+import static com.wl4g.components.common.lang.Assert2.hasText;
+import static com.wl4g.components.common.lang.Assert2.isTrue;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import org.springframework.util.Assert;
-
-import com.wl4g.shell.config.AbstractConfiguration;
+import com.wl4g.shell.config.BaseShellProperties;
 
 /**
  * Shell properties configuration
@@ -29,7 +30,7 @@ import com.wl4g.shell.config.AbstractConfiguration;
  * @version v1.0 2019年5月1日
  * @since
  */
-public class ShellProperties extends AbstractConfiguration {
+public class ShellProperties extends BaseShellProperties {
 
 	private static final long serialVersionUID = -24798955162679115L;
 
@@ -46,14 +47,14 @@ public class ShellProperties extends AbstractConfiguration {
 	/**
 	 * Maximum number of concurrent client connections.
 	 */
-	private int maxClients = 2;
+	private int maxClients = 3;
 
 	public int getBacklog() {
 		return backlog;
 	}
 
 	public void setBacklog(int backlog) {
-		Assert.isTrue(backlog > 0, String.format("backlog must greater than 0, actual is %s", backlog));
+		isTrue(backlog > 0, String.format("backlog must greater than 0, actual is %s", backlog));
 		this.backlog = backlog;
 	}
 
@@ -70,7 +71,7 @@ public class ShellProperties extends AbstractConfiguration {
 	}
 
 	public void setBindAddr(String bindAddr) {
-		Assert.hasText(bindAddr, "binAddr is emtpy, please check configure");
+		hasText(bindAddr, "binAddr is emtpy, please check configure");
 		this.bindAddr = bindAddr;
 	}
 
@@ -79,7 +80,7 @@ public class ShellProperties extends AbstractConfiguration {
 	}
 
 	public void setMaxClients(int maxClients) {
-		Assert.isTrue(maxClients > 0, String.format("maxClients must greater than 0, actual is %s", backlog));
+		isTrue(maxClients > 0, String.format("maxClients must greater than 0, actual is %s", backlog));
 		this.maxClients = maxClients;
 	}
 

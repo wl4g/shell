@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wl4g.shell.config;
+package com.wl4g.shell.cli.config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,9 +43,9 @@ public class DynamicCompleter implements Completer {
 	/**
 	 * Shell bean registry.
 	 */
-	final private DefaultShellHandlerRegistrar registry;
+	final private CliShellHandlerRegistrar registry;
 
-	public DynamicCompleter(DefaultShellHandlerRegistrar registry) {
+	public DynamicCompleter(CliShellHandlerRegistrar registry) {
 		notNull(registry, "registry is null, please check configure");
 		this.registry = registry;
 	}

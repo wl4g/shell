@@ -20,7 +20,7 @@ import com.wl4g.shell.annotation.ShellMethod.InterruptType;
 import com.wl4g.shell.exception.ChannelShellException;
 import com.wl4g.shell.exception.NoSupportedInterruptShellException;
 import com.wl4g.shell.exception.ShellException;
-import com.wl4g.shell.handler.EmbeddedServerShellHandler.ServerShellMessageChannel;
+import com.wl4g.shell.handler.EmbeddedShellHandlerServer.ServerShellMessageChannel;
 import com.wl4g.shell.registry.TargetMethodWrapper;
 import com.wl4g.shell.signal.BOFStdoutSignal;
 import com.wl4g.shell.signal.ChannelState;
@@ -30,7 +30,6 @@ import com.wl4g.shell.signal.StderrSignal;
 import com.wl4g.shell.signal.StdoutSignal;
 
 import org.slf4j.Logger;
-import org.springframework.util.Assert;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -57,7 +56,7 @@ import static org.apache.commons.lang3.StringUtils.*;
  * @version v1.0 2019年5月24日
  * @since
  */
-abstract class AbstractShellContext implements ShellContext {
+abstract class BaseShellContext implements ShellContext {
 	final public static String DEFAULT_INTERRUPT_LISTENER = "defaultInterruptEventListener";
 
 	final protected Logger log = getLogger(getClass());
@@ -83,12 +82,12 @@ abstract class AbstractShellContext implements ShellContext {
 	 */
 	private TargetMethodWrapper target;
 
-	protected AbstractShellContext() {
+	protected BaseShellContext() {
 	}
 
-	AbstractShellContext(ShellContext context) {
-		if (context instanceof AbstractShellContext) {
-			AbstractShellContext shc = (AbstractShellContext) context;
+	BaseShellContext(ShellContext context) {
+		if (context instanceof BaseShellContext) {
+			BaseShellContext shc = (BaseShellContext) context;
 			setChannel(shc.channel);
 			setState(shc.state);
 			setTarget(shc.target);
@@ -97,7 +96,7 @@ abstract class AbstractShellContext implements ShellContext {
 		}
 	}
 
-	AbstractShellContext(ServerShellMessageChannel channel) {
+	BaseShellContext(ServerShellMessageChannel channel) {
 		setChannel(channel);
 	}
 
@@ -207,7 +206,7 @@ abstract class AbstractShellContext implements ShellContext {
 	 */
 	@Override
 	public boolean addEventListener(String name, ShellEventListener eventListener) {
-		Assert.notNull(eventListener, "eventListener must not be null");
+		notNull(eventListener, "eventListener must not be null");
 		if (nonNull(eventListeners.putIfAbsent(name, eventListener))) {
 			throw new ShellException(format("Add an existed event listener: %s", name));
 		}

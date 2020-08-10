@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wl4g.shell.handler;
+package com.wl4g.shell.cli.handler;
 
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
@@ -36,10 +36,10 @@ import static java.lang.String.valueOf;
 import static java.lang.System.*;
 import static java.util.Objects.nonNull;
 
-import com.wl4g.shell.command.DefaultBuiltInCommand;
-import com.wl4g.shell.config.Configuration;
-import com.wl4g.shell.config.DynamicCompleter;
-import com.wl4g.shell.handler.AbstractShellHandler;
+import com.wl4g.shell.cli.command.DefaultBuiltInCommand;
+import com.wl4g.shell.cli.config.CliShellConfiguration;
+import com.wl4g.shell.cli.config.DynamicCompleter;
+import com.wl4g.shell.handler.GenericShellHandler;
 import com.wl4g.shell.handler.ShellMessageChannel;
 import com.wl4g.shell.registry.ShellHandlerRegistrar;
 import com.wl4g.shell.signal.*;
@@ -48,7 +48,7 @@ import static com.wl4g.components.common.lang.Assert2.*;
 import static com.wl4g.shell.annotation.ShellOption.GNU_CMD_LONG;
 import static com.wl4g.shell.cli.BuiltInCommand.INTERNAL_HE;
 import static com.wl4g.shell.cli.BuiltInCommand.INTERNAL_HELP;
-import static com.wl4g.shell.config.DefaultShellHandlerRegistrar.*;
+import static com.wl4g.shell.cli.config.CliShellHandlerRegistrar.*;
 import static com.wl4g.shell.utils.LineUtils.clean;
 import static com.wl4g.shell.utils.LineUtils.parse;
 import static org.apache.commons.lang3.StringUtils.*;
@@ -58,13 +58,13 @@ import static org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace;
 import static org.jline.reader.LineReader.HISTORY_FILE;
 
 /**
- * Abstract shell component runner
+ * CLi shell component runner
  * 
  * @author Wangl.sir <983708408@qq.com>
  * @version v1.0 2019年4月14日
  * @since
  */
-public abstract class AbstractClientShellHandler extends AbstractShellHandler implements CliShellHandler {
+public abstract class ClientCliShellHandler extends GenericShellHandler implements CliShellHandler {
 
 	/**
 	 * Used to get the name of the set target service (that is, the server that
@@ -96,7 +96,7 @@ public abstract class AbstractClientShellHandler extends AbstractShellHandler im
 	/**
 	 * Shell configuration
 	 */
-	final protected Configuration config;
+	final protected CliShellConfiguration config;
 
 	/**
 	 * Line reader
@@ -113,7 +113,7 @@ public abstract class AbstractClientShellHandler extends AbstractShellHandler im
 	 */
 	private String stacktraceAsString;
 
-	public AbstractClientShellHandler(Configuration config) {
+	public ClientCliShellHandler(CliShellConfiguration config) {
 		super(config, getSingle());
 		notNull(config, "configuration is null, please check configure");
 		this.config = config;
@@ -327,9 +327,9 @@ public abstract class AbstractClientShellHandler extends AbstractShellHandler im
 		String servPoint = getProperty(ARG_SERV_POINT);
 
 		if (isBlank(servName) && isBlank(servPoint)) {
-			throw new IllegalArgumentException(format(
-					"JVM startup argument -D%s(e.g. -D%s=8080) and -D%s(e.g. -D%s=myapp1) must be one of the two, and only -D%s are adopted when both exist",
-					ARG_SERV_POINT, ARG_SERV_POINT, ARG_SERV_NAME, ARG_SERV_NAME, ARG_SERV_POINT));
+			throw new IllegalArgumentException(
+					format("JVM startup argument -D%s(e.g. -D%s=8080) and -D%s(e.g. -D%s=myapp1) must be one of the two, and only -D%s are adopted when both exist",
+							ARG_SERV_POINT, ARG_SERV_POINT, ARG_SERV_NAME, ARG_SERV_NAME, ARG_SERV_POINT));
 		}
 
 		//
@@ -390,14 +390,14 @@ public abstract class AbstractClientShellHandler extends AbstractShellHandler im
 		/**
 		 * Line process runner.
 		 */
-		final private AbstractClientShellHandler runner;
+		final private ClientCliShellHandler runner;
 
 		/**
 		 * Boot boss thread
 		 */
 		private Thread boss;
 
-		public ClientShellMessageChannel(AbstractClientShellHandler runner, Socket client, Function<String, Object> function) {
+		public ClientShellMessageChannel(ClientCliShellHandler runner, Socket client, Function<String, Object> function) {
 			super(runner.getRegistrar(), client, function);
 			this.runner = runner;
 		}

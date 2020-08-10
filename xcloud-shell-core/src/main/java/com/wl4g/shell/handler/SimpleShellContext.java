@@ -24,9 +24,9 @@ import com.wl4g.shell.exception.ChannelShellException;
  * @version 2020年2月4日 v1.0.0
  * @see
  */
-public class SimpleShellContext extends AbstractShellContext {
+public class SimpleShellContext extends BaseShellContext {
 
-	SimpleShellContext(AbstractShellContext context) {
+	SimpleShellContext(BaseShellContext context) {
 		super(context);
 	}
 

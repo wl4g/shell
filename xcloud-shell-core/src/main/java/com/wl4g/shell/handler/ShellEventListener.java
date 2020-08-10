@@ -34,7 +34,7 @@ public interface ShellEventListener extends EventListener {
 	 * @param context
 	 * @param command
 	 */
-	default void onCommand(AbstractShellContext context, String command) {
+	default void onCommand(BaseShellContext context, String command) {
 		// Ignore
 	}
 
@@ -43,7 +43,7 @@ public interface ShellEventListener extends EventListener {
 	 * 
 	 * @param context
 	 */
-	default void onPreInterrupt(AbstractShellContext context) {
+	default void onPreInterrupt(BaseShellContext context) {
 	}
 
 	/**
@@ -52,7 +52,7 @@ public interface ShellEventListener extends EventListener {
 	 * @param context
 	 * @param confirm
 	 */
-	default void onInterrupt(AbstractShellContext context, boolean confirm) {
+	default void onInterrupt(BaseShellContext context, boolean confirm) {
 		if (confirm) {
 			context.setState(ChannelState.INTERRUPTED);
 		}

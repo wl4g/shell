@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wl4g.shell.config;
+package com.wl4g.shell.cli.config;
 
 import static com.wl4g.components.common.lang.Assert2.*;
 import static java.lang.String.format;
@@ -26,17 +26,17 @@ import com.wl4g.shell.registry.ShellHandlerRegistrar;
 import com.wl4g.shell.registry.TargetMethodWrapper;
 
 /**
- * Default bean registry
+ * Shell CLI bean registrar
  * 
  * @author Wangl.sir <983708408@qq.com>
  * @version v1.0 2019年5月3日
  * @since
  */
-public class DefaultShellHandlerRegistrar extends ShellHandlerRegistrar {
+public class CliShellHandlerRegistrar extends ShellHandlerRegistrar {
 	final private static long serialVersionUID = -6852880158146389409L;
 
 	private static class Holder {
-		final private static DefaultShellHandlerRegistrar INSTANCE = new DefaultShellHandlerRegistrar();
+		final private static CliShellHandlerRegistrar INSTANCE = new CliShellHandlerRegistrar();
 	}
 
 	/**
@@ -44,7 +44,7 @@ public class DefaultShellHandlerRegistrar extends ShellHandlerRegistrar {
 	 */
 	final private Map<String, HelpOptions> helpOptions = new ConcurrentHashMap<>(16);
 
-	public final static DefaultShellHandlerRegistrar getSingle() {
+	public final static CliShellHandlerRegistrar getSingle() {
 		return Holder.INSTANCE;
 	}
 
@@ -54,7 +54,7 @@ public class DefaultShellHandlerRegistrar extends ShellHandlerRegistrar {
 	 * @param registed
 	 * @return
 	 */
-	public DefaultShellHandlerRegistrar merge(Map<String, TargetMethodWrapper> registed) {
+	public CliShellHandlerRegistrar merge(Map<String, TargetMethodWrapper> registed) {
 		state(helpOptions.isEmpty(), "Remote server registed target methods is null");
 
 		// Registion from local.
