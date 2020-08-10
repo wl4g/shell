@@ -114,17 +114,17 @@ public class EmbeddedShellHandlerServer extends ServerShellHandler implements Ru
 				}
 			}
 
-			try {
-				Iterator<ServerShellMessageChannel> it = channels.keySet().iterator();
-				while (it.hasNext()) {
+			Iterator<ServerShellMessageChannel> it = channels.keySet().iterator();
+			while (it.hasNext()) {
+				try {
 					ServerShellMessageChannel h = it.next();
 					Thread t = channels.get(h);
 					t.interrupt();
 					t = null;
 					it.remove();
+				} catch (Exception e) {
+					log.error("Closing worker failure", e);
 				}
-			} catch (Exception e) {
-				log.error("Closing worker failure", e);
 			}
 		}
 	}

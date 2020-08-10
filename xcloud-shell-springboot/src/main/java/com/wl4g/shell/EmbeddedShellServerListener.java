@@ -19,6 +19,7 @@ import static com.wl4g.components.common.lang.Assert2.notNullOf;
 import static com.wl4g.components.common.log.SmartLoggerFactory.getLogger;
 
 import org.slf4j.Logger;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -35,7 +36,7 @@ import com.wl4g.shell.handler.EmbeddedShellHandlerServer;
  * @version v1.0 2020-08-10
  * @since
  */
-public class EmbeddedShellServerListener implements ApplicationRunner {
+public class EmbeddedShellServerListener implements ApplicationRunner, DisposableBean {
 
 	protected final Logger log = getLogger(getClass());
 
@@ -66,6 +67,11 @@ public class EmbeddedShellServerListener implements ApplicationRunner {
 		this.shellServer = new EmbeddedShellServerBuilder(environment.getRequiredProperty("spring.application.name"), config,
 				registrar).build();
 		this.shellServer.start();
+	}
+
+	@Override
+	public void destroy() throws Exception {
+		this.shellServer.close();
 	}
 
 }
