@@ -16,12 +16,10 @@
 package com.wl4g.shell.handler;
 
 import com.wl4g.shell.config.ShellProperties;
-import com.wl4g.shell.handler.ShellMessageChannel;
+import com.wl4g.shell.handler.SignalChannelHandler;
 import com.wl4g.shell.registry.ShellHandlerRegistrar;
 import com.wl4g.shell.registry.TargetMethodWrapper;
 import com.wl4g.shell.signal.*;
-
-import org.slf4j.Logger;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -39,7 +37,6 @@ import java.util.function.Function;
 
 import static com.wl4g.components.common.lang.Assert2.notNullOf;
 import static com.wl4g.components.common.lang.Assert2.state;
-import static com.wl4g.components.common.log.SmartLoggerFactory.getLogger;
 import static com.wl4g.shell.signal.ChannelState.*;
 import static java.lang.String.format;
 import static java.lang.Thread.sleep;
@@ -60,10 +57,10 @@ public class EmbeddedShellHandlerServer extends ServerShellHandler implements Ru
 	/**
 	 * Current server shellRunning status.
 	 */
-	final private AtomicBoolean shellRunning = new AtomicBoolean(false);
+	final private AtomicBoolean running = new AtomicBoolean(false);
 
 	/** Command channel workers. */
-	final private Map<ServerShellMessageChannel, Thread> channels = new ConcurrentHashMap<>();
+	final private Map<ServerSignalChannelHandler, Thread> channels = new ConcurrentHashMap<>();
 
 	/**
 	 * Server sockets
@@ -79,9 +76,13 @@ public class EmbeddedShellHandlerServer extends ServerShellHandler implements Ru
 		super(config, appName, registrar);
 	}
 
-	// Start server
+	/**
+	 * Start server shell handler instance
+	 * 
+	 * @throws Exception
+	 */
 	public void start() throws Exception {
-		if (shellRunning.compareAndSet(false, true)) {
+		if (running.compareAndSet(false, true)) {
 			state(isNull(ss), "server socket already listen ?");
 
 			// Determine server port.
@@ -99,7 +100,7 @@ public class EmbeddedShellHandlerServer extends ServerShellHandler implements Ru
 
 	@Override
 	public void close() {
-		if (shellRunning.compareAndSet(true, false)) {
+		if (running.compareAndSet(true, false)) {
 			try {
 				boss.interrupt();
 			} catch (Exception e) {
@@ -114,10 +115,10 @@ public class EmbeddedShellHandlerServer extends ServerShellHandler implements Ru
 				}
 			}
 
-			Iterator<ServerShellMessageChannel> it = channels.keySet().iterator();
+			Iterator<ServerSignalChannelHandler> it = channels.keySet().iterator();
 			while (it.hasNext()) {
 				try {
-					ServerShellMessageChannel h = it.next();
+					ServerSignalChannelHandler h = it.next();
 					Thread t = channels.get(h);
 					t.interrupt();
 					t = null;
@@ -129,10 +130,12 @@ public class EmbeddedShellHandlerServer extends ServerShellHandler implements Ru
 		}
 	}
 
-	// Accepting connect processing
+	/**
+	 * Accepting connect processing
+	 */
 	@Override
 	public void run() {
-		while (!boss.isInterrupted() && shellRunning.get()) {
+		while (!boss.isInterrupted() && running.get()) {
 			try {
 				// Receiving client socket(blocking)
 				Socket s = ss.accept();
@@ -147,7 +150,7 @@ public class EmbeddedShellHandlerServer extends ServerShellHandler implements Ru
 				}
 
 				// Create shell channel
-				ServerShellMessageChannel channel = new ServerShellMessageChannel(registrar, s, line -> process(line));
+				ServerSignalChannelHandler channel = new ServerSignalChannelHandler(registrar, s, line -> process(line));
 
 				// MARK1:
 				// The worker thread may not be the parent thread of Runnable,
@@ -240,35 +243,31 @@ public class EmbeddedShellHandlerServer extends ServerShellHandler implements Ru
 	}
 
 	/**
-	 * Server shell message channel handler
+	 * Server shell signal channel handler
 	 * 
 	 * @author Wangl.sir <983708408@qq.com>
 	 * @version v1.0 2019年5月2日
 	 * @since
 	 */
-	class ServerShellMessageChannel extends ShellMessageChannel {
-		final protected Logger log = getLogger(getClass());
+	class ServerSignalChannelHandler extends SignalChannelHandler {
 
-		/** Current single command worker */
-		final private ExecutorService currentWorker;
+		/** Running current command process worker */
+		private final ExecutorService processWorker;
 
-		/** Current shell context */
-		BaseShellContext currentContext;
+		/** Running current command {@link ShellContext} */
+		private BaseShellContext currentContext;
 
-		public ServerShellMessageChannel(ShellHandlerRegistrar registrar, Socket client, Function<String, Object> func) {
+		public ServerSignalChannelHandler(ShellHandlerRegistrar registrar, Socket client, Function<String, Object> func) {
 			super(registrar, client, func);
 			this.currentContext = new BaseShellContext(this) {
 			};
-			this.currentWorker = new ThreadPoolExecutor(1, 1, 0, SECONDS, new LinkedBlockingDeque<>(1), new ThreadFactory() {
-				final private AtomicInteger counter = new AtomicInteger(0);
-
-				@Override
-				public Thread newThread(Runnable r) {
-					String prefix = getClass().getSimpleName() + "-worker-" + counter.incrementAndGet();
-					Thread t = new Thread(r, prefix);
-					t.setDaemon(true);
-					return t;
-				}
+			// Init worker
+			final AtomicInteger incr = new AtomicInteger(0);
+			this.processWorker = new ThreadPoolExecutor(1, 1, 0, SECONDS, new LinkedBlockingDeque<>(1), r -> {
+				String prefix = getClass().getSimpleName() + "-worker-" + incr.incrementAndGet();
+				Thread t = new Thread(r, prefix);
+				t.setDaemon(true);
+				return t;
 			});
 		}
 
@@ -315,7 +314,7 @@ public class EmbeddedShellHandlerServer extends ServerShellHandler implements Ru
 
 						// Resolve that client input cannot be received during
 						// blocking execution.
-						currentWorker.execute(() -> {
+						processWorker.execute(() -> {
 							try {
 								/**
 								 * Only {@link ShellContext} printouts are

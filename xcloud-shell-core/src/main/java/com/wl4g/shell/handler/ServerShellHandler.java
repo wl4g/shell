@@ -24,7 +24,7 @@ import org.slf4j.Logger;
 
 import com.wl4g.shell.config.ShellProperties;
 import com.wl4g.shell.handler.GenericShellHandler;
-import com.wl4g.shell.handler.EmbeddedShellHandlerServer.ServerShellMessageChannel;
+import com.wl4g.shell.handler.EmbeddedShellHandlerServer.ServerSignalChannelHandler;
 import com.wl4g.shell.registry.ShellHandlerRegistrar;
 
 /**
@@ -40,7 +40,7 @@ abstract class ServerShellHandler extends GenericShellHandler implements Closeab
 	/**
 	 * Accept socket client handlers.
 	 */
-	final private ThreadLocal<ServerShellMessageChannel> clientContext = new InheritableThreadLocal<>();
+	final private ThreadLocal<ServerSignalChannelHandler> clientContext = new InheritableThreadLocal<>();
 
 	/**
 	 * Spring application name.
@@ -72,7 +72,7 @@ abstract class ServerShellHandler extends GenericShellHandler implements Closeab
 	 * @param client
 	 * @return
 	 */
-	protected ServerShellMessageChannel bind(ServerShellMessageChannel client) {
+	protected ServerSignalChannelHandler bind(ServerSignalChannelHandler client) {
 		clientContext.set(client);
 		return client;
 	}
@@ -82,7 +82,7 @@ abstract class ServerShellHandler extends GenericShellHandler implements Closeab
 	 * 
 	 * @return
 	 */
-	protected ServerShellMessageChannel getClient() {
+	protected ServerSignalChannelHandler getClient() {
 		return clientContext.get();
 	}
 

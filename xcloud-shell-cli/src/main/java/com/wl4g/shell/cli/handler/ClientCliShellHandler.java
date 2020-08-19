@@ -40,7 +40,7 @@ import com.wl4g.shell.cli.command.DefaultBuiltInCommand;
 import com.wl4g.shell.cli.config.CliShellConfiguration;
 import com.wl4g.shell.cli.config.DynamicCompleter;
 import com.wl4g.shell.handler.GenericShellHandler;
-import com.wl4g.shell.handler.ShellMessageChannel;
+import com.wl4g.shell.handler.SignalChannelHandler;
 import com.wl4g.shell.registry.ShellHandlerRegistrar;
 import com.wl4g.shell.signal.*;
 
@@ -106,7 +106,7 @@ public abstract class ClientCliShellHandler extends GenericShellHandler implemen
 	/**
 	 * Shell client handler
 	 */
-	private ClientShellMessageChannel clientChannel;
+	private ClientSignalChannelHandler clientChannel;
 
 	/**
 	 * Current process exception statcktrace as strings.
@@ -311,7 +311,7 @@ public abstract class ClientCliShellHandler extends GenericShellHandler implemen
 				throw new IllegalStateException(errmsg);
 			}
 
-			clientChannel = new ClientShellMessageChannel(this, s, result -> null).starting();
+			clientChannel = new ClientSignalChannelHandler(this, s, result -> null).starting();
 		}
 
 	}
@@ -385,7 +385,7 @@ public abstract class ClientCliShellHandler extends GenericShellHandler implemen
 	 * @version v1.0 2019年5月2日
 	 * @since
 	 */
-	class ClientShellMessageChannel extends ShellMessageChannel {
+	class ClientSignalChannelHandler extends SignalChannelHandler {
 
 		/**
 		 * Line process runner.
@@ -397,12 +397,12 @@ public abstract class ClientCliShellHandler extends GenericShellHandler implemen
 		 */
 		private Thread boss;
 
-		public ClientShellMessageChannel(ClientCliShellHandler runner, Socket client, Function<String, Object> function) {
+		public ClientSignalChannelHandler(ClientCliShellHandler runner, Socket client, Function<String, Object> function) {
 			super(runner.getRegistrar(), client, function);
 			this.runner = runner;
 		}
 
-		public ClientShellMessageChannel starting() {
+		public ClientSignalChannelHandler starting() {
 			this.boss = new Thread(this);
 			this.boss.start();
 			return this;

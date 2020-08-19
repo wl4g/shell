@@ -20,7 +20,7 @@ import com.wl4g.shell.annotation.ShellMethod.InterruptType;
 import com.wl4g.shell.exception.ChannelShellException;
 import com.wl4g.shell.exception.NoSupportedInterruptShellException;
 import com.wl4g.shell.exception.ShellException;
-import com.wl4g.shell.handler.EmbeddedShellHandlerServer.ServerShellMessageChannel;
+import com.wl4g.shell.handler.EmbeddedShellHandlerServer.ServerSignalChannelHandler;
 import com.wl4g.shell.registry.TargetMethodWrapper;
 import com.wl4g.shell.signal.BOFStdoutSignal;
 import com.wl4g.shell.signal.ChannelState;
@@ -69,7 +69,7 @@ abstract class BaseShellContext implements ShellContext {
 	/**
 	 * Shell message channel.
 	 */
-	private ServerShellMessageChannel channel;
+	private ServerSignalChannelHandler channel;
 
 	/**
 	 * Line result message state.
@@ -96,18 +96,18 @@ abstract class BaseShellContext implements ShellContext {
 		}
 	}
 
-	BaseShellContext(ServerShellMessageChannel channel) {
+	BaseShellContext(ServerSignalChannelHandler channel) {
 		setChannel(channel);
 	}
 
-	public ServerShellMessageChannel getChannel() {
+	public ServerSignalChannelHandler getChannel() {
 		if (isNull(channel)) {
 			throw new Error("The shell clientChannel should not be null???");
 		}
 		return channel;
 	}
 
-	void setChannel(ServerShellMessageChannel channel) {
+	void setChannel(ServerSignalChannelHandler channel) {
 		notNull(channel, "Shell channel must not be null");
 		this.channel = channel;
 		// Default listener register.

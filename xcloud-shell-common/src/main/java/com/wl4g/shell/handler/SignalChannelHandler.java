@@ -29,13 +29,13 @@ import static java.lang.System.err;
 import static org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace;
 
 /**
- * Built-in shell channel message handler
+ * Shell signal message channel handler
  * 
  * @author Wangl.sir <983708408@qq.com>
  * @version v1.0 2019年5月2日
  * @since
  */
-public abstract class ShellMessageChannel implements Runnable, Closeable {
+public abstract class SignalChannelHandler implements Runnable, Closeable {
 
 	/**
 	 * Currently running?
@@ -67,7 +67,7 @@ public abstract class ShellMessageChannel implements Runnable, Closeable {
 	 */
 	protected OutputStream _out;
 
-	public ShellMessageChannel(ShellHandlerRegistrar registrar, Socket socket, Function<String, Object> function) {
+	public SignalChannelHandler(ShellHandlerRegistrar registrar, Socket socket, Function<String, Object> function) {
 		notNull(socket, "Socket client is null, please check configure");
 		notNull(function, "Function is null, please check configure");
 		notNull(registrar, "Registry must not be null");
@@ -158,7 +158,7 @@ public abstract class ShellMessageChannel implements Runnable, Closeable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ShellMessageChannel other = (ShellMessageChannel) obj;
+		SignalChannelHandler other = (SignalChannelHandler) obj;
 		if (socket == null) {
 			if (other.socket != null)
 				return false;
