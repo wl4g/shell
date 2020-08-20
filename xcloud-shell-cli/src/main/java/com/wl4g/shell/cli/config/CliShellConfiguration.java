@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.wl4g.shell.config.BaseShellProperties;
+import com.wl4g.shell.common.config.BaseShellProperties;
 
 /**
  * Shell properties configuration

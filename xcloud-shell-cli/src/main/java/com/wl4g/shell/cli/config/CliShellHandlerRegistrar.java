@@ -21,9 +21,9 @@ import static java.lang.String.format;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.wl4g.shell.cli.HelpOptions;
-import com.wl4g.shell.registry.ShellHandlerRegistrar;
-import com.wl4g.shell.registry.TargetMethodWrapper;
+import com.wl4g.shell.common.cli.HelpOptions;
+import com.wl4g.shell.common.registry.ShellHandlerRegistrar;
+import com.wl4g.shell.common.registry.TargetMethodWrapper;
 
 /**
  * Shell CLI bean registrar

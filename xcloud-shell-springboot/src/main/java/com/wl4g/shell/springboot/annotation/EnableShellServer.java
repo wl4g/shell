@@ -13,19 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wl4g;
+package com.wl4g.shell.springboot.annotation;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import com.wl4g.shell.springboot.annotation.EnableShellServer;
+import org.springframework.context.annotation.Import;
 
-@EnableShellServer
-@SpringBootApplication
-public class ShellExample {
+import com.wl4g.shell.springboot.config.ShellAutoConfiguration;
 
-	public static void main(String[] args) {
-		SpringApplication.run(ShellExample.class, args);
-	}
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ ElementType.TYPE, ElementType.METHOD })
+@Documented
+@Import({ ShellAutoConfiguration.class })
+public @interface EnableShellServer {
 
 }

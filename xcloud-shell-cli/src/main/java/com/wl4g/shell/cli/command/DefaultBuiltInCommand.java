@@ -34,12 +34,12 @@ import org.jline.utils.InfoCmp.Capability;
 import static org.apache.commons.lang3.SystemUtils.*;
 import static org.apache.commons.lang3.StringUtils.*;
 
-import com.wl4g.shell.annotation.ShellMethod;
-import com.wl4g.shell.cli.BuiltInCommand;
-import com.wl4g.shell.cli.HelpOptions;
 import com.wl4g.shell.cli.config.CliShellHandlerRegistrar;
 import com.wl4g.shell.cli.handler.ClientCliShellHandler;
-import com.wl4g.shell.utils.LineUtils;
+import com.wl4g.shell.common.annotation.ShellMethod;
+import com.wl4g.shell.common.cli.BuiltInCommand;
+import com.wl4g.shell.common.cli.HelpOptions;
+import com.wl4g.shell.common.utils.LineUtils;
 
 import static com.wl4g.components.common.cli.StandardFormatter.getHelpFormat;
 import static com.wl4g.components.common.lang.Assert2.*;

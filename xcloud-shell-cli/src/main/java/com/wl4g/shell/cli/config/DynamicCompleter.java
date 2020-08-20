@@ -26,10 +26,10 @@ import org.jline.reader.ParsedLine;
 import org.jline.reader.impl.completer.StringsCompleter;
 
 import static com.wl4g.components.common.lang.Assert2.*;
-import static com.wl4g.shell.annotation.ShellOption.*;
+import static com.wl4g.shell.common.annotation.ShellOption.*;
 
-import com.wl4g.shell.cli.HelpOptions;
-import com.wl4g.shell.utils.LineUtils;
+import com.wl4g.shell.common.cli.HelpOptions;
+import com.wl4g.shell.common.utils.LineUtils;
 
 /**
  * Dynamic completer

@@ -20,21 +20,21 @@ import static org.apache.commons.lang3.StringUtils.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.wl4g.shell.cli.config.CliShellConfiguration;
-import com.wl4g.shell.signal.AckInterruptSignal;
-import com.wl4g.shell.signal.AskInterruptSignal;
-import com.wl4g.shell.signal.BOFStdoutSignal;
-import com.wl4g.shell.signal.EOFStdoutSignal;
-import com.wl4g.shell.signal.MetaSignal;
-import com.wl4g.shell.signal.PreInterruptSignal;
-import com.wl4g.shell.signal.ProgressSignal;
-import com.wl4g.shell.signal.Signal;
-import com.wl4g.shell.signal.StderrSignal;
-import com.wl4g.shell.signal.StdoutSignal;
+import com.wl4g.shell.common.signal.AckInterruptSignal;
+import com.wl4g.shell.common.signal.AskInterruptSignal;
+import com.wl4g.shell.common.signal.BOFStdoutSignal;
+import com.wl4g.shell.common.signal.EOFStdoutSignal;
+import com.wl4g.shell.common.signal.MetaSignal;
+import com.wl4g.shell.common.signal.PreInterruptSignal;
+import com.wl4g.shell.common.signal.ProgressSignal;
+import com.wl4g.shell.common.signal.Signal;
+import com.wl4g.shell.common.signal.StderrSignal;
+import com.wl4g.shell.common.signal.StdoutSignal;
 
 import static com.wl4g.components.common.cli.ProcessUtils.*;
-import static com.wl4g.shell.cli.BuiltInCommand.*;
 import static com.wl4g.shell.cli.config.CliShellHandlerRegistrar.getSingle;
-import static com.wl4g.shell.utils.ShellUtils.isTrue;
+import static com.wl4g.shell.common.cli.BuiltInCommand.*;
+import static com.wl4g.shell.common.utils.ShellUtils.isTrue;
 import static java.lang.String.format;
 import static java.lang.System.*;
 

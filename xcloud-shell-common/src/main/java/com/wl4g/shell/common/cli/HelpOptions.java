@@ -13,19 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wl4g;
+package com.wl4g.shell.common.cli;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.apache.commons.cli.Options;
 
-import com.wl4g.shell.springboot.annotation.EnableShellServer;
+import com.wl4g.shell.common.annotation.ShellMethod;
 
-@EnableShellServer
-@SpringBootApplication
-public class ShellExample {
+/**
+ * Help option.</br>
+ * See:{@link com.wl4g.devops.shell.command.DefaultInternalCommand#help()}[MARK0]
+ * 
+ * @author Wangl.sir <983708408@qq.com>
+ * @version v1.0 2019年5月4日
+ * @since
+ */
+public class HelpOptions extends Options {
+	private static final long serialVersionUID = 2206030510132539771L;
 
-	public static void main(String[] args) {
-		SpringApplication.run(ShellExample.class, args);
+	final private ShellMethod shellMethod;
+
+	public HelpOptions(ShellMethod shellMethod) throws IllegalArgumentException {
+		this.shellMethod = shellMethod;
+	}
+
+	public ShellMethod getShellMethod() {
+		return shellMethod;
 	}
 
 }

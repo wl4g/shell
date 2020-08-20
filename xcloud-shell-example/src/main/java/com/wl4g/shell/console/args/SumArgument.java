@@ -17,7 +17,7 @@ package com.wl4g.shell.console.args;
 
 import java.io.Serializable;
 
-import com.wl4g.shell.annotation.ShellOption;
+import com.wl4g.shell.common.annotation.ShellOption;
 
 public class SumArgument implements Serializable {
 

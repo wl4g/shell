@@ -27,15 +27,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import com.wl4g.shell.annotation.ShellComponent;
-import com.wl4g.shell.annotation.ShellMethod;
-import com.wl4g.shell.annotation.ShellOption;
-import com.wl4g.shell.annotation.ShellMethod.InterruptType;
+import com.wl4g.shell.common.annotation.ShellMethod;
+import com.wl4g.shell.common.annotation.ShellOption;
+import com.wl4g.shell.common.annotation.ShellMethod.InterruptType;
 import com.wl4g.shell.console.args.MixedArgument;
 import com.wl4g.shell.console.args.SumArgument;
-import com.wl4g.shell.handler.ProgressShellContext;
-import com.wl4g.shell.handler.SimpleShellContext;
+import com.wl4g.shell.core.handler.ProgressShellContext;
+import com.wl4g.shell.core.handler.SimpleShellContext;
 import com.wl4g.shell.service.ExampleService;
+import com.wl4g.shell.springboot.annotation.ShellComponent;
 
 /**
  * Example console.</br>

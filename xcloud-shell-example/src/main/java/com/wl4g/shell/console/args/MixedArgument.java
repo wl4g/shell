@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import com.wl4g.shell.annotation.ShellOption;
+import com.wl4g.shell.common.annotation.ShellOption;
 
 public class MixedArgument implements Serializable {
 
