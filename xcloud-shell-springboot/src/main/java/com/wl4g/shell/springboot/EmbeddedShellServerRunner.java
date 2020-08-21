@@ -65,8 +65,11 @@ public class EmbeddedShellServerRunner implements ApplicationRunner, DisposableB
 	public void run(ApplicationArguments args) throws Exception {
 		log.info("Shell server init starting on {} ...", config.getBeginPort());
 
-		this.shellServer = new EmbeddedShellServerBuilder(environment.getRequiredProperty("spring.application.name"), config,
-				registrar).build();
+		this.shellServer = EmbeddedShellServerBuilder.newBuilder()
+				.withAppName(environment.getRequiredProperty("spring.application.name"))
+				.withConfiguration(config)
+				.withRegistrar(registrar)
+				.build();
 		this.shellServer.start();
 	}
 
