@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wl4g.shell.console.args;
+package com.wl4g.shell.example.console.args;
 
 import static com.wl4g.components.common.serialize.JacksonUtils.toJSONString;
 

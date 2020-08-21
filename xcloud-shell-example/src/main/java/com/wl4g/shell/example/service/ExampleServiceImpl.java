@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wl4g.shell.service;
+package com.wl4g.shell.example.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.wl4g.shell.console.args.SumArgument;
-import com.wl4g.shell.console.args.SumResult;
+import com.wl4g.shell.example.console.args.SumArgument;
+import com.wl4g.shell.example.console.args.SumResult;
 
 @Service
 public class ExampleServiceImpl implements ExampleService {

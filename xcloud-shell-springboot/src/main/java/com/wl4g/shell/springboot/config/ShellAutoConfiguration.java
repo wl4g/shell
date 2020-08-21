@@ -21,8 +21,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
 import com.wl4g.shell.core.config.ShellProperties;
-import com.wl4g.shell.core.handler.EmbeddedShellHandlerServer;
-import com.wl4g.shell.springboot.EmbeddedShellServerListener;
+import com.wl4g.shell.core.handler.EmbeddedShellServer;
+import com.wl4g.shell.springboot.EmbeddedShellServerRunner;
 
 /**
  * Shell component services auto configuration
@@ -46,15 +46,15 @@ public class ShellAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean
-	public EmbeddedShellHandlerServer embeddedShellHandlerServer(@Value("${spring.application.name}") String appName,
+	public EmbeddedShellServer embeddedShellHandlerServer(@Value("${spring.application.name}") String appName,
 			ShellProperties config, AnnotationShellHandlerRegistrar registrar) {
-		return new EmbeddedShellHandlerServer(config, appName, registrar);
+		return new EmbeddedShellServer(config, appName, registrar);
 	}
 
 	@Bean
-	public EmbeddedShellServerListener embeddedShellServerListener(ShellProperties config,
+	public EmbeddedShellServerRunner embeddedShellServerListener(ShellProperties config,
 			AnnotationShellHandlerRegistrar registrar) {
-		return new EmbeddedShellServerListener(config, registrar);
+		return new EmbeddedShellServerRunner(config, registrar);
 	}
 
 }

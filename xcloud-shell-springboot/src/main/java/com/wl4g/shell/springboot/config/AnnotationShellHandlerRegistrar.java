@@ -25,7 +25,7 @@ import com.wl4g.shell.common.registry.ShellHandlerRegistrar;
 import com.wl4g.shell.springboot.annotation.ShellComponent;
 
 /**
- * Annotation shell command handler registrar.
+ * Annotation shell components handler registrar.
  * 
  * @author Wangl.sir <983708408@qq.com>
  * @version v1.0 2019年4月14日

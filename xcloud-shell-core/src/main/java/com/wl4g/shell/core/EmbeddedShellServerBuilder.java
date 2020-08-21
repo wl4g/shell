@@ -20,10 +20,10 @@ import static com.wl4g.components.common.lang.Assert2.notNullOf;
 
 import com.wl4g.shell.common.registry.ShellHandlerRegistrar;
 import com.wl4g.shell.core.config.ShellProperties;
-import com.wl4g.shell.core.handler.EmbeddedShellHandlerServer;
+import com.wl4g.shell.core.handler.EmbeddedShellServer;
 
 /**
- * Budiler of {@link EmbeddedShellHandlerServer}
+ * Budiler of {@link EmbeddedShellServer}
  *
  * @author Wangl.sir <wanglsir@gmail.com, 983708408@qq.com>
  * @version v1.0 2020-08-10
@@ -63,8 +63,8 @@ public class EmbeddedShellServerBuilder {
 		return this;
 	}
 
-	public EmbeddedShellHandlerServer build() {
-		return new EmbeddedShellHandlerServer(config, appName, registrar);
+	public EmbeddedShellServer build() {
+		return new EmbeddedShellServer(config, appName, registrar);
 	}
 
 }

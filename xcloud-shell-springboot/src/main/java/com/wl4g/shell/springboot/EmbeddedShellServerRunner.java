@@ -18,28 +18,28 @@ package com.wl4g.shell.springboot;
 import static com.wl4g.components.common.lang.Assert2.notNullOf;
 import static com.wl4g.components.common.log.SmartLoggerFactory.getLogger;
 
-import org.slf4j.Logger;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.env.Environment;
 
+import com.wl4g.components.common.log.SmartLogger;
 import com.wl4g.shell.core.EmbeddedShellServerBuilder;
 import com.wl4g.shell.core.config.ShellProperties;
-import com.wl4g.shell.core.handler.EmbeddedShellHandlerServer;
+import com.wl4g.shell.core.handler.EmbeddedShellServer;
 import com.wl4g.shell.springboot.config.AnnotationShellHandlerRegistrar;
 
 /**
- * {@link EmbeddedShellServerListener}
+ * {@link EmbeddedShellServerRunner}
  *
  * @author Wangl.sir <wanglsir@gmail.com, 983708408@qq.com>
  * @version v1.0 2020-08-10
  * @since
  */
-public class EmbeddedShellServerListener implements ApplicationRunner, DisposableBean {
+public class EmbeddedShellServerRunner implements ApplicationRunner, DisposableBean {
 
-	protected final Logger log = getLogger(getClass());
+	protected final SmartLogger log = getLogger(getClass());
 
 	/** {@link ShellProperties} */
 	protected final ShellProperties config;
@@ -51,10 +51,10 @@ public class EmbeddedShellServerListener implements ApplicationRunner, Disposabl
 	@Autowired
 	protected Environment environment;
 
-	/** {@link EmbeddedShellHandlerServer} */
-	protected EmbeddedShellHandlerServer shellServer;
+	/** {@link EmbeddedShellServer} */
+	protected EmbeddedShellServer shellServer;
 
-	public EmbeddedShellServerListener(ShellProperties config, AnnotationShellHandlerRegistrar registrar) {
+	public EmbeddedShellServerRunner(ShellProperties config, AnnotationShellHandlerRegistrar registrar) {
 		notNullOf(config, "config");
 		notNullOf(registrar, "registrar");
 		this.config = config;

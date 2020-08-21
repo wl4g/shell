@@ -29,13 +29,13 @@ import static java.lang.System.err;
 import static org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace;
 
 /**
- * Shell signal message channel handler
+ * Default JDK simple shell signal handler
  * 
  * @author Wangl.sir <983708408@qq.com>
  * @version v1.0 2019年5月2日
  * @since
  */
-public abstract class SignalChannelHandler implements Runnable, Closeable {
+public abstract class SimpleSignalHandler extends SignalHandler {
 
 	/**
 	 * Currently running?
@@ -43,19 +43,9 @@ public abstract class SignalChannelHandler implements Runnable, Closeable {
 	final protected AtomicBoolean running = new AtomicBoolean(false);
 
 	/**
-	 * Local shell component registry.
-	 */
-	final protected ShellHandlerRegistrar registrar;
-
-	/**
 	 * Client socket
 	 */
 	final protected Socket socket;
-
-	/**
-	 * Callback function
-	 */
-	final protected Function<String, Object> function;
 
 	/**
 	 * Input stream
@@ -67,13 +57,12 @@ public abstract class SignalChannelHandler implements Runnable, Closeable {
 	 */
 	protected OutputStream _out;
 
-	public SignalChannelHandler(ShellHandlerRegistrar registrar, Socket socket, Function<String, Object> function) {
+	public SimpleSignalHandler(ShellHandlerRegistrar registrar, Socket socket, Function<String, Object> function) {
+		super(registrar, function);
 		notNull(socket, "Socket client is null, please check configure");
 		notNull(function, "Function is null, please check configure");
 		notNull(registrar, "Registry must not be null");
-		this.registrar = registrar;
 		this.socket = socket;
-		this.function = function;
 		if (running.compareAndSet(false, true)) {
 			try {
 				this._in = socket.getInputStream();
@@ -158,7 +147,7 @@ public abstract class SignalChannelHandler implements Runnable, Closeable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		SignalChannelHandler other = (SignalChannelHandler) obj;
+		SimpleSignalHandler other = (SimpleSignalHandler) obj;
 		if (socket == null) {
 			if (other.socket != null)
 				return false;

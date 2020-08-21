@@ -40,7 +40,7 @@ import com.wl4g.shell.cli.command.DefaultBuiltInCommand;
 import com.wl4g.shell.cli.config.CliShellConfiguration;
 import com.wl4g.shell.cli.config.DynamicCompleter;
 import com.wl4g.shell.common.handler.GenericShellHandler;
-import com.wl4g.shell.common.handler.SignalChannelHandler;
+import com.wl4g.shell.common.handler.SimpleSignalHandler;
 import com.wl4g.shell.common.registry.ShellHandlerRegistrar;
 import com.wl4g.shell.common.signal.*;
 
@@ -106,7 +106,7 @@ public abstract class ClientCliShellHandler extends GenericShellHandler implemen
 	/**
 	 * Shell client handler
 	 */
-	private ClientSignalChannelHandler clientChannel;
+	private ClientSignalHandler clientChannel;
 
 	/**
 	 * Current process exception statcktrace as strings.
@@ -311,7 +311,7 @@ public abstract class ClientCliShellHandler extends GenericShellHandler implemen
 				throw new IllegalStateException(errmsg);
 			}
 
-			clientChannel = new ClientSignalChannelHandler(this, s, result -> null).starting();
+			clientChannel = new ClientSignalHandler(this, s, result -> null).starting();
 		}
 
 	}
@@ -385,24 +385,24 @@ public abstract class ClientCliShellHandler extends GenericShellHandler implemen
 	 * @version v1.0 2019年5月2日
 	 * @since
 	 */
-	class ClientSignalChannelHandler extends SignalChannelHandler {
+	class ClientSignalHandler extends SimpleSignalHandler {
 
 		/**
 		 * Line process runner.
 		 */
-		final private ClientCliShellHandler runner;
+		final private ClientCliShellHandler shellHandler;
 
 		/**
 		 * Boot boss thread
 		 */
 		private Thread boss;
 
-		public ClientSignalChannelHandler(ClientCliShellHandler runner, Socket client, Function<String, Object> function) {
-			super(runner.getRegistrar(), client, function);
-			this.runner = runner;
+		public ClientSignalHandler(ClientCliShellHandler shellHandler, Socket socket, Function<String, Object> function) {
+			super(shellHandler.getRegistrar(), socket, function);
+			this.shellHandler = shellHandler;
 		}
 
-		public ClientSignalChannelHandler starting() {
+		public ClientSignalHandler starting() {
 			this.boss = new Thread(this);
 			this.boss.start();
 			return this;
@@ -424,10 +424,10 @@ public abstract class ClientCliShellHandler extends GenericShellHandler implemen
 					try {
 						close();
 					} catch (IOException e1) {
-						runner.printError(EMPTY, e);
+						shellHandler.printError(EMPTY, e);
 					}
 				} catch (Throwable e) {
-					runner.printError(EMPTY, e);
+					shellHandler.printError(EMPTY, e);
 				}
 			}
 		}

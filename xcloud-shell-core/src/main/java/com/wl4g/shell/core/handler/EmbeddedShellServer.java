@@ -15,9 +15,8 @@
  */
 package com.wl4g.shell.core.handler;
 
-import com.wl4g.shell.common.handler.SignalChannelHandler;
+import com.wl4g.shell.common.handler.SimpleSignalHandler;
 import com.wl4g.shell.common.registry.ShellHandlerRegistrar;
-import com.wl4g.shell.common.registry.TargetMethodWrapper;
 import com.wl4g.shell.common.signal.*;
 import com.wl4g.shell.core.config.ShellProperties;
 
@@ -28,7 +27,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -52,15 +50,15 @@ import static org.apache.commons.lang3.exception.ExceptionUtils.*;
  * @version v1.0 2019年5月1日
  * @since
  */
-public class EmbeddedShellHandlerServer extends ServerShellHandler implements Runnable {
+public class EmbeddedShellServer extends AbstractShellServer implements Runnable {
 
 	/**
 	 * Current server shellRunning status.
 	 */
 	final private AtomicBoolean running = new AtomicBoolean(false);
 
-	/** Command channel workers. */
-	final private Map<ServerSignalChannelHandler, Thread> channels = new ConcurrentHashMap<>();
+	/** Shell signal handler workers. */
+	final private Map<ServerSignalHandler, Thread> workers;
 
 	/**
 	 * Server sockets
@@ -72,8 +70,9 @@ public class EmbeddedShellHandlerServer extends ServerShellHandler implements Ru
 	 */
 	private Thread boss;
 
-	public EmbeddedShellHandlerServer(ShellProperties config, String appName, ShellHandlerRegistrar registrar) {
+	public EmbeddedShellServer(ShellProperties config, String appName, ShellHandlerRegistrar registrar) {
 		super(config, appName, registrar);
+		this.workers = new ConcurrentHashMap<>(config.getMaxClients());
 	}
 
 	/**
@@ -115,11 +114,11 @@ public class EmbeddedShellHandlerServer extends ServerShellHandler implements Ru
 				}
 			}
 
-			Iterator<ServerSignalChannelHandler> it = channels.keySet().iterator();
+			Iterator<ServerSignalHandler> it = workers.keySet().iterator();
 			while (it.hasNext()) {
 				try {
-					ServerSignalChannelHandler h = it.next();
-					Thread t = channels.get(h);
+					ServerSignalHandler h = it.next();
+					Thread t = workers.get(h);
 					t.interrupt();
 					t = null;
 					it.remove();
@@ -139,107 +138,33 @@ public class EmbeddedShellHandlerServer extends ServerShellHandler implements Ru
 			try {
 				// Receiving client socket(blocking)
 				Socket s = ss.accept();
-				log.debug("On accept socket: {}, maximum: {}, actual: {}", s, getConfig().getMaxClients(), channels.size());
+				log.debug("On accept socket: {}, maximum: {}, actual: {}", s, getConfig().getMaxClients(), workers.size());
 
 				// Check many connections.
-				if (channels.size() >= getConfig().getMaxClients()) {
+				if (workers.size() >= getConfig().getMaxClients()) {
 					log.warn(String.format("There are too many parallel shell connections. maximum: %s, actual: %s",
-							getConfig().getMaxClients(), channels.size()));
+							getConfig().getMaxClients(), workers.size()));
 					s.close();
 					continue;
 				}
 
-				// Create shell channel
-				ServerSignalChannelHandler channel = new ServerSignalChannelHandler(registrar, s, line -> process(line));
+				// Wrap signal handler
+				ServerSignalHandler signalHandler = new ServerSignalHandler(registrar, s, line -> process(line));
 
 				// MARK1:
 				// The worker thread may not be the parent thread of Runnable,
 				// so you need to display bind to the thread in the afternoon
 				// again.
-				Thread channelTask = new Thread(() -> bind(channel).run(),
-						getClass().getSimpleName() + "-channel-" + channels.size());
-				channelTask.setDaemon(true);
-				channels.put(channel, channelTask);
-				channelTask.start();
+				Thread task = new Thread(() -> bind(signalHandler).run(),
+						getClass().getSimpleName().concat("-channel-") + workers.size());
+				task.setDaemon(true);
+				workers.put(signalHandler, task);
+				task.start();
 
 			} catch (Throwable e) {
 				log.warn("Shell boss thread shutdown. cause: {}", getStackTrace(e));
 			}
 		}
-	}
-
-	@Override
-	protected void preHandleInput(TargetMethodWrapper tm, List<Object> args) {
-		// Get current context
-		BaseShellContext context = getClient().getContext();
-
-		// Bind target method
-		context.setTarget(tm);
-
-		// Resolving args with {@link AbstractShellContext}
-		BaseShellContext updateContext = resolveInjectArgsForShellContextIfNecceary(context, tm, args);
-		// Inject update actual context
-		getClient().setContext(updateContext);
-	}
-
-	/**
-	 * If necessary, resolving whether the shell method parameters have
-	 * {@link BaseShellContext} instances and inject.
-	 * 
-	 * @param context
-	 * @param tm
-	 * @param args
-	 */
-	private BaseShellContext resolveInjectArgsForShellContextIfNecceary(BaseShellContext context, TargetMethodWrapper tm,
-			List<Object> args) {
-
-		// Find parameter: ShellContext index and class
-		Object[] ret = findParameterForShellContext(tm);
-		int index = (int) ret[0];
-		Class<?> contextClass = (Class<?>) ret[1];
-
-		if (index >= 0) { // have ShellContext?
-			// Convert to specific shellContext
-			if (SimpleShellContext.class.isAssignableFrom(contextClass)) {
-				context = new SimpleShellContext(context);
-			} else if (ProgressShellContext.class.isAssignableFrom(contextClass)) {
-				context = new ProgressShellContext(context);
-			}
-			if (index < args.size()) { // Correct parameter index
-				args.add(index, context);
-			} else {
-				args.add(context);
-			}
-
-			/**
-			 * When injection {@link ShellContext} is used, the auto open
-			 * channel status is wait.
-			 */
-			context.begin(); // MARK2
-		}
-
-		return context;
-	}
-
-	/**
-	 * Get {@link ShellContext} index by parameters classes.
-	 * 
-	 * @param tm
-	 * @param clazz
-	 * @return
-	 */
-	private Object[] findParameterForShellContext(TargetMethodWrapper tm) {
-		int index = -1, i = 0;
-		Class<?> contextCls = null;
-		for (Class<?> cls : tm.getMethod().getParameterTypes()) {
-			if (ShellContext.class.isAssignableFrom(cls)) {
-				state(index < 0, format("Multiple shellcontext type parameters are unsupported. %s", tm.getMethod()));
-				index = i;
-				contextCls = cls;
-			}
-			++i;
-		}
-		return new Object[] { index, contextCls };
 	}
 
 	/**
@@ -249,15 +174,15 @@ public class EmbeddedShellHandlerServer extends ServerShellHandler implements Ru
 	 * @version v1.0 2019年5月2日
 	 * @since
 	 */
-	class ServerSignalChannelHandler extends SignalChannelHandler {
+	class ServerSignalHandler extends SimpleSignalHandler {
 
-		/** Running current command process worker */
+		/** Running process command worker */
 		private final ExecutorService processWorker;
 
 		/** Running current command {@link ShellContext} */
 		private BaseShellContext currentContext;
 
-		public ServerSignalChannelHandler(ShellHandlerRegistrar registrar, Socket client, Function<String, Object> func) {
+		public ServerSignalHandler(ShellHandlerRegistrar registrar, Socket client, Function<String, Object> func) {
 			super(registrar, client, func);
 			this.currentContext = new BaseShellContext(this) {
 			};
@@ -359,12 +284,12 @@ public class EmbeddedShellHandlerServer extends ServerShellHandler implements Ru
 			super.close();
 
 			// Clear the current channel
-			Thread t = channels.remove(this);
+			Thread t = workers.remove(this);
 			if (t != null) {
 				t.interrupt();
 				t = null;
 			}
-			log.debug("Remove shellHandler: {}, actual: {}", this, channels.size());
+			log.debug("Remove shellHandler: {}, actual: {}", this, workers.size());
 		}
 
 		/**

@@ -13,51 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wl4g.shell.console.args;
+package com.wl4g.shell.example.console.args;
 
 import java.io.Serializable;
 
-import com.wl4g.shell.common.annotation.ShellOption;
+import com.wl4g.components.common.cli.annotation.PropertyDescription;
 
-public class SumArgument implements Serializable {
+public class SumResult implements Serializable {
 
-	private static final long serialVersionUID = -90377698662015272L;
+	private static final long serialVersionUID = -3398687888016885699L;
 
-	@ShellOption(opt = "a", lopt = "add1", help = "Add number")
-	private int add1;
+	@PropertyDescription("Addition sum")
+	private int sum;
 
-	@ShellOption(opt = "b", lopt = "add2", help = "Added number", defaultValue = "1")
-	private int add2;
-
-	public SumArgument() {
+	public SumResult() {
 		super();
 	}
 
-	public SumArgument(int add1, int add2) {
+	public SumResult(int sum) {
 		super();
-		this.add1 = add1;
-		this.add2 = add2;
+		this.sum = sum;
 	}
 
-	public int getAdd1() {
-		return add1;
+	public int getSum() {
+		return sum;
 	}
 
-	public void setAdd1(int add1) {
-		this.add1 = add1;
-	}
-
-	public int getAdd2() {
-		return add2;
-	}
-
-	public void setAdd2(int add2) {
-		this.add2 = add2;
+	public void setSum(int sum) {
+		this.sum = sum;
 	}
 
 	@Override
 	public String toString() {
-		return "AdditionArgument [add1=" + add1 + ", add2=" + add2 + "]";
+		return "AdditionResult [sum=" + sum + "]";
 	}
 
 }

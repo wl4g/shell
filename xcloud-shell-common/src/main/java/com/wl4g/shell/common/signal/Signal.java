@@ -18,7 +18,7 @@ package com.wl4g.shell.common.signal;
 import java.io.Serializable;
 
 /**
- * Shell transport message
+ * Shell transport signal
  * 
  * @author Wangl.sir <983708408@qq.com>
  * @version v1.0 2019年5月4日

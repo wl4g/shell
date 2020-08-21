@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wl4g.shell.console;
+package com.wl4g.shell.example.console;
 
 import java.util.List;
 import java.util.Set;
@@ -30,11 +30,11 @@ import org.springframework.stereotype.Service;
 import com.wl4g.shell.common.annotation.ShellMethod;
 import com.wl4g.shell.common.annotation.ShellOption;
 import com.wl4g.shell.common.annotation.ShellMethod.InterruptType;
-import com.wl4g.shell.console.args.MixedArgument;
-import com.wl4g.shell.console.args.SumArgument;
 import com.wl4g.shell.core.handler.ProgressShellContext;
 import com.wl4g.shell.core.handler.SimpleShellContext;
-import com.wl4g.shell.service.ExampleService;
+import com.wl4g.shell.example.console.args.MixedArgument;
+import com.wl4g.shell.example.console.args.SumArgument;
+import com.wl4g.shell.example.service.ExampleService;
 import com.wl4g.shell.springboot.annotation.ShellComponent;
 
 /**

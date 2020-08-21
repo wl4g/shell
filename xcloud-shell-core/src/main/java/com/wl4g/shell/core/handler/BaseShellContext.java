@@ -27,7 +27,7 @@ import com.wl4g.shell.common.signal.EOFStdoutSignal;
 import com.wl4g.shell.common.signal.Signal;
 import com.wl4g.shell.common.signal.StderrSignal;
 import com.wl4g.shell.common.signal.StdoutSignal;
-import com.wl4g.shell.core.handler.EmbeddedShellHandlerServer.ServerSignalChannelHandler;
+import com.wl4g.shell.core.handler.EmbeddedShellServer.ServerSignalHandler;
 
 import org.slf4j.Logger;
 
@@ -50,7 +50,7 @@ import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.StringUtils.*;
 
 /**
- * Shell handler context
+ * Base shell handler context
  *
  * @author wangl.sir
  * @version v1.0 2019年5月24日
@@ -69,7 +69,7 @@ abstract class BaseShellContext implements ShellContext {
 	/**
 	 * Shell message channel.
 	 */
-	private ServerSignalChannelHandler channel;
+	private ServerSignalHandler client;
 
 	/**
 	 * Line result message state.
@@ -88,7 +88,7 @@ abstract class BaseShellContext implements ShellContext {
 	BaseShellContext(ShellContext context) {
 		if (context instanceof BaseShellContext) {
 			BaseShellContext shc = (BaseShellContext) context;
-			setChannel(shc.channel);
+			setChannel(shc.client);
 			setState(shc.state);
 			setTarget(shc.target);
 			// Copy event listeners.
@@ -96,20 +96,20 @@ abstract class BaseShellContext implements ShellContext {
 		}
 	}
 
-	BaseShellContext(ServerSignalChannelHandler channel) {
+	BaseShellContext(ServerSignalHandler channel) {
 		setChannel(channel);
 	}
 
-	public ServerSignalChannelHandler getChannel() {
-		if (isNull(channel)) {
+	public ServerSignalHandler getChannel() {
+		if (isNull(client)) {
 			throw new Error("The shell clientChannel should not be null???");
 		}
-		return channel;
+		return client;
 	}
 
-	void setChannel(ServerSignalChannelHandler channel) {
+	void setChannel(ServerSignalHandler channel) {
 		notNull(channel, "Shell channel must not be null");
-		this.channel = channel;
+		this.client = channel;
 		// Default listener register.
 		eventListeners.putIfAbsent(DEFAULT_INTERRUPT_LISTENER, new ShellEventListener() {
 			// Ignore
