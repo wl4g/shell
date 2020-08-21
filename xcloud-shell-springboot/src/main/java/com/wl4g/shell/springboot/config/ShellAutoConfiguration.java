@@ -46,13 +46,13 @@ public class ShellAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean
-	public EmbeddedShellServer embeddedShellHandlerServer(@Value("${spring.application.name}") String appName,
-			ShellProperties config, AnnotationShellHandlerRegistrar registrar) {
+	public EmbeddedShellServer embeddedShellServer(@Value("${spring.application.name}") String appName, ShellProperties config,
+			AnnotationShellHandlerRegistrar registrar) {
 		return new EmbeddedShellServer(config, appName, registrar);
 	}
 
 	@Bean
-	public EmbeddedShellServerRunner embeddedShellServerListener(ShellProperties config,
+	public EmbeddedShellServerRunner embeddedShellServerRunner(ShellProperties config,
 			AnnotationShellHandlerRegistrar registrar) {
 		return new EmbeddedShellServerRunner(config, registrar);
 	}
