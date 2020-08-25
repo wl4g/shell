@@ -39,10 +39,10 @@ public class ShellBootstrap {
 	 * 
 	 * @param args
 	 * @see <a href=
-	 *      "https://gitee.com/wl4g/super-devops/blob/master/super-devops-shell/README.md">Quick
+	 *      "https://github.com/wl4g/xcloud-shell/blob/master/README_CN.md">Quick
 	 *      start for Gitee</a>
 	 * @see <a href=
-	 *      "https://github.com/wl4g/super-devops/blob/master/super-devops-shell/README.md">Quick
+	 *      "https://github.com/wl4g/xcloud-shell/blob/master/README.md">Quick
 	 *      start for Github</a>
 	 */
 	public static void main(String[] args) {
