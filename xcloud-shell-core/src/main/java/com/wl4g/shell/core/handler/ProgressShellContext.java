@@ -22,9 +22,8 @@ import static java.util.Objects.isNull;
 
 import java.util.Collection;
 
-import org.slf4j.Logger;
-
 import com.wl4g.components.common.annotation.Reserved;
+import com.wl4g.components.common.log.SmartLogger;
 import com.wl4g.components.common.math.Maths;
 import com.wl4g.shell.common.exception.ChannelShellException;
 import com.wl4g.shell.common.exception.NoSupportedInterruptShellException;
@@ -135,19 +134,18 @@ public class ProgressShellContext extends BaseShellContext {
 	}
 
 	/**
-	 * {@link Util}
+	 * In order to facilitate users to pass {@link ShellContext} binding to
+	 * different method stacks, the tool class is specially provided.
 	 * 
 	 * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
 	 * @version 2020年2月2日 v1.0.0
 	 * @see
 	 */
-	public static abstract class Util {
-		final private static Logger log = getLogger(Util.class);
+	public static final class UserShellContextBindingTool {
 
-		/** Shell context cache. */
-		final private static ThreadLocal<ProgressShellContext> contextCache = new InheritableThreadLocal<>();
+		private static final SmartLogger log = getLogger(UserShellContextBindingTool.class);
 
-		private Util() {
+		private UserShellContextBindingTool() {
 		}
 
 		/**
@@ -169,7 +167,7 @@ public class ProgressShellContext extends BaseShellContext {
 		 * @see {@link EmbeddedServerShellHandler#run()#MARK1}
 		 * @return
 		 */
-		public static ProgressShellContext getContext() {
+		public static ProgressShellContext get() {
 			ProgressShellContext context = contextCache.get();
 			if (isNull(context)) {
 				log.debug("The progress shell context was not retrieved. first use bind()");
@@ -181,7 +179,10 @@ public class ProgressShellContext extends BaseShellContext {
 		/**
 		 * Empty implements {@link ProgressShellContext}
 		 */
-		final private static ProgressShellContext notOpProgressShellContext = new NoOpProgressShellContext();
+		private static final ProgressShellContext notOpProgressShellContext = new NoOpProgressShellContext();
+
+		/** Shell context cache. */
+		private static final ThreadLocal<ProgressShellContext> contextCache = new InheritableThreadLocal<>();
 
 	}
 
