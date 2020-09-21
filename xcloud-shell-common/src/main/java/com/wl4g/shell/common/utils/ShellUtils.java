@@ -16,6 +16,7 @@
 package com.wl4g.shell.common.utils;
 
 import com.wl4g.components.common.bean.BeanUtils2;
+import com.wl4g.components.common.reflect.ReflectionUtils2.FieldFilter;
 import com.wl4g.shell.common.annotation.ShellOption;
 
 import static com.wl4g.components.common.reflect.TypeUtils2.*;
@@ -23,6 +24,7 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.StringUtils.*;
 
+import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Map;
 
@@ -92,14 +94,16 @@ public abstract class ShellUtils extends BeanUtils2 {
 	 */
 	public static <T> void copyOptionsProperties(T dest, T src, FieldProcessor fp) {
 		try {
-			deepCopyFieldState(dest, src, targetField -> {
-				// [MARK0], See:[AbstractActuator.MARK4]
-				return nonNull(targetField.getAnnotation(ShellOption.class)) && DEFAULT_FIELD_FILTER.matches(targetField);
+			deepCopyFieldState(dest, src, new FieldFilter() {
+				@Override
+				public boolean matches(Field targetField) {
+					// [MARK0], See:[AbstractActuator.MARK4]
+					return nonNull(targetField.getAnnotation(ShellOption.class)) && DEFAULT_FIELD_FILTER.matches(targetField);
+				}
 			}, fp);
 		} catch (IllegalArgumentException | IllegalAccessException e) {
 			throw new IllegalStateException(e);
 		}
-
 	}
 
 	/**
