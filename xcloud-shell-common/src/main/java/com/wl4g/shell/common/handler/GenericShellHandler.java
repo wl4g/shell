@@ -149,7 +149,7 @@ public abstract class GenericShellHandler implements ShellHandler {
 				if (i % 2 == 0) {
 					// Input opt
 					String argname = commands.get(i);
-					hasText(argname, String.format("Unable to get parameter name, i:%s", i));
+					hasText(argname, format("Unable to get parameter name, i:%s", i));
 					// Value(May be empty) See:[MARK3]
 					String value = commands.get(i + 1);
 
@@ -178,8 +178,7 @@ public abstract class GenericShellHandler implements ShellHandler {
 				// Validate argument(if required)
 				if (shOpt.required() && !beanMap.containsKey(shOpt.opt()) && !beanMap.containsKey(shOpt.lopt())
 						&& isBlank(shOpt.defaultValue())) {
-					throw new IllegalArgumentException(
-							String.format("option: '-%s', '--%s' is required", shOpt.opt(), shOpt.lopt()));
+					throw new IllegalArgumentException(format("option: '-%s', '--%s' is required", shOpt.opt(), shOpt.lopt()));
 				}
 				args.add(TypeUtils2.instantiate(value, parameter.getParamType()));
 			}
@@ -206,7 +205,7 @@ public abstract class GenericShellHandler implements ShellHandler {
 					// Validate argument(if required)
 					if (shOpt.required() && !beanMap.containsKey(field.getName()) && isBlank(shOpt.defaultValue())) {
 						throw new IllegalArgumentException(
-								String.format("option: '-%s', '--%s' is required", shOpt.opt(), shOpt.lopt()));
+								format("option: '-%s', '--%s' is required", shOpt.opt(), shOpt.lopt()));
 					}
 
 					value = instantiateWithInitOptionValue((String) value, field.getType());
