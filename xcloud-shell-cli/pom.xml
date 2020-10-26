@@ -13,27 +13,19 @@
 	</parent>
 	<properties>
 		<java.version>1.8</java.version>
+		<jline.version>3.9.0</jline.version>
 		<final-name>shell-cli</final-name>
 	</properties>
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>com.wl4g</groupId>
-				<artifactId>xcloud-bom</artifactId>
-				<version>master</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 	<dependencies>
 		<dependency>
 			<groupId>com.wl4g</groupId>
 			<artifactId>xcloud-shell-common</artifactId>
+			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jline</groupId>
 			<artifactId>jline</artifactId>
+			<version>${jline.version}</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
