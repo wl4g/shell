@@ -1,6 +1,6 @@
 Shell Cli 一个基于SpringBoot Cloud的开源命令行工具，运行方式类似于spark-shell。
 
-English version goes [here](README_EN.md).
+English version goes [here](README.md).
 
 # 快速开始
 
