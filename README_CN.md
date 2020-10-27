@@ -4,10 +4,46 @@ English version goes [here](README_EN.md).
 
 # 快速开始
 
-## 源码编译
+## Maven依赖
+- Springboot项目只需依赖
 ```
-cd super-devops-shell
-mvn clean install -DskipTests 
+<!-- https://mvnrepository.com/artifact/com.wl4g/xcloud-shell-springboot -->
+<dependency>
+  <groupId>com.wl4g</groupId>
+  <artifactId>xcloud-shell-springboot</artifactId>
+  <version>2.0.0</version> <!-- 请使用最新版 -->
+</dependency>
+<!-- https://mvnrepository.com/artifact/com.wl4g/xcloud-shell-cli -->
+<dependency>
+  <groupId>com.wl4g</groupId>
+  <artifactId>xcloud-shell-cli</artifactId>
+  <version>2.0.0</version> <!-- 请使用最新版 -->
+</dependency>
+```
+
+- Java项目只需依赖
+```
+<!-- https://mvnrepository.com/artifact/com.wl4g/xcloud-shell-core -->
+<dependency>
+  <groupId>com.wl4g</groupId>
+  <artifactId>xcloud-shell-core</artifactId>
+  <version>2.0.0</version> <!-- 请使用最新版 -->
+</dependency>
+<!-- https://mvnrepository.com/artifact/com.wl4g/xcloud-shell-cli -->
+<dependency>
+  <groupId>com.wl4g</groupId>
+  <artifactId>xcloud-shell-cli</artifactId>
+  <version>2.0.0</version> <!-- 请使用最新版 -->
+</dependency>
+```
+
+## 新建命令处理类，示例：
+[完整示例](xcloud-shell-example/src/main/java/com/wl4g/shell/console/ExampleConsole.java)
+
+## 源码编译(若需二次开发)
+```
+cd xcloud-shell
+mvn clean install -DskipTests -T 2C
 ```
 
 ## 启动
@@ -54,6 +90,3 @@ java -Dservname=shell-example -Dprompt=my-shell -Dtimeout=5000 -jar shell-cli-ma
 - stacktrace/st    查看上一次异常的堆栈信息（若有）
 - help/he    使用帮助，用法如：help/help sumTest/sumTest --help/sumTest --he/  其中 sumTest 为一个求和的测试命令
 
-## 自定义命令
-
-[完整示例](super-devops-shell-example/src/main/java/com/wl4g/devops/shell/console/ExampleConsole.java)

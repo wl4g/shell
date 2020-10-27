@@ -4,10 +4,47 @@ Shell-cli is an open source command-line tool based on spring cloud service, whi
 
 # Quick start
 
-## Source code compilation
+## Maven dependencies
+- Springboot project only needs to rely on
 ```
-cd super-devops-shell
-mvn clean install -DskipTests 
+<!-- https://mvnrepository.com/artifact/com.wl4g/xcloud-shell-springboot -->
+<dependency>
+  <groupId>com.wl4g</groupId>
+  <artifactId>xcloud-shell-springboot</artifactId>
+  <version>2.0.0</version> <!-- Please use the latest version -->
+</dependency>
+<!-- https://mvnrepository.com/artifact/com.wl4g/xcloud-shell-cli -->
+<dependency>
+  <groupId>com.wl4g</groupId>
+  <artifactId>xcloud-shell-cli</artifactId>
+  <version>2.0.0</version> <!-- Please use the latest version -->
+</dependency>
+```
+
+- Java project only needs to rely on
+```
+<!-- https://mvnrepository.com/artifact/com.wl4g/xcloud-shell-core -->
+<dependency>
+  <groupId>com.wl4g</groupId>
+  <artifactId>xcloud-shell-core</artifactId>
+  <version>2.0.0</version> <!-- Please use the latest version -->
+</dependency>
+<!-- https://mvnrepository.com/artifact/com.wl4g/xcloud-shell-cli -->
+<dependency>
+  <groupId>com.wl4g</groupId>
+  <artifactId>xcloud-shell-cli</artifactId>
+  <version>2.0.0</version> <!-- Please use the latest version -->
+</dependency>
+```
+
+## 新建命令处理类，示例：
+[完整示例](xcloud-shell-example/src/main/java/com/wl4g/shell/console/ExampleConsole.java)
+
+
+## Source code Compilation
+```
+cd xcloud-shell
+mvn clean install -DskipTests -T 2C
 ```
 
 ### Way1
@@ -51,7 +88,4 @@ the time-out for waiting results to return (default: 180_000ms), and can print d
 - stacktrace/st    View stack information for the last exception (if any)
 - help/he    Use help, such as: help/help sumTest/sumTest --help/sumTest --he/ where sumTest is a summation test command
 
-## Custom commands
-
-[For perfect example](super-devops-shell-example/src/main/java/com/wl4g/devops/shell/console/ExampleConsole.java)
 	
