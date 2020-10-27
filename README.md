@@ -38,7 +38,7 @@ Shell-cli is an open source command-line tool based on spring cloud service, whi
 ```
 
 ## 新建命令处理类，示例：
-[完整示例](xcloud-shell-example/src/main/java/com/wl4g/shell/console/ExampleConsole.java)
+[完整示例](xcloud-shell-example/src/main/java/com/wl4g/shell/example/console/ExampleConsole.java)
 
 
 ## Source code Compilation

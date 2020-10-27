@@ -38,7 +38,7 @@ English version goes [here](README_EN.md).
 ```
 
 ## 新建命令处理类，示例：
-[完整示例](xcloud-shell-example/src/main/java/com/wl4g/shell/console/ExampleConsole.java)
+[完整示例](xcloud-shell-example/src/main/java/com/wl4g/shell/example/console/ExampleConsole.java)
 
 ## 源码编译(若需二次开发)
 ```
