@@ -308,6 +308,7 @@
 							</execution>
 						</executions>
 					</plugin>
+					<!-- https://help.sonatype.com/repomanager2/staging-releases/configuring-your-project-for-deployment -->
 					<plugin>
 						<groupId>org.sonatype.plugins</groupId>
 						<artifactId>nexus-staging-maven-plugin</artifactId>
