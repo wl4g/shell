@@ -18,7 +18,7 @@ package com.wl4g.shell.cli;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 
-import static com.wl4g.components.common.lang.Assert2.*;
+import static com.wl4g.component.common.lang.Assert2.*;
 import static org.apache.commons.lang3.StringUtils.*;
 
 import com.wl4g.shell.cli.config.CliShellConfiguration;

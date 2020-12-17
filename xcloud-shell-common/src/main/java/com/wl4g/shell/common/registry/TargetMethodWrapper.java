@@ -36,10 +36,10 @@ import com.wl4g.shell.common.cli.BuiltInCommand;
 import com.wl4g.shell.common.cli.HelpOption;
 import com.wl4g.shell.common.cli.HelpOptions;
 
-import static com.wl4g.components.common.lang.Assert2.*;
-import static com.wl4g.components.common.reflect.ReflectionUtils2.isGenericModifier;
-import static com.wl4g.components.common.reflect.TypeUtils2.isSimpleCollectionType;
-import static com.wl4g.components.common.reflect.TypeUtils2.isSimpleType;
+import static com.wl4g.component.common.lang.Assert2.*;
+import static com.wl4g.component.common.reflect.ReflectionUtils2.isGenericModifier;
+import static com.wl4g.component.common.reflect.TypeUtils2.isSimpleCollectionType;
+import static com.wl4g.component.common.reflect.TypeUtils2.isSimpleType;
 import static com.wl4g.shell.common.cli.BuiltInCommand.*;
 import static com.wl4g.shell.common.registry.TargetMethodWrapper.TargetParameter.*;
 import static java.lang.String.format;

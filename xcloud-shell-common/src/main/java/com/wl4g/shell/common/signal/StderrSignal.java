@@ -15,7 +15,7 @@
  */
 package com.wl4g.shell.common.signal;
 
-import static com.wl4g.components.common.lang.Assert2.*;
+import static com.wl4g.component.common.lang.Assert2.*;
 import static org.apache.commons.lang3.exception.ExceptionUtils.*;
 
 /**

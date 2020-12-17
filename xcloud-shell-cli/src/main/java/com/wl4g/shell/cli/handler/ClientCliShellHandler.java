@@ -44,7 +44,7 @@ import com.wl4g.shell.common.handler.SimpleSignalHandler;
 import com.wl4g.shell.common.registry.ShellHandlerRegistrar;
 import com.wl4g.shell.common.signal.*;
 
-import static com.wl4g.components.common.lang.Assert2.*;
+import static com.wl4g.component.common.lang.Assert2.*;
 import static com.wl4g.shell.cli.config.CliShellHandlerRegistrar.*;
 import static com.wl4g.shell.common.annotation.ShellOption.GNU_CMD_LONG;
 import static com.wl4g.shell.common.cli.BuiltInCommand.INTERNAL_HE;

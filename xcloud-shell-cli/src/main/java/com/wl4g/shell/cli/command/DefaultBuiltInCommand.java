@@ -41,8 +41,8 @@ import com.wl4g.shell.common.cli.BuiltInCommand;
 import com.wl4g.shell.common.cli.HelpOptions;
 import com.wl4g.shell.common.utils.LineUtils;
 
-import static com.wl4g.components.common.cli.StandardFormatter.getHelpFormat;
-import static com.wl4g.components.common.lang.Assert2.*;
+import static com.wl4g.component.common.cli.StandardFormatter.getHelpFormat;
+import static com.wl4g.component.common.lang.Assert2.*;
 
 /**
  * Default internal command.

@@ -32,13 +32,13 @@ import static java.lang.System.*;
 import static java.util.Locale.US;
 import static org.apache.commons.lang3.StringUtils.*;
 import static org.apache.commons.lang3.exception.ExceptionUtils.getRootCauseMessage;
-import static com.wl4g.components.common.lang.Assert2.*;
-import static com.wl4g.components.common.lang.SystemUtils2.LOCAL_PROCESS_ID;
-import static com.wl4g.components.common.reflect.ReflectionUtils2.doFullWithFields;
-import static com.wl4g.components.common.reflect.ReflectionUtils2.isGenericModifier;
+import static com.wl4g.component.common.lang.Assert2.*;
+import static com.wl4g.component.common.lang.SystemUtils2.LOCAL_PROCESS_ID;
+import static com.wl4g.component.common.reflect.ReflectionUtils2.doFullWithFields;
+import static com.wl4g.component.common.reflect.ReflectionUtils2.isGenericModifier;
 import static com.wl4g.shell.common.utils.ShellUtils.*;
 
-import com.wl4g.components.common.reflect.TypeUtils2;
+import com.wl4g.component.common.reflect.TypeUtils2;
 import com.wl4g.shell.common.annotation.ShellOption;
 import com.wl4g.shell.common.config.BaseShellProperties;
 import com.wl4g.shell.common.exception.ShellException;

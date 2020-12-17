@@ -33,8 +33,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
-import static com.wl4g.components.common.lang.Assert2.notNullOf;
-import static com.wl4g.components.common.lang.Assert2.state;
+import static com.wl4g.component.common.lang.Assert2.notNullOf;
+import static com.wl4g.component.common.lang.Assert2.state;
 import static com.wl4g.shell.common.signal.ChannelState.*;
 import static java.lang.String.format;
 import static java.lang.Thread.sleep;

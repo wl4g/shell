@@ -15,11 +15,11 @@
  */
 package com.wl4g.shell.common.utils;
 
-import com.wl4g.components.common.bean.BeanUtils2;
-import com.wl4g.components.common.reflect.ReflectionUtils2.FieldFilter;
+import com.wl4g.component.common.bean.BeanUtils2;
+import com.wl4g.component.common.reflect.ReflectionUtils2.FieldFilter;
 import com.wl4g.shell.common.annotation.ShellOption;
 
-import static com.wl4g.components.common.reflect.TypeUtils2.*;
+import static com.wl4g.component.common.reflect.TypeUtils2.*;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.StringUtils.*;

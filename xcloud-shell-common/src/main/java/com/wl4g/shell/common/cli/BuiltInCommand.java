@@ -22,7 +22,7 @@ import java.util.List;
 import com.wl4g.shell.common.annotation.ShellOption;
 
 import static org.apache.commons.lang3.StringUtils.*;
-import static com.wl4g.components.common.lang.Assert2.*;
+import static com.wl4g.component.common.lang.Assert2.*;
 import static com.wl4g.shell.common.utils.LineUtils.*;
 
 /**

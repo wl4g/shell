@@ -36,10 +36,10 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static com.wl4g.components.common.lang.Assert2.isTrue;
-import static com.wl4g.components.common.lang.Assert2.notNull;
-import static com.wl4g.components.common.lang.Exceptions.getRootCausesString;
-import static com.wl4g.components.common.log.SmartLoggerFactory.getLogger;
+import static com.wl4g.component.common.lang.Assert2.isTrue;
+import static com.wl4g.component.common.lang.Assert2.notNull;
+import static com.wl4g.component.common.lang.Exceptions.getRootCausesString;
+import static com.wl4g.component.common.log.SmartLoggerFactory.getLogger;
 import static com.wl4g.shell.common.annotation.ShellMethod.InterruptType.*;
 import static com.wl4g.shell.common.signal.ChannelState.*;
 import static java.lang.String.format;

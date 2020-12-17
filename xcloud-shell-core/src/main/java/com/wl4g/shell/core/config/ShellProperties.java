@@ -15,8 +15,8 @@
  */
 package com.wl4g.shell.core.config;
 
-import static com.wl4g.components.common.lang.Assert2.hasText;
-import static com.wl4g.components.common.lang.Assert2.isTrue;
+import static com.wl4g.component.common.lang.Assert2.hasText;
+import static com.wl4g.component.common.lang.Assert2.isTrue;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

@@ -21,7 +21,7 @@ import com.wl4g.shell.common.registry.ShellHandlerRegistrar;
 import java.io.*;
 import java.util.function.Function;
 
-import static com.wl4g.components.common.lang.Assert2.*;
+import static com.wl4g.component.common.lang.Assert2.*;
 
 /**
  * Shell signal handler

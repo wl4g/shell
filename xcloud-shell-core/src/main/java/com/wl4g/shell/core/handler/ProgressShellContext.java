@@ -15,16 +15,16 @@
  */
 package com.wl4g.shell.core.handler;
 
-import static com.wl4g.components.common.lang.Assert2.isTrue;
-import static com.wl4g.components.common.log.SmartLoggerFactory.getLogger;
+import static com.wl4g.component.common.lang.Assert2.isTrue;
+import static com.wl4g.component.common.log.SmartLoggerFactory.getLogger;
 import static java.lang.String.format;
 import static java.util.Objects.isNull;
 
 import java.util.Collection;
 
-import com.wl4g.components.common.annotation.Reserved;
-import com.wl4g.components.common.log.SmartLogger;
-import com.wl4g.components.common.math.Maths;
+import com.wl4g.component.common.annotation.Reserved;
+import com.wl4g.component.common.log.SmartLogger;
+import com.wl4g.component.common.math.Maths;
 import com.wl4g.shell.common.exception.ChannelShellException;
 import com.wl4g.shell.common.exception.NoSupportedInterruptShellException;
 import com.wl4g.shell.common.exception.ProgressShellException;

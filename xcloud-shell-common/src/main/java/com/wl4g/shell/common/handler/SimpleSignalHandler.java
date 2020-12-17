@@ -23,7 +23,7 @@ import java.net.Socket;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 
-import static com.wl4g.components.common.lang.Assert2.*;
+import static com.wl4g.component.common.lang.Assert2.*;
 import static java.lang.String.format;
 import static java.lang.System.err;
 import static org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace;

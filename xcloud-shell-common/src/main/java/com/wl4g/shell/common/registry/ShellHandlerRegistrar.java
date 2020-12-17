@@ -18,7 +18,7 @@ package com.wl4g.shell.common.registry;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 
-import static com.wl4g.components.common.lang.Assert2.*;
+import static com.wl4g.component.common.lang.Assert2.*;
 import static java.lang.reflect.Modifier.*;
 
 import java.util.Map;

@@ -15,8 +15,8 @@
  */
 package com.wl4g.shell.core;
 
-import static com.wl4g.components.common.lang.Assert2.hasTextOf;
-import static com.wl4g.components.common.lang.Assert2.notNullOf;
+import static com.wl4g.component.common.lang.Assert2.hasTextOf;
+import static com.wl4g.component.common.lang.Assert2.notNullOf;
 import static java.util.Objects.nonNull;
 
 import com.wl4g.shell.common.registry.ShellHandlerRegistrar;

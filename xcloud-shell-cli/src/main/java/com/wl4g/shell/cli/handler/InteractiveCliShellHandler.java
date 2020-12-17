@@ -31,7 +31,7 @@ import com.wl4g.shell.common.signal.Signal;
 import com.wl4g.shell.common.signal.StderrSignal;
 import com.wl4g.shell.common.signal.StdoutSignal;
 
-import static com.wl4g.components.common.cli.ProcessUtils.*;
+import static com.wl4g.component.common.cli.ProcessUtils.*;
 import static com.wl4g.shell.cli.config.CliShellHandlerRegistrar.getSingle;
 import static com.wl4g.shell.common.cli.BuiltInCommand.*;
 import static com.wl4g.shell.common.utils.ShellUtils.isTrue;
