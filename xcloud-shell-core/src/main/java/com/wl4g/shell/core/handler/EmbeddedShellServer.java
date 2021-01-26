@@ -41,6 +41,7 @@ import static java.lang.Thread.sleep;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
 import static org.apache.commons.lang3.exception.ExceptionUtils.*;
 
 /**
@@ -106,7 +107,7 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
 				log.error("Interrupting boss failure", e);
 			}
 
-			if (ss != null && !ss.isClosed()) {
+			if (nonNull(ss) && !ss.isClosed()) {
 				try {
 					ss.close();
 				} catch (IOException e) {
@@ -134,7 +135,7 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
 	 */
 	@Override
 	public void run() {
-		while (!boss.isInterrupted() && running.get()) {
+		while (running.get() && !boss.isInterrupted() && !ss.isClosed()) {
 			try {
 				// Receiving client socket(blocking)
 				Socket s = ss.accept();
@@ -162,7 +163,13 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
 				task.start();
 
 			} catch (Throwable e) {
-				log.warn("Shell boss thread shutdown. cause: {}", getStackTrace(e));
+				// e.g. Socket is closed
+				if ((!running.get() || boss.isInterrupted() || ss.isClosed()) && (e instanceof SocketException)
+						&& containsIgnoreCase(e.getMessage(), "closed")) {
+					log.warn("Shutdown shell server receiver.");
+				} else {
+					log.warn("Shell server receiving failure. {}", getStackTrace(e));
+				}
 			}
 		}
 	}
