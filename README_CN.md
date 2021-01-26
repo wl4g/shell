@@ -1,4 +1,4 @@
-Shell Cli 一个基于SpringBoot Cloud的开源命令行工具，运行方式类似于spark-shell。
+Shell Cli 一个基于 SpringBoot 的开源命令行工具，运行方式类似于spark-shell。
 
 English version goes [here](README.md).
 
