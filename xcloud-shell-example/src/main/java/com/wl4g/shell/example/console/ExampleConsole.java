@@ -31,7 +31,7 @@ import com.wl4g.shell.common.annotation.ShellMethod;
 import com.wl4g.shell.common.annotation.ShellMethod.InterruptType;
 import com.wl4g.shell.common.annotation.ShellOption;
 import com.wl4g.shell.core.handler.ProgressShellContext;
-import com.wl4g.shell.core.handler.ProgressShellContext.UserShellContextBindingTool;
+import com.wl4g.shell.core.handler.ProgressShellContext.UserShellContextBinders;
 import com.wl4g.shell.core.handler.SimpleShellContext;
 import com.wl4g.shell.example.console.args.MixedArgument;
 import com.wl4g.shell.example.console.args.SumArgument;
@@ -175,14 +175,14 @@ public class ExampleConsole {
             ProgressShellContext context) {
 
         // For testing the customization binding context
-        UserShellContextBindingTool.bind(context);
+        UserShellContextBinders.bind(context);
 
         // Call real execution
         doTask3(num, sleep);
     }
 
     private static void doTask3(int num, long sleep) {
-        ProgressShellContext context = UserShellContextBindingTool.get();
+        ProgressShellContext context = UserShellContextBinders.get();
         try {
             context.printf("Log3 print...", 0.05f);
             for (int i = 1; !context.isInterrupted() && i <= num; i++) {

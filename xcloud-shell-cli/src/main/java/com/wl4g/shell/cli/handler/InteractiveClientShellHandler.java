@@ -88,12 +88,6 @@ public class InteractiveClientShellHandler extends DefaultClientShellHandler {
                     notifyAll(); // see:MARK3
                 }
 
-                // Simulates interrupt events, for secondary
-                // development, it is convenient to debug in IDE environment.
-                if (DEBUG && "E".equals(trimToEmpty(stdin))) {
-                    throw new UserInterruptException(stdin);
-                }
-
                 // Payload command?
                 if (!isBlank(stdin) && !isPaused()) {
                     paused(); // Paused wait complete
@@ -101,21 +95,21 @@ public class InteractiveClientShellHandler extends DefaultClientShellHandler {
                     writeStdin(stdin); // Do send command
                 }
 
-                // e.g: when the last execution is not completed, the channel
-                // has been interrupted, need wakeup the console prompt to
-                // resume reading.
-                if (isPaused() && !isActive()) {
-                    wakeup();
-                }
+                // // e.g: when the last execution is not completed, the channel
+                // // has been interrupted, need wakeup the console prompt to
+                // // resume reading.
+                // if (isPaused() && !isActive()) {
+                // wakeup();
+                // }
             } catch (UserInterruptException e) { // e.g: Ctrl+C
-                // Last command completed, interrupt allowed
-                if (!isPaused()) {
+                // Last command is not completed, send interrupt signal
+                // stop gracefully
+                if (isPaused()) {
+                    writeStdin(new PreInterruptSignal(true));
+                } else {
+                    // Last command completed, interrupt allowed.
                     out.println(format("Command is cancelled. to exit please use: %s|%s|%s|%s", INTERNAL_EXIT, INTERNAL_EX,
                             INTERNAL_QUIT, INTERNAL_QU));
-                } else {
-                    // Last command is not completed, send interrupt signal
-                    // stop gracefully
-                    writeStdin(new PreInterruptSignal(true));
                 }
             } catch (Throwable e) {
                 printError(EMPTY, e);

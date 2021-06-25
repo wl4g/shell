@@ -15,15 +15,15 @@
  */
 package com.wl4g.shell.common.cli;
 
+import static com.wl4g.component.common.lang.Assert2.hasText;
+import static com.wl4g.shell.common.utils.LineUtils.clean;
+import static org.apache.commons.lang3.StringUtils.startsWithAny;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.wl4g.shell.common.annotation.ShellOption;
-
-import static org.apache.commons.lang3.StringUtils.*;
-import static com.wl4g.component.common.lang.Assert2.*;
-import static com.wl4g.shell.common.utils.LineUtils.*;
 
 /**
  * Internal built-in commands
@@ -34,133 +34,133 @@ import static com.wl4g.shell.common.utils.LineUtils.*;
  */
 public abstract class BuiltInCommand {
 
-	/**
-	 * Default long help method suffix.
-	 */
-	final public static String INTERNAL_HELP = "help";
+    /**
+     * Default long help method suffix.
+     */
+    public final static String INTERNAL_HELP = "help";
 
-	/**
-	 * Default short help method suffix.
-	 */
-	final public static String INTERNAL_HE = "he";
+    /**
+     * Default short help method suffix.
+     */
+    public final static String INTERNAL_HE = "he";
 
-	/**
-	 * Default long exit method suffix.
-	 */
-	final public static String INTERNAL_EXIT = "exit";
+    /**
+     * Default long exit method suffix.
+     */
+    public final static String INTERNAL_EXIT = "exit";
 
-	/**
-	 * Default short quit method suffix.
-	 */
-	final public static String INTERNAL_QUIT = "quit";
+    /**
+     * Default short quit method suffix.
+     */
+    public final static String INTERNAL_QUIT = "quit";
 
-	/**
-	 * Default short quit method suffix.
-	 */
-	final public static String INTERNAL_QU = "qu";
+    /**
+     * Default short quit method suffix.
+     */
+    public final static String INTERNAL_QU = "qu";
 
-	/**
-	 * Default short exit method suffix.
-	 */
-	final public static String INTERNAL_EX = "ex";
+    /**
+     * Default short exit method suffix.
+     */
+    public final static String INTERNAL_EX = "ex";
 
-	/**
-	 * Default long history method suffix.
-	 */
-	final public static String INTERNAL_HISTORY = "history";
+    /**
+     * Default long history method suffix.
+     */
+    public final static String INTERNAL_HISTORY = "history";
 
-	/**
-	 * Default short history method suffix.
-	 */
-	final public static String INTERNAL_HIS = "his";
+    /**
+     * Default short history method suffix.
+     */
+    public final static String INTERNAL_HIS = "his";
 
-	/**
-	 * Default long clear method suffix.
-	 */
-	final public static String INTERNAL_CLEAR = "clear";
+    /**
+     * Default long clear method suffix.
+     */
+    public final static String INTERNAL_CLEAR = "clear";
 
-	/**
-	 * Default short clear method suffix.
-	 */
-	final public static String INTERNAL_CLS = "cls";
+    /**
+     * Default short clear method suffix.
+     */
+    public final static String INTERNAL_CLS = "cls";
 
-	/**
-	 * Default long stacktrace method suffix.
-	 */
-	final public static String INTERNAL_STACKTRACE = "stacktrace";
+    /**
+     * Default long stacktrace method suffix.
+     */
+    public final static String INTERNAL_STACKTRACE = "stacktrace";
 
-	/**
-	 * Default short stacktrace method suffix.
-	 */
-	final public static String INTERNAL_ST = "st";
+    /**
+     * Default short stacktrace method suffix.
+     */
+    public final static String INTERNAL_ST = "st";
 
-	final private static List<String> CMDS = new ArrayList<>();
+    final private static List<String> CMDS = new ArrayList<>();
 
-	static {
-		Field[] fields = BuiltInCommand.class.getDeclaredFields();
-		for (Field f : fields) {
-			f.setAccessible(true);
-			if (startsWithAny(f.getName(), "INTERNAL")) {
-				try {
-					CMDS.add((String) f.get(null));
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
+    static {
+        Field[] fields = BuiltInCommand.class.getDeclaredFields();
+        for (Field f : fields) {
+            f.setAccessible(true);
+            if (startsWithAny(f.getName(), "INTERNAL")) {
+                try {
+                    CMDS.add((String) f.get(null));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
-	/**
-	 * Check contains defineKey whether it is naming conflict with built-in
-	 * commands
-	 * 
-	 * @param defineKey
-	 * @return
-	 */
-	final public static boolean contains(String... defineKeys) {
-		for (String key : defineKeys) {
-			if (CMDS.contains(key) || CMDS.contains(clean(key))) {
-				return true;
-			}
-		}
-		return false;
-	}
+    /**
+     * Check contains defineKey whether it is naming conflict with built-in
+     * commands
+     * 
+     * @param defineKey
+     * @return
+     */
+    public final static boolean contains(String... defineKeys) {
+        for (String key : defineKeys) {
+            if (CMDS.contains(key) || CMDS.contains(clean(key))) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	/**
-	 * Get GNU long option
-	 * 
-	 * @param defineKey
-	 * @return
-	 */
-	final public static String getGNULong(String defineKey) {
-		hasText(defineKey, "defineKey must not be emtpy");
-		return ShellOption.GNU_CMD_LONG + defineKey;
-	}
+    /**
+     * Get GNU long option
+     * 
+     * @param defineKey
+     * @return
+     */
+    public final static String getGNULong(String defineKey) {
+        hasText(defineKey, "defineKey must not be emtpy");
+        return ShellOption.GNU_CMD_LONG + defineKey;
+    }
 
-	/**
-	 * Get GNU short option
-	 * 
-	 * @param defineKey
-	 * @return
-	 */
-	final public static String getGNUShort(String defineKey) {
-		hasText(defineKey, "defineKey must not be emtpy");
-		return ShellOption.GNU_CMD_SHORT + defineKey;
-	}
+    /**
+     * Get GNU short option
+     * 
+     * @param defineKey
+     * @return
+     */
+    public final static String getGNUShort(String defineKey) {
+        hasText(defineKey, "defineKey must not be emtpy");
+        return ShellOption.GNU_CMD_SHORT + defineKey;
+    }
 
-	/**
-	 * To internal command option all.
-	 * 
-	 * @param defineKey
-	 * @return
-	 */
-	final public static String asCmdsString() {
-		StringBuffer cmds = new StringBuffer();
-		for (String cmd : CMDS) {
-			cmds.append(cmd);
-			cmds.append(", ");
-		}
-		return cmds.toString();
-	}
+    /**
+     * To internal command option all.
+     * 
+     * @param defineKey
+     * @return
+     */
+    public final static String asCmdsString() {
+        StringBuffer cmds = new StringBuffer();
+        for (String cmd : CMDS) {
+            cmds.append(cmd);
+            cmds.append(", ");
+        }
+        return cmds.toString();
+    }
 
 }

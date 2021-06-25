@@ -141,11 +141,11 @@ public class ProgressShellContext extends BaseShellContext {
 	 * @version 2020年2月2日 v1.0.0
 	 * @see
 	 */
-	public static final class UserShellContextBindingTool {
+	public static final class UserShellContextBinders {
 
-		private static final SmartLogger log = getLogger(UserShellContextBindingTool.class);
+		private static final SmartLogger log = getLogger(UserShellContextBinders.class);
 
-		private UserShellContextBindingTool() {
+		private UserShellContextBinders() {
 		}
 
 		/**
