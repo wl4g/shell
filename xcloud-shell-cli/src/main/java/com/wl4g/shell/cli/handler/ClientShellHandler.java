@@ -16,13 +16,13 @@
 package com.wl4g.shell.cli.handler;
 
 /**
- * {@link CliShellHandler}
+ * {@link ClientShellHandler}
  *
  * @author Wangl.sir <wanglsir@gmail.com, 983708408@qq.com>
  * @version v1.0 2018-08-10
  * @since
  */
-public interface CliShellHandler {
+public interface ClientShellHandler {
 
 	/**
 	 * Running

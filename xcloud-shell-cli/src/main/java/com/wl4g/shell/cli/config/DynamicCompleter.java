@@ -43,9 +43,9 @@ public class DynamicCompleter implements Completer {
 	/**
 	 * Shell bean registry.
 	 */
-	final private CliShellHandlerRegistrar registry;
+	final private ClientShellHandlerRegistrar registry;
 
-	public DynamicCompleter(CliShellHandlerRegistrar registry) {
+	public DynamicCompleter(ClientShellHandlerRegistrar registry) {
 		notNull(registry, "registry is null, please check configure");
 		this.registry = registry;
 	}

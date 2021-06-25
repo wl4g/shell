@@ -16,7 +16,7 @@
 package com.wl4g;
 
 import com.wl4g.shell.cli.RunnerBuilder;
-import com.wl4g.shell.cli.handler.InteractiveCliShellHandler;
+import com.wl4g.shell.cli.handler.InteractiveClientShellHandler;
 
 /**
  * Shell bootstrap program for client.
@@ -46,7 +46,7 @@ public class ShellBootstrap {
 	 *      start for Github</a>
 	 */
 	public static void main(String[] args) {
-		RunnerBuilder.builder().provider(InteractiveCliShellHandler.class).build().run(args);
+		RunnerBuilder.builder().provider(InteractiveClientShellHandler.class).build().run(args);
 	}
 
 }

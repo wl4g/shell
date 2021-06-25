@@ -26,7 +26,7 @@ import org.springframework.core.env.Environment;
 
 import com.wl4g.component.common.log.SmartLogger;
 import com.wl4g.shell.core.EmbeddedShellServerBuilder;
-import com.wl4g.shell.core.config.ShellProperties;
+import com.wl4g.shell.core.config.ServerShellProperties;
 import com.wl4g.shell.core.handler.EmbeddedShellServer;
 import com.wl4g.shell.springboot.config.AnnotationShellHandlerRegistrar;
 
@@ -41,8 +41,8 @@ public class EmbeddedShellServerRunner implements ApplicationRunner, DisposableB
 
 	protected final SmartLogger log = getLogger(getClass());
 
-	/** {@link ShellProperties} */
-	protected final ShellProperties config;
+	/** {@link ServerShellProperties} */
+	protected final ServerShellProperties config;
 
 	/** {@link AnnotationShellHandlerRegistrar} */
 	protected final AnnotationShellHandlerRegistrar registrar;
@@ -54,7 +54,7 @@ public class EmbeddedShellServerRunner implements ApplicationRunner, DisposableB
 	/** {@link EmbeddedShellServer} */
 	protected EmbeddedShellServer shellServer;
 
-	public EmbeddedShellServerRunner(ShellProperties config, AnnotationShellHandlerRegistrar registrar) {
+	public EmbeddedShellServerRunner(ServerShellProperties config, AnnotationShellHandlerRegistrar registrar) {
 		notNullOf(config, "config");
 		notNullOf(registrar, "registrar");
 		this.config = config;

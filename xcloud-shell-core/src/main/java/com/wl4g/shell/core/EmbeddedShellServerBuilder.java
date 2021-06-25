@@ -20,7 +20,7 @@ import static com.wl4g.component.common.lang.Assert2.notNullOf;
 import static java.util.Objects.nonNull;
 
 import com.wl4g.shell.common.registry.ShellHandlerRegistrar;
-import com.wl4g.shell.core.config.ShellProperties;
+import com.wl4g.shell.core.config.ServerShellProperties;
 import com.wl4g.shell.core.handler.EmbeddedShellServer;
 
 /**
@@ -35,8 +35,8 @@ public class EmbeddedShellServerBuilder {
 	/** Shell application name */
 	private String appName = "defaultShellApplication";
 
-	/** {@link ShellProperties} */
-	private ShellProperties config = new ShellProperties();
+	/** {@link ServerShellProperties} */
+	private ServerShellProperties config = new ServerShellProperties();
 
 	/** {@link ShellHandlerRegistrar} */
 	private ShellHandlerRegistrar registrar = new ShellHandlerRegistrar();
@@ -66,12 +66,12 @@ public class EmbeddedShellServerBuilder {
 	}
 
 	/**
-	 * Sets shell configuration of {@link ShellProperties}.
+	 * Sets shell configuration of {@link ServerShellProperties}.
 	 * 
 	 * @param appName
 	 * @return
 	 */
-	public EmbeddedShellServerBuilder withConfiguration(ShellProperties config) {
+	public EmbeddedShellServerBuilder withConfiguration(ServerShellProperties config) {
 		notNullOf(config, "config");
 		this.config = config;
 		return this;

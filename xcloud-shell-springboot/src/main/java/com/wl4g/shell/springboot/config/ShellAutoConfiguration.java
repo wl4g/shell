@@ -20,7 +20,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
-import com.wl4g.shell.core.config.ShellProperties;
+import com.wl4g.shell.core.config.ServerShellProperties;
 import com.wl4g.shell.core.handler.EmbeddedShellServer;
 import com.wl4g.shell.springboot.EmbeddedShellServerRunner;
 
@@ -35,8 +35,8 @@ public class ShellAutoConfiguration {
 
 	@Bean
 	@ConfigurationProperties(prefix = "spring.cloud.devops.shell")
-	public ShellProperties shellProperties() {
-		return new ShellProperties();
+	public ServerShellProperties shellProperties() {
+		return new ServerShellProperties();
 	}
 
 	@Bean
@@ -46,13 +46,13 @@ public class ShellAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean
-	public EmbeddedShellServer embeddedShellServer(@Value("${spring.application.name}") String appName, ShellProperties config,
+	public EmbeddedShellServer embeddedShellServer(@Value("${spring.application.name}") String appName, ServerShellProperties config,
 			AnnotationShellHandlerRegistrar registrar) {
 		return new EmbeddedShellServer(config, appName, registrar);
 	}
 
 	@Bean
-	public EmbeddedShellServerRunner embeddedShellServerRunner(ShellProperties config,
+	public EmbeddedShellServerRunner embeddedShellServerRunner(ServerShellProperties config,
 			AnnotationShellHandlerRegistrar registrar) {
 		return new EmbeddedShellServerRunner(config, registrar);
 	}

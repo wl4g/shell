@@ -15,13 +15,14 @@
  */
 package com.wl4g.shell.common.handler;
 
-import com.wl4g.shell.common.exception.ChannelShellException;
-import com.wl4g.shell.common.registry.ShellHandlerRegistrar;
+import static com.wl4g.component.common.lang.Assert2.notNull;
 
-import java.io.*;
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.function.Function;
 
-import static com.wl4g.component.common.lang.Assert2.*;
+import com.wl4g.shell.common.exception.ChannelShellException;
+import com.wl4g.shell.common.registry.ShellHandlerRegistrar;
 
 /**
  * Shell signal handler
@@ -32,45 +33,45 @@ import static com.wl4g.component.common.lang.Assert2.*;
  */
 public abstract class SignalHandler implements Runnable, Closeable {
 
-	/**
-	 * Local shell component registry.
-	 */
-	final protected ShellHandlerRegistrar registrar;
+    /**
+     * Local shell component registry.
+     */
+    protected final ShellHandlerRegistrar registrar;
 
-	/**
-	 * Callback function
-	 */
-	final protected Function<String, Object> function;
+    /**
+     * Callback function
+     */
+    protected final Function<String, Object> function;
 
-	public SignalHandler(ShellHandlerRegistrar registrar, Function<String, Object> function) {
-		notNull(function, "Function is null, please check configure");
-		notNull(registrar, "Registry must not be null");
-		this.registrar = registrar;
-		this.function = function;
-	}
+    public SignalHandler(ShellHandlerRegistrar registrar, Function<String, Object> function) {
+        notNull(function, "Function is null, please check configure");
+        notNull(registrar, "Registry must not be null");
+        this.registrar = registrar;
+        this.function = function;
+    }
 
-	/**
-	 * Write and flush echo to client
-	 * 
-	 * @param message
-	 * @throws IOException
-	 */
-	public abstract void writeFlush(Object message) throws ChannelShellException, IOException;
+    /**
+     * Write and flush echo to client
+     * 
+     * @param message
+     * @throws IOException
+     */
+    public abstract void writeFlush(Object message) throws ChannelShellException, IOException;
 
-	/**
-	 * Is connect active
-	 * 
-	 * @return
-	 */
-	public abstract boolean isActive();
+    /**
+     * Is connect active
+     * 
+     * @return
+     */
+    public abstract boolean isActive();
 
-	@Override
-	public abstract int hashCode();
+    @Override
+    public abstract int hashCode();
 
-	@Override
-	public abstract boolean equals(Object obj);
+    @Override
+    public abstract boolean equals(Object obj);
 
-	@Override
-	public abstract String toString();
+    @Override
+    public abstract String toString();
 
 }

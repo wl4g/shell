@@ -34,8 +34,8 @@ import org.jline.utils.InfoCmp.Capability;
 import static org.apache.commons.lang3.SystemUtils.*;
 import static org.apache.commons.lang3.StringUtils.*;
 
-import com.wl4g.shell.cli.config.CliShellHandlerRegistrar;
-import com.wl4g.shell.cli.handler.ClientCliShellHandler;
+import com.wl4g.shell.cli.config.ClientShellHandlerRegistrar;
+import com.wl4g.shell.cli.handler.DefaultClientShellHandler;
 import com.wl4g.shell.common.annotation.ShellMethod;
 import com.wl4g.shell.common.cli.BuiltInCommand;
 import com.wl4g.shell.common.cli.HelpOptions;
@@ -66,17 +66,17 @@ public class DefaultBuiltInCommand extends BuiltInCommand {
 	/**
 	 * Shell handler bean registry
 	 */
-	final protected CliShellHandlerRegistrar registry;
+	final protected ClientShellHandlerRegistrar registry;
 
 	/**
 	 * Line process runner.
 	 */
-	final protected ClientCliShellHandler runner;
+	final protected DefaultClientShellHandler runner;
 
-	public DefaultBuiltInCommand(ClientCliShellHandler runner) {
+	public DefaultBuiltInCommand(DefaultClientShellHandler runner) {
 		notNull(runner, "runner is null, please check configure");
 		this.runner = runner;
-		this.registry = (CliShellHandlerRegistrar) runner.getRegistrar();
+		this.registry = (ClientShellHandlerRegistrar) runner.getRegistrar();
 		notNull(registry, "Registry must not be null");
 	}
 
@@ -116,7 +116,7 @@ public class DefaultBuiltInCommand extends BuiltInCommand {
 	}
 
 	/**
-	 * See:[{@link ClientCliShellHandler#submit}.MARK0]
+	 * See:[{@link DefaultClientShellHandler#submit}.MARK0]
 	 * 
 	 * @return
 	 */

@@ -30,7 +30,7 @@ import com.wl4g.shell.common.config.BaseShellProperties;
  * @version v1.0 2019年5月1日
  * @since
  */
-public class ShellProperties extends BaseShellProperties {
+public class ServerShellProperties extends BaseShellProperties {
 
 	private static final long serialVersionUID = -24798955162679115L;
 

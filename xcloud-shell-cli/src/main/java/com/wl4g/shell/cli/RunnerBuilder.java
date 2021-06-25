@@ -21,8 +21,8 @@ import java.net.URL;
 import static com.wl4g.component.common.lang.Assert2.*;
 import static org.apache.commons.lang3.StringUtils.*;
 
-import com.wl4g.shell.cli.config.CliShellConfiguration;
-import com.wl4g.shell.cli.handler.CliShellHandler;
+import com.wl4g.shell.cli.config.ClientShellConfiguration;
+import com.wl4g.shell.cli.handler.ClientShellHandler;
 
 /**
  * Runner builder
@@ -35,7 +35,7 @@ public abstract class RunnerBuilder {
 
 	private String conf;
 
-	private Class<? extends CliShellHandler> provider;
+	private Class<? extends ClientShellHandler> provider;
 
 	private RunnerBuilder() {
 	}
@@ -51,22 +51,22 @@ public abstract class RunnerBuilder {
 		return this;
 	}
 
-	public RunnerBuilder provider(Class<? extends CliShellHandler> provider) {
+	public RunnerBuilder provider(Class<? extends ClientShellHandler> provider) {
 		notNull(provider, "provider is null, please check configure");
 		this.provider = provider;
 		return this;
 	}
 
-	public CliShellHandler build() {
+	public ClientShellHandler build() {
 		try {
-			CliShellConfiguration config = CliShellConfiguration.create();
+			ClientShellConfiguration config = ClientShellConfiguration.create();
 			if (isNotBlank(conf)) {
-				config = CliShellConfiguration.create(new URL("file://" + conf));
+				config = ClientShellConfiguration.create(new URL("file://" + conf));
 			}
 			notNull(provider, "provider is null, please check configure");
 			notNull(config, "config is null, please check configure");
 
-			Constructor<? extends CliShellHandler> constr = provider.getConstructor(CliShellConfiguration.class);
+			Constructor<? extends ClientShellHandler> constr = provider.getConstructor(ClientShellConfiguration.class);
 			return constr.newInstance(new Object[] { config });
 		} catch (Exception e) {
 			throw new IllegalStateException(e);

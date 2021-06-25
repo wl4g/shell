@@ -37,7 +37,7 @@ import com.wl4g.shell.common.config.BaseShellProperties;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "configuration")
-public class CliShellConfiguration extends BaseShellProperties {
+public class ClientShellConfiguration extends BaseShellProperties {
 
 	final private static long serialVersionUID = -24798955162679115L;
 
@@ -72,13 +72,13 @@ public class CliShellConfiguration extends BaseShellProperties {
 		this.banner = banner;
 	}
 
-	public static CliShellConfiguration create() {
-		return create(CliShellConfiguration.class.getClassLoader().getResource(DEFAULT_CONFIG));
+	public static ClientShellConfiguration create() {
+		return create(ClientShellConfiguration.class.getClassLoader().getResource(DEFAULT_CONFIG));
 	}
 
-	public static CliShellConfiguration create(URL url) {
+	public static ClientShellConfiguration create(URL url) {
 		try {
-			return Util.read(url, BaseShellProperties.class, CliShellConfiguration.class);
+			return Util.read(url, BaseShellProperties.class, ClientShellConfiguration.class);
 		} catch (Exception e) {
 			throw new IllegalStateException(e);
 		}

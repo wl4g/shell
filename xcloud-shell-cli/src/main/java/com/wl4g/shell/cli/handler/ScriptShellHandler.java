@@ -19,7 +19,7 @@ import static java.lang.System.err;
 import static org.apache.commons.lang3.exception.ExceptionUtils.*;
 import org.apache.commons.lang3.StringUtils;
 
-import com.wl4g.shell.cli.config.CliShellConfiguration;
+import com.wl4g.shell.cli.config.ClientShellConfiguration;
 
 /**
  * Script command line(client) shell handler.
@@ -28,9 +28,9 @@ import com.wl4g.shell.cli.config.CliShellConfiguration;
  * @version v1.0 2019年4月14日
  * @since
  */
-public class ScriptCliShellHandler extends ClientCliShellHandler {
+public class ScriptShellHandler extends DefaultClientShellHandler {
 
-	public ScriptCliShellHandler(CliShellConfiguration config) {
+	public ScriptShellHandler(ClientShellConfiguration config) {
 		super(config);
 	}
 
