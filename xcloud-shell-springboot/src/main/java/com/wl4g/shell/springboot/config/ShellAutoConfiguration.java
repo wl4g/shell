@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Bean;
 
 import com.wl4g.shell.core.config.ServerShellProperties;
 import com.wl4g.shell.core.handler.EmbeddedShellServer;
-import com.wl4g.shell.springboot.EmbeddedShellServerRunner;
+import com.wl4g.shell.springboot.EmbeddedShellServerStartup;
 
 /**
  * Shell component services auto configuration
@@ -33,28 +33,28 @@ import com.wl4g.shell.springboot.EmbeddedShellServerRunner;
  */
 public class ShellAutoConfiguration {
 
-	@Bean
-	@ConfigurationProperties(prefix = "spring.cloud.devops.shell")
-	public ServerShellProperties shellProperties() {
-		return new ServerShellProperties();
-	}
+    @Bean
+    @ConfigurationProperties(prefix = "spring.xcloud.shell")
+    public ServerShellProperties serverShellProperties() {
+        return new ServerShellProperties();
+    }
 
-	@Bean
-	public AnnotationShellHandlerRegistrar annotationShellHandlerRegistrar() {
-		return new AnnotationShellHandlerRegistrar();
-	}
+    @Bean
+    public AnnotationShellHandlerRegistrar annotationShellHandlerRegistrar() {
+        return new AnnotationShellHandlerRegistrar();
+    }
 
-	@Bean
-	@ConditionalOnMissingBean
-	public EmbeddedShellServer embeddedShellServer(@Value("${spring.application.name}") String appName, ServerShellProperties config,
-			AnnotationShellHandlerRegistrar registrar) {
-		return new EmbeddedShellServer(config, appName, registrar);
-	}
+    @Bean
+    @ConditionalOnMissingBean
+    public EmbeddedShellServer embeddedShellServer(@Value("${spring.application.name}") String appName,
+            ServerShellProperties config, AnnotationShellHandlerRegistrar registrar) {
+        return new EmbeddedShellServer(config, appName, registrar);
+    }
 
-	@Bean
-	public EmbeddedShellServerRunner embeddedShellServerRunner(ServerShellProperties config,
-			AnnotationShellHandlerRegistrar registrar) {
-		return new EmbeddedShellServerRunner(config, registrar);
-	}
+    @Bean
+    public EmbeddedShellServerStartup embeddedShellServerStartup(ServerShellProperties config,
+            AnnotationShellHandlerRegistrar registrar) {
+        return new EmbeddedShellServerStartup(config, registrar);
+    }
 
 }

@@ -23,6 +23,9 @@ import java.net.UnknownHostException;
 
 import com.wl4g.shell.common.config.BaseShellProperties;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Shell properties configuration
  * 
@@ -31,57 +34,76 @@ import com.wl4g.shell.common.config.BaseShellProperties;
  * @since
  */
 public class ServerShellProperties extends BaseShellProperties {
+    private static final long serialVersionUID = -24798955162679115L;
 
-	private static final long serialVersionUID = -24798955162679115L;
+    /**
+     * listening TCP backlog
+     */
+    private int backlog = 16;
 
-	/**
-	 * listening TCP backlog
-	 */
-	private int backlog = 16;
+    /**
+     * Listening server socket bind address
+     */
+    private String bindAddr = "127.0.0.1";
 
-	/**
-	 * Listening server socket bind address
-	 */
-	private String bindAddr = "127.0.0.1";
+    /**
+     * Maximum number of concurrent client connections.
+     */
+    private int maxClients = 3;
 
-	/**
-	 * Maximum number of concurrent client connections.
-	 */
-	private int maxClients = 3;
+    /**
+     * Authetication configuration.
+     */
+    private AuthInfo auth = new AuthInfo();
 
-	public int getBacklog() {
-		return backlog;
-	}
+    public int getBacklog() {
+        return backlog;
+    }
 
-	public void setBacklog(int backlog) {
-		isTrue(backlog > 0, String.format("backlog must greater than 0, actual is %s", backlog));
-		this.backlog = backlog;
-	}
+    public void setBacklog(int backlog) {
+        isTrue(backlog > 0, String.format("backlog must greater than 0, actual is %s", backlog));
+        this.backlog = backlog;
+    }
 
-	public String getBindAddr() {
-		return bindAddr;
-	}
+    public String getBindAddr() {
+        return bindAddr;
+    }
 
-	public InetAddress getInetBindAddr() {
-		try {
-			return InetAddress.getByName(getBindAddr());
-		} catch (UnknownHostException e) {
-			throw new RuntimeException(e);
-		}
-	}
+    public InetAddress getInetBindAddr() {
+        try {
+            return InetAddress.getByName(getBindAddr());
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-	public void setBindAddr(String bindAddr) {
-		hasText(bindAddr, "binAddr is emtpy, please check configure");
-		this.bindAddr = bindAddr;
-	}
+    public void setBindAddr(String bindAddr) {
+        hasText(bindAddr, "binAddr is emtpy, please check configure");
+        this.bindAddr = bindAddr;
+    }
 
-	public int getMaxClients() {
-		return maxClients;
-	}
+    public int getMaxClients() {
+        return maxClients;
+    }
 
-	public void setMaxClients(int maxClients) {
-		isTrue(maxClients > 0, String.format("maxClients must greater than 0, actual is %s", backlog));
-		this.maxClients = maxClients;
-	}
+    public void setMaxClients(int maxClients) {
+        isTrue(maxClients > 0, String.format("maxClients must greater than 0, actual is %s", backlog));
+        this.maxClients = maxClients;
+    }
+
+    public AuthInfo getAuth() {
+        return auth;
+    }
+
+    public void setAuth(AuthInfo auth) {
+        this.auth = auth;
+    }
+
+    @Getter
+    @Setter
+    public static class AuthInfo {
+        private boolean enabled;
+        private String basic;
+    }
 
 }

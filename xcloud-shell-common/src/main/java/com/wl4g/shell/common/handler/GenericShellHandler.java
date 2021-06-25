@@ -21,6 +21,7 @@ import static com.wl4g.component.common.lang.Assert2.isTrue;
 import static com.wl4g.component.common.lang.Assert2.notEmpty;
 import static com.wl4g.component.common.lang.Assert2.notNull;
 import static com.wl4g.component.common.lang.Assert2.notNullOf;
+import static com.wl4g.component.common.lang.Exceptions.getRootCauses;
 import static com.wl4g.component.common.lang.SystemUtils2.LOCAL_PROCESS_ID;
 import static com.wl4g.component.common.reflect.ReflectionUtils2.doFullWithFields;
 import static com.wl4g.component.common.reflect.ReflectionUtils2.isGenericModifier;
@@ -93,7 +94,6 @@ public abstract class GenericShellHandler implements ShellHandler {
         if (isEmpty(line)) {
             return null;
         }
-
         try {
             // Invocation
             Object output = doProcess(resolveCommands(line));
@@ -103,7 +103,7 @@ public abstract class GenericShellHandler implements ShellHandler {
 
             return output;
         } catch (Exception e) {
-            throw new ShellException(e);
+            throw new ShellException(getRootCauses(e));
         }
     }
 

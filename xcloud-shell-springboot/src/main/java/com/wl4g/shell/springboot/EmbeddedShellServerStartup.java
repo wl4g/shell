@@ -31,51 +31,45 @@ import com.wl4g.shell.core.handler.EmbeddedShellServer;
 import com.wl4g.shell.springboot.config.AnnotationShellHandlerRegistrar;
 
 /**
- * {@link EmbeddedShellServerRunner}
+ * {@link EmbeddedShellServerStartup}
  *
  * @author Wangl.sir <wanglsir@gmail.com, 983708408@qq.com>
  * @version v1.0 2020-08-10
  * @since
  */
-public class EmbeddedShellServerRunner implements ApplicationRunner, DisposableBean {
+public class EmbeddedShellServerStartup implements ApplicationRunner, DisposableBean {
+    protected final SmartLogger log = getLogger(getClass());
 
-	protected final SmartLogger log = getLogger(getClass());
+    /** {@link ServerShellProperties} */
+    protected final ServerShellProperties config;
 
-	/** {@link ServerShellProperties} */
-	protected final ServerShellProperties config;
+    /** {@link AnnotationShellHandlerRegistrar} */
+    protected final AnnotationShellHandlerRegistrar registrar;
 
-	/** {@link AnnotationShellHandlerRegistrar} */
-	protected final AnnotationShellHandlerRegistrar registrar;
+    /** {@link Environment} */
+    protected @Autowired Environment environment;
 
-	/** {@link Environment} */
-	@Autowired
-	protected Environment environment;
+    /** {@link EmbeddedShellServer} */
+    protected EmbeddedShellServer shellServer;
 
-	/** {@link EmbeddedShellServer} */
-	protected EmbeddedShellServer shellServer;
+    public EmbeddedShellServerStartup(ServerShellProperties config, AnnotationShellHandlerRegistrar registrar) {
+        this.config = notNullOf(config, "config");
+        this.registrar = notNullOf(registrar, "registrar");
+    }
 
-	public EmbeddedShellServerRunner(ServerShellProperties config, AnnotationShellHandlerRegistrar registrar) {
-		notNullOf(config, "config");
-		notNullOf(registrar, "registrar");
-		this.config = config;
-		this.registrar = registrar;
-	}
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        log.info("Shell server init starting on {} ...", config.getBeginPort());
 
-	@Override
-	public void run(ApplicationArguments args) throws Exception {
-		log.info("Shell server init starting on {} ...", config.getBeginPort());
+        this.shellServer = EmbeddedShellServerBuilder.newBuilder()
+                .withAppName(environment.getRequiredProperty("spring.application.name")).withConfiguration(config)
+                .withRegistrar(registrar).build();
+        this.shellServer.start();
+    }
 
-		this.shellServer = EmbeddedShellServerBuilder.newBuilder()
-				.withAppName(environment.getRequiredProperty("spring.application.name"))
-				.withConfiguration(config)
-				.withRegistrar(registrar)
-				.build();
-		this.shellServer.start();
-	}
-
-	@Override
-	public void destroy() throws Exception {
-		this.shellServer.close();
-	}
+    @Override
+    public void destroy() throws Exception {
+        this.shellServer.close();
+    }
 
 }
