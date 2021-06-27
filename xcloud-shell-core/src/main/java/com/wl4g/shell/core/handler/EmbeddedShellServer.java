@@ -15,6 +15,7 @@
  */
 package com.wl4g.shell.core.handler;
 
+import static com.wl4g.component.common.lang.Assert2.isInstanceOf;
 import static com.wl4g.component.common.lang.Assert2.notNullOf;
 import static com.wl4g.component.common.lang.Assert2.state;
 import static com.wl4g.shell.common.signal.ChannelState.RUNNING;
@@ -24,6 +25,7 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
+import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 import static org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace;
 
 import java.io.EOFException;
@@ -34,6 +36,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -42,12 +45,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
+import com.wl4g.shell.common.exception.UnAuthenticationShellException;
 import com.wl4g.shell.common.handler.BaseSignalHandler;
 import com.wl4g.shell.common.registry.ShellHandlerRegistrar;
 import com.wl4g.shell.common.signal.AckInterruptSignal;
 import com.wl4g.shell.common.signal.AskInterruptSignal;
+import com.wl4g.shell.common.signal.LoginSignal;
 import com.wl4g.shell.common.signal.MetaSignal;
 import com.wl4g.shell.common.signal.PreInterruptSignal;
+import com.wl4g.shell.common.signal.PreLoginSignal;
+import com.wl4g.shell.common.signal.Signal;
 import com.wl4g.shell.common.signal.StdinSignal;
 import com.wl4g.shell.core.config.ServerShellProperties;
 
@@ -63,24 +70,28 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
     /**
      * Current server shellRunning status.
      */
-    private final AtomicBoolean running = new AtomicBoolean(false);
+    protected final AtomicBoolean running = new AtomicBoolean(false);
 
     /** Shell signal handler workers. */
-    private final Map<ServerSignalHandler, Thread> workers;
+    protected final Map<ServerSignalHandler, Thread> workers;
+
+    /** Authentication shell channel sessions. */
+    protected final Map<String, ServerSignalHandler> sessions;
 
     /**
      * Server sockets
      */
-    private ServerSocket ss;
+    protected ServerSocket ss;
 
     /**
      * Boss thread
      */
-    private Thread boss;
+    protected Thread boss;
 
     public EmbeddedShellServer(ServerShellProperties config, String appName, ShellHandlerRegistrar registrar) {
         super(config, appName, registrar);
         this.workers = new ConcurrentHashMap<>(config.getMaxClients());
+        this.sessions = new ConcurrentHashMap<>(config.getMaxClients());
     }
 
     /**
@@ -224,9 +235,26 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
             while (running.get() && isActive()) {
                 try {
                     Object stdin = new ObjectInputStream(_in).readObject();
+                    isInstanceOf(Signal.class, stdin);
                     log.info("<= {}", stdin);
 
+                    Signal stdin0 = (Signal) stdin;
                     Object output = null;
+                    if (!sessions.containsKey(trimToEmpty(stdin0.getSessionId()))) {
+                        if (stdin instanceof PreLoginSignal) {
+                            PreLoginSignal login = (PreLoginSignal) stdin;
+                            if (getConfig().getAcl().isEqual(login.getUsername(), login.getPassword())) {
+                                String newSessionId = UUID.randomUUID().toString().replaceAll("-", "");
+                                sessions.put(newSessionId, this);
+                                output = new LoginSignal(newSessionId); // Response-login
+                            } else {
+                                throw new UnAuthenticationShellException("Authentication failure.");
+                            }
+                        } else {
+                            throw new UnAuthenticationShellException("No authentication.");
+                        }
+                    }
+
                     // Register shell methods
                     if (stdin instanceof MetaSignal) {
                         output = new MetaSignal(registrar.getTargetMethods());

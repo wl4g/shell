@@ -28,29 +28,29 @@ import com.wl4g.shell.common.registry.TargetMethodWrapper;
  * @since
  */
 public class MetaSignal extends Signal {
-	private static final long serialVersionUID = -8574315248835509685L;
+    private static final long serialVersionUID = -8574315248835509685L;
 
-	/**
-	 * Shell component target methods
-	 */
-	final private Map<String, TargetMethodWrapper> registedMethods = new ConcurrentHashMap<>(16);
+    /**
+     * Shell component target methods
+     */
+    private final Map<String, TargetMethodWrapper> registedMethods = new ConcurrentHashMap<>(16);
 
-	public MetaSignal() {
-	}
+    public MetaSignal() {
+    }
 
-	public MetaSignal(Map<String, TargetMethodWrapper> wrapper) {
-		if (wrapper != null) {
-			this.registedMethods.putAll(wrapper);
-		}
-	}
+    public MetaSignal(Map<String, TargetMethodWrapper> wrapper) {
+        if (wrapper != null) {
+            this.registedMethods.putAll(wrapper);
+        }
+    }
 
-	public Map<String, TargetMethodWrapper> getRegistedMethods() {
-		return registedMethods;
-	}
+    public Map<String, TargetMethodWrapper> getRegistedMethods() {
+        return registedMethods;
+    }
 
-	@Override
-	public String toString() {
-		return super.toString().concat(registedMethods.values().toString());
-	}
+    @Override
+    public String toString() {
+        return super.toString().concat(registedMethods.values().toString());
+    }
 
 }

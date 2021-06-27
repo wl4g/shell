@@ -15,8 +15,8 @@
  */
 package com.wl4g.shell.common.signal;
 
-import static com.wl4g.component.common.lang.Assert2.*;
-import static org.apache.commons.lang3.exception.ExceptionUtils.*;
+import static com.wl4g.component.common.lang.Assert2.notNull;
+import static org.apache.commons.lang3.exception.ExceptionUtils.getRootCauseMessage;
 
 /**
  * Stderr exception message.
@@ -26,22 +26,22 @@ import static org.apache.commons.lang3.exception.ExceptionUtils.*;
  * @since
  */
 public class StderrSignal extends Signal {
-	private static final long serialVersionUID = -8574315277731909685L;
+    private static final long serialVersionUID = -8574315277731909685L;
 
-	final private Throwable throwable;
+    private final Throwable throwable;
 
-	public StderrSignal(Throwable throwable) {
-		notNull(throwable, "throwable must not be null");
-		this.throwable = throwable;
-	}
+    public StderrSignal(Throwable throwable) {
+        notNull(throwable, "throwable must not be null");
+        this.throwable = throwable;
+    }
 
-	public Throwable getThrowable() {
-		return throwable;
-	}
+    public Throwable getThrowable() {
+        return throwable;
+    }
 
-	@Override
-	public String toString() {
-		return "stderr [" + getRootCauseMessage(throwable) + "]";
-	}
+    @Override
+    public String toString() {
+        return "stderr [" + getRootCauseMessage(throwable) + "]";
+    }
 
 }

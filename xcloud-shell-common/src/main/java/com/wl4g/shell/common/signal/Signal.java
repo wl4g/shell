@@ -17,6 +17,11 @@ package com.wl4g.shell.common.signal;
 
 import java.io.Serializable;
 
+import javax.annotation.Nullable;
+
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Shell transport signal
  * 
@@ -24,12 +29,16 @@ import java.io.Serializable;
  * @version v1.0 2019年5月4日
  * @since
  */
+@Getter
+@Setter
 public abstract class Signal implements Serializable {
-	private static final long serialVersionUID = 771621623117425564L;
+    private static final long serialVersionUID = 771621623117425564L;
 
-	@Override
-	public String toString() {
-		return getClass().getSimpleName().concat(" - ");
-	}
+    private @Nullable String sessionId;
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName().concat(" - ");
+    }
 
 }

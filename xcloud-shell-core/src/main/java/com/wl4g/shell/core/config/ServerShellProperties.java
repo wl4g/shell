@@ -15,11 +15,14 @@
  */
 package com.wl4g.shell.core.config;
 
+import static com.google.common.base.Charsets.UTF_8;
 import static com.wl4g.component.common.lang.Assert2.hasText;
 import static com.wl4g.component.common.lang.Assert2.isTrue;
+import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.security.MessageDigest;
 
 import com.wl4g.shell.common.config.BaseShellProperties;
 
@@ -54,7 +57,7 @@ public class ServerShellProperties extends BaseShellProperties {
     /**
      * Authetication configuration.
      */
-    private AuthInfo auth = new AuthInfo();
+    private AclInfo acl = new AclInfo();
 
     public int getBacklog() {
         return backlog;
@@ -91,19 +94,25 @@ public class ServerShellProperties extends BaseShellProperties {
         this.maxClients = maxClients;
     }
 
-    public AuthInfo getAuth() {
-        return auth;
+    public AclInfo getAcl() {
+        return acl;
     }
 
-    public void setAuth(AuthInfo auth) {
-        this.auth = auth;
+    public void setAcl(AclInfo auth) {
+        this.acl = auth;
     }
 
     @Getter
     @Setter
-    public static class AuthInfo {
+    public static class AclInfo {
         private boolean enabled;
-        private String basic;
+        private String authString;
+
+        public final boolean isEqual(String username, String password) {
+            String authToken = trimToEmpty(username).concat(":").concat(password);
+            return MessageDigest.isEqual(trimToEmpty(getAuthString()).getBytes(UTF_8), trimToEmpty(authToken).getBytes(UTF_8));
+        }
+
     }
 
 }

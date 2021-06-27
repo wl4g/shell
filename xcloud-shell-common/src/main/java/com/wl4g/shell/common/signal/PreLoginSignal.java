@@ -15,32 +15,35 @@
  */
 package com.wl4g.shell.common.signal;
 
-import static java.lang.String.valueOf;
+import static com.wl4g.component.common.lang.Assert2.hasTextOf;
+import static org.apache.commons.lang3.StringUtils.trimToEmpty;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
- * Pre transmit interrupt signal
+ * Pre login commands message
  * 
  * @author Wangl.sir <983708408@qq.com>
  * @version v1.0 2019年5月4日
  * @since
  */
-public class PreInterruptSignal extends Signal {
-    private static final long serialVersionUID = -5574318886731906685L;
+@Getter
+@Setter
+public class PreLoginSignal extends Signal {
+    private static final long serialVersionUID = -8574315246731906685L;
 
-    private final boolean force;
+    private final String username;
+    private final String password;
 
-    public PreInterruptSignal(boolean force) {
-        super();
-        this.force = force;
-    }
-
-    public boolean isForce() {
-        return force;
+    public PreLoginSignal(String username, String password) {
+        this.username = hasTextOf(username, "username");
+        this.password = hasTextOf(password, "password");
     }
 
     @Override
     public String toString() {
-        return super.toString().concat("force=").concat(valueOf(force));
+        return "login [" + username + ":" + trimToEmpty(password).replaceAll(".", "\\*") + "]";
     }
 
 }

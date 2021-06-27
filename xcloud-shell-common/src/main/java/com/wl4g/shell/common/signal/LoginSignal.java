@@ -15,32 +15,23 @@
  */
 package com.wl4g.shell.common.signal;
 
-import static java.lang.String.valueOf;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
- * Pre transmit interrupt signal
+ * Login commands message
  * 
  * @author Wangl.sir <983708408@qq.com>
  * @version v1.0 2019年5月4日
  * @since
  */
-public class PreInterruptSignal extends Signal {
-    private static final long serialVersionUID = -5574318886731906685L;
+@Getter
+@Setter
+public class LoginSignal extends Signal {
+    private static final long serialVersionUID = -8574315246731906685L;
 
-    private final boolean force;
-
-    public PreInterruptSignal(boolean force) {
-        super();
-        this.force = force;
-    }
-
-    public boolean isForce() {
-        return force;
-    }
-
-    @Override
-    public String toString() {
-        return super.toString().concat("force=").concat(valueOf(force));
+    public LoginSignal(String sessionId) {
+        setSessionId(sessionId);
     }
 
 }

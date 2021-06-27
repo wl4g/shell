@@ -15,9 +15,9 @@ spring:
       #bind-addr: 127.0.0.1
       #backlog: 16
       #max-clients: 3
-      auth:
-        enable: true
-        basic: admin:123456
+      acl:
+        enabled: true
+        auth-string: admin:123456
 
 # ### Server configuration. ###
 server:

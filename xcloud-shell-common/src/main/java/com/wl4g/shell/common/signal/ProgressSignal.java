@@ -27,47 +27,47 @@ import static java.lang.String.format;
  * @since
  */
 public class ProgressSignal extends Signal {
-	private static final long serialVersionUID = -8574315246731906685L;
+    private static final long serialVersionUID = -8574315246731906685L;
 
-	/**
-	 * Current progress title.
-	 */
-	final private String title;
+    /**
+     * Current progress title.
+     */
+    private final String title;
 
-	/**
-	 * Total number.
-	 */
-	final private int whole;
+    /**
+     * Total number.
+     */
+    private final int whole;
 
-	/**
-	 * Current progress number.
-	 */
-	final private int progress;
+    /**
+     * Current progress number.
+     */
+    private final int progress;
 
-	public ProgressSignal(String title, int whole, int progress) {
-		hasTextOf(title, "title");
-		isTrue(progress >= 0 && whole >= 0, format("Illegal arguments, progress: %s, whole: %s", progress, whole));
-		isTrue(progress <= whole, format("Progress number out of bounds, current progress: %s, whole: %s", progress, whole));
-		this.title = title;
-		this.whole = whole;
-		this.progress = progress;
-	}
+    public ProgressSignal(String title, int whole, int progress) {
+        hasTextOf(title, "title");
+        isTrue(progress >= 0 && whole >= 0, format("Illegal arguments, progress: %s, whole: %s", progress, whole));
+        isTrue(progress <= whole, format("Progress number out of bounds, current progress: %s, whole: %s", progress, whole));
+        this.title = title;
+        this.whole = whole;
+        this.progress = progress;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public int getWhole() {
-		return whole;
-	}
+    public int getWhole() {
+        return whole;
+    }
 
-	public int getProgress() {
-		return progress;
-	}
+    public int getProgress() {
+        return progress;
+    }
 
-	@Override
-	public String toString() {
-		return super.toString().concat("[" + progress + "/" + whole + "]");
-	}
+    @Override
+    public String toString() {
+        return super.toString().concat("[" + progress + "/" + whole + "]");
+    }
 
 }

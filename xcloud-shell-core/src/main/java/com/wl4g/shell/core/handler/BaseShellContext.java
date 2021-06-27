@@ -61,9 +61,9 @@ import com.wl4g.shell.core.handler.EmbeddedShellServer.ServerSignalHandler;
  * @since
  */
 abstract class BaseShellContext implements ShellContext {
-    final public static String DEFAULT_INTERRUPT_LISTENER = "defaultInterruptEventListener";
+    public static final String DEFAULT_INTERRUPT_LISTENER = "defaultInterruptEventListener";
 
-    final protected Logger log = getLogger(getClass());
+    protected final Logger log = getLogger(getClass());
 
     /**
      * Event listeners

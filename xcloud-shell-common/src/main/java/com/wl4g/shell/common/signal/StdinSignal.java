@@ -15,7 +15,7 @@
  */
 package com.wl4g.shell.common.signal;
 
-import static com.wl4g.component.common.lang.Assert2.*;
+import static com.wl4g.component.common.lang.Assert2.hasText;
 
 /**
  * Line commands message
@@ -25,22 +25,22 @@ import static com.wl4g.component.common.lang.Assert2.*;
  * @since
  */
 public class StdinSignal extends Signal {
-	private static final long serialVersionUID = -8574315246731906685L;
+    private static final long serialVersionUID = -8574315246731906685L;
 
-	final private String line;
+    private final String line;
 
-	public StdinSignal(String line) {
-		hasText(line, "line must not be empty");
-		this.line = line;
-	}
+    public StdinSignal(String line) {
+        hasText(line, "line must not be empty");
+        this.line = line;
+    }
 
-	public String getLine() {
-		return line;
-	}
+    public String getLine() {
+        return line;
+    }
 
-	@Override
-	public String toString() {
-		return "stdin [" + line + "]";
-	}
+    @Override
+    public String toString() {
+        return "stdin [" + line + "]";
+    }
 
 }
