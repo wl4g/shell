@@ -44,6 +44,13 @@ public class MetaSignal extends Signal {
         }
     }
 
+    public MetaSignal(Map<String, TargetMethodWrapper> wrapper, String sessionId) {
+        if (wrapper != null) {
+            this.registedMethods.putAll(wrapper);
+        }
+        super.setSessionId(sessionId);
+    }
+
     public Map<String, TargetMethodWrapper> getRegistedMethods() {
         return registedMethods;
     }

@@ -16,16 +16,17 @@
 package com.wl4g.shell.core.handler;
 
 import static com.wl4g.component.common.lang.Assert2.isInstanceOf;
+import static com.wl4g.component.common.lang.Assert2.notNull;
 import static com.wl4g.component.common.lang.Assert2.notNullOf;
 import static com.wl4g.component.common.lang.Assert2.state;
 import static com.wl4g.shell.common.signal.ChannelState.RUNNING;
+import static com.wl4g.shell.core.utils.AuthUtils.generateSessionId;
 import static java.lang.String.format;
 import static java.lang.Thread.sleep;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
-import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 import static org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace;
 
 import java.io.EOFException;
@@ -35,8 +36,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -45,9 +46,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
-import com.wl4g.shell.common.exception.UnAuthenticationShellException;
+import com.wl4g.shell.common.exception.InternalShellException;
+import com.wl4g.shell.common.exception.UnauthenticationShellException;
+import com.wl4g.shell.common.exception.UnauthorizedShellException;
 import com.wl4g.shell.common.handler.BaseSignalHandler;
 import com.wl4g.shell.common.registry.ShellHandlerRegistrar;
+import com.wl4g.shell.common.registry.TargetMethodWrapper;
 import com.wl4g.shell.common.signal.AckInterruptSignal;
 import com.wl4g.shell.common.signal.AskInterruptSignal;
 import com.wl4g.shell.common.signal.LoginSignal;
@@ -57,6 +61,13 @@ import com.wl4g.shell.common.signal.PreLoginSignal;
 import com.wl4g.shell.common.signal.Signal;
 import com.wl4g.shell.common.signal.StdinSignal;
 import com.wl4g.shell.core.config.ServerShellProperties;
+import com.wl4g.shell.core.config.ServerShellProperties.AclInfo;
+import com.wl4g.shell.core.config.ServerShellProperties.AclInfo.AuthInfo;
+import com.wl4g.shell.core.utils.AuthUtils;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Embedded shell handle server
@@ -75,8 +86,8 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
     /** Shell signal handler workers. */
     protected final Map<ServerSignalHandler, Thread> workers;
 
-    /** Authentication shell channel sessions. */
-    protected final Map<String, ServerSignalHandler> sessions;
+    /** Current shell channel standard input. */
+    protected final ThreadLocal<StdinCommandWrapper> currentStdin = new ThreadLocal<>();
 
     /**
      * Server sockets
@@ -91,7 +102,6 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
     public EmbeddedShellServer(ServerShellProperties config, String appName, ShellHandlerRegistrar registrar) {
         super(config, appName, registrar);
         this.workers = new ConcurrentHashMap<>(config.getMaxClients());
-        this.sessions = new ConcurrentHashMap<>(config.getMaxClients());
     }
 
     /**
@@ -148,6 +158,40 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
         }
     }
 
+    @Override
+    protected void preHandleInput(TargetMethodWrapper tm, List<Object> args) {
+        assertShellAclPermission(tm, args);
+        super.preHandleInput(tm, args);
+    }
+
+    /**
+     * Assertion shell channel ACL permission by based on roles.
+     * 
+     * @param tm
+     * @param args
+     */
+    private void assertShellAclPermission(TargetMethodWrapper tm, List<Object> args) {
+        // Skip no enabled.
+        if (!getConfig().getAcl().isEnabled()) {
+            log.debug("No enabled acl of shell target method: {}", tm);
+            return;
+        }
+
+        // Check shell channel authentication.
+        StdinCommandWrapper stdin = currentStdin.get();
+        AuthenticationInfo authenticationInfo = stdin.getHandler().getAuthInfo();
+        if (!authenticationInfo.isAuthenticated()) {
+            throw new UnauthenticationShellException("Authentication failure.");
+        }
+
+        // Check ACL by roles.
+        String[] roles = tm.getShellMethod().aclRoles();
+        AuthInfo authInfo = getConfig().getAcl().getUserAuthInfo(authenticationInfo.getUsername());
+        if (!AuthUtils.matchsRoles(roles, authInfo.getRoles())) {
+            throw new UnauthorizedShellException("Access permission not defined.");
+        }
+    }
+
     /**
      * Accepting connect processing
      */
@@ -161,21 +205,20 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
 
                 // Check many connections.
                 if (workers.size() >= getConfig().getMaxClients()) {
-                    log.warn(String.format("There are too many parallel shell connections. maximum: %s, actual: %s",
+                    log.warn(format("There are too many parallel shell connections. maximum: %s, actual: %s",
                             getConfig().getMaxClients(), workers.size()));
                     s.close();
                     continue;
                 }
 
-                // Wrap signal handler
+                // Create signal handler
                 ServerSignalHandler signalHandler = new ServerSignalHandler(registrar, s, line -> process(line));
 
-                // MARK1:
-                // The worker thread may not be the parent thread of Runnable,
-                // so you need to display bind to the thread in the afternoon
-                // again.
-                Thread task = new Thread(() -> bind(signalHandler).run(),
-                        getClass().getSimpleName().concat("-channel-") + workers.size());
+                // MARK1: The worker thread may not be the parent thread of
+                // Runnable, so you need to display bind to the thread in the
+                // afternoon gain.
+                String taskId = getClass().getSimpleName().concat("-channel-") + workers.size();
+                Thread task = new Thread(() -> bind(signalHandler).run(), taskId);
                 task.setDaemon(true);
                 workers.put(signalHandler, task);
                 task.start();
@@ -207,6 +250,9 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
         /** Running current command {@link ShellContext} */
         private BaseShellContext currentContext;
 
+        /** Authentication info. */
+        private AuthenticationInfo authInfo = new AuthenticationInfo();
+
         public ServerSignalHandler(ShellHandlerRegistrar registrar, Socket client, Function<String, Object> func) {
             super(registrar, client, func);
             this.currentContext = new BaseShellContext(this) {
@@ -214,8 +260,8 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
             // Init worker
             final AtomicInteger incr = new AtomicInteger(0);
             this.processWorker = new ThreadPoolExecutor(1, 1, 0, SECONDS, new LinkedBlockingDeque<>(1), r -> {
-                String prefix = getClass().getSimpleName() + "-worker-" + incr.incrementAndGet();
-                Thread t = new Thread(r, prefix);
+                String processId = getClass().getSimpleName() + "-worker-" + incr.incrementAndGet();
+                Thread t = new Thread(r, processId);
                 t.setDaemon(true);
                 return t;
             });
@@ -230,65 +276,82 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
             this.currentContext = context;
         }
 
+        public AuthenticationInfo getAuthInfo() {
+            return authInfo;
+        }
+
         @Override
         public void run() {
             while (running.get() && isActive()) {
                 try {
-                    Object stdin = new ObjectInputStream(_in).readObject();
-                    isInstanceOf(Signal.class, stdin);
-                    log.info("<= {}", stdin);
+                    Object signal = new ObjectInputStream(_in).readObject();
+                    isInstanceOf(Signal.class, signal);
+                    log.info("<= {}", signal);
 
-                    Signal stdin0 = (Signal) stdin;
                     Object output = null;
-                    if (!sessions.containsKey(trimToEmpty(stdin0.getSessionId()))) {
-                        if (stdin instanceof PreLoginSignal) {
-                            PreLoginSignal login = (PreLoginSignal) stdin;
-                            if (getConfig().getAcl().isEqual(login.getUsername(), login.getPassword())) {
-                                String newSessionId = UUID.randomUUID().toString().replaceAll("-", "");
-                                sessions.put(newSessionId, this);
-                                output = new LoginSignal(newSessionId); // Response-login
-                            } else {
-                                throw new UnAuthenticationShellException("Authentication failure.");
-                            }
+                    // Register shell methods
+                    if (signal instanceof MetaSignal) {
+                        authInfo.setSessionId(generateSessionId());
+                        output = new MetaSignal(registrar.getTargetMethods(), authInfo.getSessionId());
+                    } else {
+                        notNull(getAuthInfo().getSessionId(), InternalShellException.class,
+                                "Internal error, shell handler sessionId required.");
+                        notNull(((Signal) signal).getSessionId(), InternalShellException.class,
+                                "Internal error, request shell signal sessionId required.");
+                    }
+                    // Pre login
+                    if (signal instanceof PreLoginSignal) {
+                        PreLoginSignal login = (PreLoginSignal) signal;
+                        if (authInfo.isAuthenticated()) {
+                            output = new LoginSignal(true, login.getSessionId()).withDesc("Authenticated");
                         } else {
-                            throw new UnAuthenticationShellException("No authentication.");
+                            AclInfo acl = getConfig().getAcl();
+                            if (acl.isEnabled()) {
+                                if (acl.matchs(login.getUsername(), login.getPassword())) {
+                                    // Sets authentication success info.
+                                    authInfo.setAuthenticated(true);
+                                    authInfo.setUsername(login.getUsername());
+                                    output = new LoginSignal(true, authInfo.getSessionId()).withDesc("Authenticated");
+                                } else {
+                                    output = new LoginSignal(false).withDesc("Authentication failure.");
+                                }
+                            } else {
+                                output = new LoginSignal(false).withDesc("No authentication required");
+                            }
                         }
                     }
-
-                    // Register shell methods
-                    if (stdin instanceof MetaSignal) {
-                        output = new MetaSignal(registrar.getTargetMethods());
-                    }
-                    // Ask interruption
-                    else if (stdin instanceof PreInterruptSignal) {
+                    // Ask interruption.
+                    else if (signal instanceof PreInterruptSignal) {
                         // Call pre-interrupt events.
                         currentContext.getUnmodifiableEventListeners().forEach(l -> l.onPreInterrupt(currentContext));
                         // Ask if the client is interrupt.
                         output = new AskInterruptSignal("Are you sure you want to cancel execution? (y|n)");
                     }
                     // Confirm interruption
-                    else if (stdin instanceof AckInterruptSignal) {
-                        AckInterruptSignal ack = (AckInterruptSignal) stdin;
+                    else if (signal instanceof AckInterruptSignal) {
+                        AckInterruptSignal ack = (AckInterruptSignal) signal;
                         // Call interrupt events.
                         currentContext.getUnmodifiableEventListeners()
                                 .forEach(l -> l.onInterrupt(currentContext, ack.getConfirm()));
                     }
                     // Stdin of commands
-                    else if (stdin instanceof StdinSignal) {
-                        StdinSignal cmd = (StdinSignal) stdin;
+                    else if (signal instanceof StdinSignal) {
+                        StdinSignal stdin = (StdinSignal) signal;
                         // Call command events.
-                        currentContext.getUnmodifiableEventListeners().forEach(l -> l.onCommand(currentContext, cmd.getLine()));
+                        currentContext.getUnmodifiableEventListeners().forEach(l -> l.onCommand(currentContext, stdin.getLine()));
 
                         // Resolve that client input cannot be received during
                         // blocking execution.
                         processWorker.execute(() -> {
                             try {
+                                currentStdin.set(new StdinCommandWrapper(stdin, this));
+
                                 /**
                                  * Only {@link ShellContext} printouts are
                                  * supported, and return value is no longer
                                  * supported (otherwise it will be ignored)
                                  */
-                                function.apply(cmd.getLine());
+                                function.apply(stdin.getLine());
 
                                 /**
                                  * see:{@link EmbeddedServerShellHandler#preHandleInput()}#MARK2
@@ -297,8 +360,10 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
                                     currentContext.completed();
                                 }
                             } catch (Throwable e) {
-                                log.error(format("Failed to handle shell command: [%s]", cmd.getLine()), e);
+                                log.error(format("Failed to handle shell command: [%s]", stdin.getLine()), e);
                                 handleError(e);
+                            } finally {
+                                currentStdin.remove();
                             }
                         });
                     }
@@ -351,7 +416,42 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
                 currentContext.printf0(th);
             }
         }
+    }
 
+    /**
+     * Shell channel authentication information.
+     */
+    @Getter
+    @Setter
+    @ToString
+    static class AuthenticationInfo {
+        /** Shell session ID. */
+        private String sessionId;
+        /** Authentication state. */
+        private boolean authenticated = false;
+        /** Authentication username. */
+        private String username;
+    }
+
+    /**
+     * Standard input command signal info wrapper.
+     */
+    static class StdinCommandWrapper {
+        private final StdinSignal stdin;
+        private final ServerSignalHandler handler;
+
+        public StdinCommandWrapper(StdinSignal stdin, ServerSignalHandler handler) {
+            this.stdin = notNullOf(stdin, "stdin");
+            this.handler = notNullOf(handler, "handler");
+        }
+
+        public StdinSignal getStdin() {
+            return stdin;
+        }
+
+        public ServerSignalHandler getHandler() {
+            return handler;
+        }
     }
 
 }

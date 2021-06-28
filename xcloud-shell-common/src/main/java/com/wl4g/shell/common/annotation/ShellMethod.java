@@ -33,49 +33,67 @@ import java.lang.annotation.Target;
 @Documented
 public @interface ShellMethod {
 
-	/**
-	 * Command names definition.</br>
-	 * 
-	 * e.g:
-	 * 
-	 * <pre>
-	 * $ > mylist
-	 * </pre>
-	 * 
-	 * @return
-	 */
-	String[] keys();
+    /**
+     * Command names definition.</br>
+     * 
+     * e.g:
+     * 
+     * <pre>
+     * $ > mylist
+     * </pre>
+     * 
+     * @return
+     */
+    String[] keys();
 
-	/**
-	 * Command group name.
-	 * 
-	 * @return
-	 */
-	String group();
+    /**
+     * Command group name.
+     * 
+     * @return
+     */
+    String group();
 
-	/**
-	 * Whether to allow command line execution to be interrupted.
-	 * 
-	 * @return
-	 */
-	InterruptType interruptible() default InterruptType.NOT_ALLOW;
+    /**
+     * Whether to allow command line execution to be interrupted.
+     * 
+     * @return
+     */
+    InterruptType interruptible() default InterruptType.NOT_ALLOW;
 
-	/**
-	 * Command help description.
-	 * 
-	 * @return
-	 */
-	String help();
+    /**
+     * The list of roles required by the access control mechanism takes effect
+     * only when the global ACL is enabled.
+     * 
+     * @return
+     */
+    String[] aclRoles() default {};
 
-	/**
-	 * {@link InterruptType}
-	 * 
-	 * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
-	 * @version 2020年2月4日 v1.0.0
-	 * @see
-	 */
-	public static enum InterruptType {
-		ALLOW, NOT_ALLOW
-	}
+    /**
+     * If lock is true, it means that concurrent execution lock is enabled
+     * (cluster is supported if redis exists in classpath). Default: true, that
+     * is, any client executing a command must wait for the last execution
+     * (possibly other clients) to end.
+     * 
+     * @return
+     */
+    boolean lock() default true;
+
+    /**
+     * Command help description.
+     * 
+     * @return
+     */
+    String help();
+
+    /**
+     * {@link InterruptType}
+     * 
+     * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
+     * @version 2020年2月4日 v1.0.0
+     * @see
+     */
+    public static enum InterruptType {
+        ALLOW, NOT_ALLOW
+    }
 
 }

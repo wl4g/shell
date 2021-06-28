@@ -15,7 +15,8 @@
  */
 package com.wl4g.shell.common.config;
 
-import static com.wl4g.component.common.lang.Assert2.*;
+import static com.wl4g.component.common.lang.Assert2.hasText;
+import static com.wl4g.component.common.lang.Assert2.isTrue;
 import static com.wl4g.component.common.serialize.JacksonUtils.toJSONString;
 import static java.lang.Integer.parseInt;
 import static java.lang.String.format;
@@ -32,68 +33,68 @@ import java.io.Serializable;
  */
 public abstract class BaseShellProperties implements Serializable {
 
-	final private static long serialVersionUID = -5897277204687388946L;
+    private static final long serialVersionUID = -5897277204687388946L;
 
-	/**
-	 * Default shell console listen port range begin.
-	 */
-	final public static int DEFAULT_PORT_BEGIN = 60100;
+    /**
+     * Default shell console listen port range begin.
+     */
+    public static final int DEFAULT_PORT_BEGIN = 60100;
 
-	/**
-	 * Default shell console listen port range end.
-	 */
-	final public static int DEFAULT_PORT_END = 60200;
+    /**
+     * Default shell console listen port range end.
+     */
+    public static final int DEFAULT_PORT_END = 60200;
 
-	/**
-	 * Listening serve socket port range.
-	 */
-	private String portRange;
+    /**
+     * Listening serve socket port range.
+     */
+    private String portRange;
 
-	// --- Temporary. ---
+    // --- Temporary. ---
 
-	/**
-	 * Begin listen socket port
-	 */
-	private transient int beginPort;
+    /**
+     * Begin listen socket port
+     */
+    private transient int beginPort;
 
-	/**
-	 * End listen socket port
-	 */
-	private transient int endPort;
+    /**
+     * End listen socket port
+     */
+    private transient int endPort;
 
-	public BaseShellProperties() {
-		setPortRange(DEFAULT_PORT_BEGIN + ":" + DEFAULT_PORT_END);
-	}
+    public BaseShellProperties() {
+        setPortRange(DEFAULT_PORT_BEGIN + ":" + DEFAULT_PORT_END);
+    }
 
-	public String getPortRange() {
-		return portRange;
-	}
+    public String getPortRange() {
+        return portRange;
+    }
 
-	public void setPortRange(String portRange) {
-		hasText(portRange, "Listen port range must not be empty");
-		String[] part = portRange.split(":");
-		isTrue(part.length == 2 && isNumeric(part[0]) && isNumeric(part[1]), "Invalid listen port range. (e.g. 66100:66200)");
-		int begin = parseInt(part[0]);
-		int end = parseInt(part[1]);
-		isTrue(begin > 1024 && begin < 65535 && end > 1024 && end < 65535 && end > begin,
-				format("Both start and end ports must be between 1024 and 65535, And the end port must be greater than the begin port, actual is %s",
-						portRange));
-		this.portRange = portRange;
-		this.beginPort = begin;
-		this.endPort = end;
-	}
+    public void setPortRange(String portRange) {
+        hasText(portRange, "Listen port range must not be empty");
+        String[] part = portRange.split(":");
+        isTrue(part.length == 2 && isNumeric(part[0]) && isNumeric(part[1]), "Invalid listen port range. (e.g. 66100:66200)");
+        int begin = parseInt(part[0]);
+        int end = parseInt(part[1]);
+        isTrue(begin > 1024 && begin < 65535 && end > 1024 && end < 65535 && end > begin, format(
+                "Both start and end ports must be between 1024 and 65535, And the end port must be greater than the begin port, actual is %s",
+                portRange));
+        this.portRange = portRange;
+        this.beginPort = begin;
+        this.endPort = end;
+    }
 
-	public int getBeginPort() {
-		return beginPort;
-	}
+    public int getBeginPort() {
+        return beginPort;
+    }
 
-	public int getEndPort() {
-		return endPort;
-	}
+    public int getEndPort() {
+        return endPort;
+    }
 
-	@Override
-	public String toString() {
-		return getClass().getSimpleName().concat(" - ").concat(toJSONString(this));
-	}
+    @Override
+    public String toString() {
+        return getClass().getSimpleName().concat(" - ").concat(toJSONString(this));
+    }
 
 }

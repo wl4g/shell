@@ -17,6 +17,7 @@ package com.wl4g.shell.common.signal;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Wither;
 
 /**
  * Login commands message
@@ -27,10 +28,22 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@Wither
 public class LoginSignal extends Signal {
     private static final long serialVersionUID = -8574315246731906685L;
 
-    public LoginSignal(String sessionId) {
+    private boolean authenticated;
+    private String desc;
+
+    public LoginSignal() {
+    }
+
+    public LoginSignal(boolean authenticated) {
+        setAuthenticated(authenticated);
+    }
+
+    public LoginSignal(boolean authenticated, String sessionId) {
+        setAuthenticated(authenticated);
         setSessionId(sessionId);
     }
 
