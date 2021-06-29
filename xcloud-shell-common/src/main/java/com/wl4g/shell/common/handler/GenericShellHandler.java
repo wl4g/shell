@@ -22,6 +22,7 @@ import static com.wl4g.component.common.lang.Assert2.notEmpty;
 import static com.wl4g.component.common.lang.Assert2.notNull;
 import static com.wl4g.component.common.lang.Assert2.notNullOf;
 import static com.wl4g.component.common.lang.Exceptions.getRootCauses;
+import static com.wl4g.component.common.lang.Exceptions.getRootCausesString;
 import static com.wl4g.component.common.lang.SystemUtils2.LOCAL_PROCESS_ID;
 import static com.wl4g.component.common.reflect.ReflectionUtils2.doFullWithFields;
 import static com.wl4g.component.common.reflect.ReflectionUtils2.isGenericModifier;
@@ -35,7 +36,6 @@ import static org.apache.commons.lang3.StringUtils.equalsAny;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.trimToEmpty;
-import static org.apache.commons.lang3.exception.ExceptionUtils.getRootCauseMessage;
 
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
@@ -317,7 +317,7 @@ public abstract class GenericShellHandler implements ShellHandler {
         if (DEBUG) {
             th.printStackTrace();
         } else {
-            err.println(format("%s %s", abnormal, getRootCauseMessage(th)));
+            err.println(format("%s %s", abnormal, getRootCausesString(th, true)));
         }
     }
 

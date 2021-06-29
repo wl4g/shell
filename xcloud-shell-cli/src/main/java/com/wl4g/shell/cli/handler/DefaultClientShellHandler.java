@@ -18,6 +18,7 @@ package com.wl4g.shell.cli.handler;
 import static com.wl4g.component.common.lang.Assert2.isTrue;
 import static com.wl4g.component.common.lang.Assert2.notNull;
 import static com.wl4g.component.common.lang.Assert2.state;
+import static com.wl4g.component.common.lang.Exceptions.getStackTraceAsString;
 import static com.wl4g.shell.cli.config.ClientShellHandlerRegistrar.getSingle;
 import static com.wl4g.shell.common.annotation.ShellOption.GNU_CMD_LONG;
 import static com.wl4g.shell.common.cli.BuiltInCommand.CMD_HE;
@@ -39,7 +40,6 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.isNumeric;
 import static org.apache.commons.lang3.SystemUtils.USER_HOME;
 import static org.apache.commons.lang3.exception.ExceptionUtils.getRootCauseMessage;
-import static org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace;
 import static org.jline.reader.LineReader.HISTORY_FILE;
 
 import java.io.EOFException;
@@ -169,7 +169,7 @@ public abstract class DefaultClientShellHandler extends GenericShellHandler impl
 
     @Override
     protected void printError(String abnormal, Throwable th) {
-        stacktraceAsString = getStackTrace(th);
+        stacktraceAsString = getStackTraceAsString(th);
         super.printError(abnormal, th);
     }
 
@@ -203,8 +203,7 @@ public abstract class DefaultClientShellHandler extends GenericShellHandler impl
                         return;
                     }
                     // help command? [MARK0] $> add --help
-                    else if (cmds.size() > 1
-                            && equalsAny(cmds.get(1), (GNU_CMD_LONG + CMD_HELP), (GNU_CMD_LONG + CMD_HE))) {
+                    else if (cmds.size() > 1 && equalsAny(cmds.get(1), (GNU_CMD_LONG + CMD_HELP), (GNU_CMD_LONG + CMD_HE))) {
                         isRemoteCommand = false;
                         // e.g: '$> help add'
                         line = clean(CMD_HELP) + " " + cmds.get(0);
