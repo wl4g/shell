@@ -65,6 +65,7 @@ import com.wl4g.shell.common.handler.BaseSignalHandler;
 import com.wl4g.shell.common.handler.GenericShellHandler;
 import com.wl4g.shell.common.registry.ShellHandlerRegistrar;
 import com.wl4g.shell.common.signal.MetaSignal;
+import com.wl4g.shell.common.signal.Signal;
 import com.wl4g.shell.common.signal.StdinSignal;
 
 /**
@@ -81,27 +82,27 @@ public abstract class DefaultClientShellHandler extends GenericShellHandler impl
      * the current shell client will connect to) (because the same computer may
      * start many different shell services)
      */
-    public final static String ARG_SERV_NAME = "servname";
+    public static final String ARG_SERV_NAME = "servname";
 
     /**
      * IBid, note that this priority is higher than ARG_SERV_PIDS
      */
-    public final static String ARG_SERV_POINT = "servpoint";
+    public static final String ARG_SERV_POINT = "servpoint";
 
     /**
      * Commands prompt string.
      */
-    public final static String ARG_PROMPT = "prompt";
+    public static final String ARG_PROMPT = "prompt";
 
     /**
      * Enable debugging
      */
-    public final static long TIMEOUT = Long.parseLong(getProperty("timeout", valueOf(180_000L)));
+    public static final long TIMEOUT = Long.parseLong(getProperty("timeout", valueOf(180_000L)));
 
     /**
      * Attributed string
      */
-    public final static AttributedString DEFAULT_ATTRIBUTED = new AttributedString("console> ");
+    public static final AttributedString DEFAULT_ATTRIBUTED = new AttributedString("console> ");
 
     /**
      * Shell configuration
@@ -117,6 +118,9 @@ public abstract class DefaultClientShellHandler extends GenericShellHandler impl
      * Shell client handler
      */
     private ClientSignalHandler clientChannel;
+
+    /** Current shell channel session ID. */
+    protected String sessionId;
 
     /**
      * Current process exception statcktrace as strings.
@@ -188,14 +192,14 @@ public abstract class DefaultClientShellHandler extends GenericShellHandler impl
         try {
             boolean isRemoteCommand = true;
             if (stdin instanceof String) {
-                String cmd = (String) stdin;
-                List<String> cmds = parse(cmd);
+                String line = (String) stdin;
+                List<String> cmds = parse(line);
                 if (!cmds.isEmpty()) {
                     // $> [help|clear|history...]
                     if (registrar.contains(cmds.get(0))) { // Local command?
                         isRemoteCommand = false;
-                        DefaultBuiltInCommand.senseLine(cmd);
-                        process(cmd);
+                        DefaultBuiltInCommand.senseLine(line);
+                        process(line);
                         return;
                     }
                     // help command? [MARK0] $> add --help
@@ -203,22 +207,24 @@ public abstract class DefaultClientShellHandler extends GenericShellHandler impl
                             && equalsAny(cmds.get(1), (GNU_CMD_LONG + INTERNAL_HELP), (GNU_CMD_LONG + INTERNAL_HE))) {
                         isRemoteCommand = false;
                         // e.g: '$> help add'
-                        cmd = clean(INTERNAL_HELP) + " " + cmds.get(0);
+                        line = clean(INTERNAL_HELP) + " " + cmds.get(0);
                         // Set current line
-                        DefaultBuiltInCommand.senseLine(cmd);
-                        process(cmd);
+                        DefaultBuiltInCommand.senseLine(line);
+                        process(line);
                         return;
                     }
                 }
-
                 // Wrap string command
-                stdin = new StdinSignal(cmd);
+                stdin = new StdinSignal(line);
             }
 
             // Check connect & send to server.
             if (isRemoteCommand) {
                 ensureClient();
-                clientChannel.writeFlush(stdin);
+                Signal stdin0 = (Signal) stdin;
+                // Add current shell channel sessionId.
+                stdin0.setSessionId(sessionId);
+                clientChannel.writeFlush(stdin0);
             }
         } catch (IOException e) {
             printError(EMPTY, e);

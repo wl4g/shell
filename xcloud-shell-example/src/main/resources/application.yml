@@ -17,7 +17,10 @@ spring:
       #max-clients: 3
       acl:
         enabled: true
-        auth-string: admin:123456
+        info:
+          username: admin
+          password: 123456
+          roles: ['normal_role']
 
 # ### Server configuration. ###
 server:

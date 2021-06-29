@@ -15,7 +15,7 @@
  */
 package com.wl4g.shell.cli.config;
 
-import static com.wl4g.component.common.lang.Assert2.*;
+import static com.wl4g.component.common.lang.Assert2.state;
 import static java.lang.String.format;
 
 import java.util.Map;
@@ -33,48 +33,48 @@ import com.wl4g.shell.common.registry.TargetMethodWrapper;
  * @since
  */
 public class ClientShellHandlerRegistrar extends ShellHandlerRegistrar {
-	final private static long serialVersionUID = -6852880158146389409L;
+    private static final long serialVersionUID = -6852880158146389409L;
 
-	private static class Holder {
-		final private static ClientShellHandlerRegistrar INSTANCE = new ClientShellHandlerRegistrar();
-	}
+    /**
+     * Local and remote registed shell target methods for help.
+     */
+    private final Map<String, HelpOptions> helpOptions = new ConcurrentHashMap<>(16);
 
-	/**
-	 * Local and remote registed shell target methods for help.
-	 */
-	final private Map<String, HelpOptions> helpOptions = new ConcurrentHashMap<>(16);
+    public static final ClientShellHandlerRegistrar getSingle() {
+        return Holder.INSTANCE;
+    }
 
-	public final static ClientShellHandlerRegistrar getSingle() {
-		return Holder.INSTANCE;
-	}
+    /**
+     * Merge remote and local targetMethodWrapper
+     * 
+     * @param registed
+     * @return
+     */
+    public ClientShellHandlerRegistrar merge(Map<String, TargetMethodWrapper> registed) {
+        state(helpOptions.isEmpty(), "Remote server registed target methods is null");
 
-	/**
-	 * Merge remote and local targetMethodWrapper
-	 * 
-	 * @param registed
-	 * @return
-	 */
-	public ClientShellHandlerRegistrar merge(Map<String, TargetMethodWrapper> registed) {
-		state(helpOptions.isEmpty(), "Remote server registed target methods is null");
+        // Registion from local.
+        getTargetMethods().forEach((argname, tm) -> {
+            state(helpOptions.putIfAbsent(argname, tm.getOptions()) == null,
+                    format("Already local registed commands: '%s'", argname));
+        });
 
-		// Registion from local.
-		getTargetMethods().forEach((argname, tm) -> {
-			state(helpOptions.putIfAbsent(argname, tm.getOptions()) == null,
-					format("Already local registed commands: '%s'", argname));
-		});
+        // Registion from remote registed.
+        registed.forEach((argname, tm) -> {
+            state(helpOptions.putIfAbsent(argname, tm.getOptions()) == null, format(
+                    "Already remote registed commands: '%s', It is recommended to replace the shell definition @ShellMethod(name=xx)",
+                    argname));
+        });
 
-		// Registion from remote registed.
-		registed.forEach((argname, tm) -> {
-			state(helpOptions.putIfAbsent(argname, tm.getOptions()) == null,
-					format("Already remote registed commands: '%s', It is recommended to replace the shell definition @ShellMethod(name=xx)",
-							argname));
-		});
+        return this;
+    }
 
-		return this;
-	}
+    public Map<String, HelpOptions> getHelpOptions() {
+        return helpOptions;
+    }
 
-	public Map<String, HelpOptions> getHelpOptions() {
-		return helpOptions;
-	}
+    private static final class Holder {
+        final private static ClientShellHandlerRegistrar INSTANCE = new ClientShellHandlerRegistrar();
+    }
 
 }

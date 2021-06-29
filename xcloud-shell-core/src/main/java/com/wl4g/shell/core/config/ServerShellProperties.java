@@ -108,16 +108,16 @@ public class ServerShellProperties extends BaseShellProperties {
     @Setter
     public static class AclInfo {
         private boolean enabled;
-        private List<AuthInfo> info = new ArrayList<>();
+        private List<CredentialsInfo> info = new ArrayList<>();
 
-        public final AuthInfo getUserAuthInfo(final String username) {
+        public final CredentialsInfo getCredentialsInfo(final String username) {
             return info.stream()
                     .filter(ai -> isEqual(trimToEmpty(ai.getUsername()).getBytes(UTF_8), trimToEmpty(username).getBytes(UTF_8)))
                     .findFirst().orElse(null);
         }
 
         public final boolean matchs(final String username, final String password) {
-            for (AuthInfo ai : info) {
+            for (CredentialsInfo ai : info) {
                 if (isEqual(trimToEmpty(ai.getUsername()).getBytes(UTF_8), trimToEmpty(username).getBytes(UTF_8))
                         && isEqual(trimToEmpty(ai.getPassword()).getBytes(UTF_8), trimToEmpty(password).getBytes(UTF_8))) {
                     return true;
@@ -128,7 +128,7 @@ public class ServerShellProperties extends BaseShellProperties {
 
         @Getter
         @Setter
-        public static class AuthInfo {
+        public static class CredentialsInfo {
             private String username;
             private String password;
             private String[] roles;

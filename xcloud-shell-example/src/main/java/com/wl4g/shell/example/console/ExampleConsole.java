@@ -15,6 +15,8 @@
  */
 package com.wl4g.shell.example.console;
 
+import static java.lang.String.format;
+
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executors;
@@ -57,65 +59,66 @@ public class ExampleConsole {
     @Autowired
     private ExampleService exampleService;
 
-    // --------------- Injection arguments tests. ----------------
+    // --------------- Testing for simple injection. ----------------
 
     /**
-     * For example: $> sum1 -a 1 -b 123
+     * For example: $> testSimple -a 1 -b 123
      */
-    @ShellMethod(keys = "sum1", group = GROUP_NAME, help = "Shell method tests that do not output results")
-    public void sum1(SumArgument arg) {
+    @ShellMethod(keys = "testSimple", group = GROUP_NAME, help = "A simple shell summation method")
+    public void testSimpleSum(SumArgument arg) {
         exampleService.add(arg);
     }
 
     /**
-     * For example: $> sum2 -a 1 -b 123
+     * For example: $> testPirnt -a 1 -b 123
      */
-    @ShellMethod(keys = "sum2", group = GROUP_NAME, help = "Test of shell method that can output results")
-    public void sum2(SimpleShellContext context, @ShellOption(opt = "a", lopt = "add1", help = "Add number") int a,
+    @ShellMethod(keys = "testPirnt", group = GROUP_NAME, help = "A simple shell summation method, the calculation process will be printed")
+    public void testPirnt(SimpleShellContext context, @ShellOption(opt = "a", lopt = "add1", help = "Add number") int a,
             @ShellOption(opt = "b", lopt = "add2", help = "Added number", defaultValue = "1") int b) {
         context.printf(exampleService.add(new SumArgument(a, b)).toString());
         context.completed();
     }
 
     /**
-     * For example: $> set -l 1,2 -s x3,x4
+     * For example: $> testInjectArgs1 -s x3,x4 -l 1,2 -m a1=b1,a2=b2
      */
-    @ShellMethod(keys = "set", group = GROUP_NAME, help = "Complex parameter injection testing")
-    public void set(SimpleShellContext context,
-            @ShellOption(opt = "s", lopt = "set", help = "Set<String> type argument field") Set<String> set1,
-            @ShellOption(opt = "l", lopt = "list", help = "List<Integer> type argument field") List<Integer> list) {
-        context.printf("Direct mixed set parameter injection results: set=" + set1 + ", list=" + list);
+    @ShellMethod(keys = "testInjectArgs1", group = GROUP_NAME, help = "A simple shell printing method, will inject set/list/map various collection type parameters")
+    public void testInjectArgs1(SimpleShellContext context,
+            @ShellOption(opt = "s", lopt = "set", help = "Set<String> type argument field") Set<String> set,
+            @ShellOption(opt = "l", lopt = "list", help = "List<Integer> type argument field") List<Integer> list,
+            @ShellOption(opt = "m", lopt = "map", help = "Map<String, String> type argument field") List<Integer> map) {
+        context.printf(format("输入参数: set => {}, list => {}, map => {}", set, list, map));
         context.completed();
     }
 
     /**
-     * For example: $> mixed -l x1,x2 -m a1=b1,a2=b2 -p aa1=bb1,aa2=bb2 -s x3,x4
-     * -e false -E true
+     * For example: $> testInjectArgs2 -l x1,x2 -m a1=b1,a2=b2 -p
+     * aa1=bb1,aa2=bb2 -s x3,x4 -e false
      */
-    @ShellMethod(keys = "mixed", group = GROUP_NAME, help = "Mixed parameter injection testing")
-    public void mixed(MixedArgument arg, SimpleShellContext context) {
-        context.printf("The input parameters are: " + arg.toString());
+    @ShellMethod(keys = "testInjectArgs2", group = GROUP_NAME, help = "A simple shell printing method will inject complex + collection type parameters")
+    public void testInjectArgs2(MixedArgument arg, SimpleShellContext context) {
+        context.printf(format("输入参数: => {}", arg.toString()));
         context.completed();
     }
 
-    // --------------- ShellContext using and binding tests. ----------------
+    // --------------- Testing for ShellContext. ----------------
 
     /**
-     * For example: $> task1 -n 20
+     * For example: $> testAsyncTask -n 20
      */
-    @ShellMethod(keys = "task1", group = GROUP_NAME, help = "This is a shell method for printing logs asynchronously.(Not support interrupt)")
-    public void task1(
+    @ShellMethod(keys = "testAsyncTask", group = GROUP_NAME, help = "This is a shell method for printing logs asynchronously.(Not support interrupt)")
+    public void testAsyncTask(
             @ShellOption(opt = "n", lopt = "num", required = false, defaultValue = "5", help = "Number of printed messages") int num,
             SimpleShellContext context) {
 
         Executors.newSingleThreadExecutor().execute(() -> {
             try {
-                context.printf("Log print...");
+                context.printf("TestAsyncTask starting ...");
                 for (int i = 1; i <= num; i++) {
-                    String message = "This is the " + i + "th message!";
+                    String message = "This is the " + i + "th output of TestAsyncTask ...";
                     log.info(message);
 
-                    // Print to console
+                    // Print to client console
                     context.printf(message);
 
                     try {
@@ -124,7 +127,7 @@ public class ExampleConsole {
                         e.printStackTrace();
                     }
                 }
-                context.printf("Log print finished!");
+                context.printf("TestAsyncTask finished!");
             } finally {
                 // *** Note: Don't forget to execute it, or the client console
                 // will pause until it timesout.
@@ -134,21 +137,21 @@ public class ExampleConsole {
     }
 
     /**
-     * For example: $> task2 -n 20
+     * For example: $> testProgressTask -n 20
      */
-    @ShellMethod(keys = "task2", group = GROUP_NAME, interruptible = InterruptType.ALLOW, help = "This is a shell method for printing logs asynchronously.(Support interrupt)")
-    public void task2(
+    @ShellMethod(keys = "testProgressTask", group = GROUP_NAME, interruptible = InterruptType.ALLOW, help = "This is a shell method for printing logs asynchronously.(Support interrupt)")
+    public void testProgressTask(
             @ShellOption(opt = "n", lopt = "num", required = false, defaultValue = "5", help = "Number of printed messages") int num,
             ProgressShellContext context) {
 
         Executors.newSingleThreadExecutor().execute(() -> {
             try {
-                context.printf("Log2 print...", 0.05f);
+                context.printf("TestProgressTask starting ...", 0.05f);
                 for (int i = 1; !context.isInterrupted() && i <= num; i++) {
-                    String message = "This is the " + i + "th message!";
+                    String message = "This is the " + i + "th output of TestProgressTask ...";
                     log.info(message);
 
-                    // Print to console
+                    // Print to client console
                     context.printf(message, num, i);
 
                     try {
@@ -160,16 +163,16 @@ public class ExampleConsole {
             } finally {
                 // *** Note: Don't forget to execute it, or the client console
                 // will pause until it timesout.
-                context.completed("Log2 print finished!");
+                context.completed("TestProgressTask finished!");
             }
         });
     }
 
     /**
-     * For example: $> task3 -n 20
+     * For example: $> testBindContextTask -n 20
      */
-    @ShellMethod(keys = "task3", group = GROUP_NAME, interruptible = InterruptType.ALLOW, help = "This is a simple shell method for printing logs synchronously.(Support interrupt)")
-    public void task3(
+    @ShellMethod(keys = "testBindContextTask", group = GROUP_NAME, interruptible = InterruptType.ALLOW, help = "This is a simple shell method for printing logs synchronously.(Support interrupt)")
+    public void testBindContextTask(
             @ShellOption(opt = "n", lopt = "num", required = false, defaultValue = "5", help = "Number of printed messages") int num,
             @ShellOption(opt = "s", lopt = "sleep", required = false, defaultValue = "100", help = "Print message delay(ms)") long sleep,
             ProgressShellContext context) {
@@ -181,15 +184,15 @@ public class ExampleConsole {
         doTask3(num, sleep);
     }
 
-    private static void doTask3(int num, long sleep) {
+    private void doTask3(int num, long sleep) {
         ProgressShellContext context = UserShellContextBinders.get();
         try {
-            context.printf("Log3 print...", 0.05f);
+            context.printf("TestBindContextTask starting ...", 0.05f);
             for (int i = 1; !context.isInterrupted() && i <= num; i++) {
-                String message = "This is the " + i + "th message!";
+                String message = "This is the " + i + "th output of testBindContextTask ...";
                 log.info(message);
 
-                // Print to console
+                // Print to client console
                 context.printf(message, num, i);
 
                 try {
@@ -201,23 +204,37 @@ public class ExampleConsole {
         } finally {
             // *** Note: Don't forget to execute it, or the client console
             // will pause until it timesout.
-            context.completed("Log3 print finished!");
+            context.completed("TestBindContextTask finished!");
         }
     }
 
-    // --------------- States switch tests. ----------------
+    // --------------- Testing for States switching. ----------------
 
     /**
-     * For example: $> task4
+     * For example: $> testError
      */
-    @ShellMethod(keys = "task4", group = GROUP_NAME, help = "This is a test execution exception command methods")
-    public void task4(SimpleShellContext context) {
-        context.printf("Log print...");
+    @ShellMethod(keys = "testError", group = GROUP_NAME, help = "This is a test execution exception command methods")
+    public void testError(SimpleShellContext context) {
+        context.printf("Test error task starting ...");
         throw new IllegalStateException("This is a deliberate error!");
     }
 
-    public static void main(String[] args) {
-        doTask3(30, 200L);
+    // --------------- Testing for ACL. ----------------
+
+    /**
+     * For example: $> testAclAllow
+     */
+    @ShellMethod(keys = "testAclAllow", group = GROUP_NAME, aclRoles = "normal_role", help = "This is a test execution ACL command methods")
+    public void testAclAllow(SimpleShellContext context) {
+        context.printf("TestAclAllow starting ...");
+    }
+
+    /**
+     * For example: $> testAclReject
+     */
+    @ShellMethod(keys = "testAclReject", group = GROUP_NAME, aclRoles = "administrator_role", help = "This is a test execution ACL command methods")
+    public void testAclReject(SimpleShellContext context) {
+        context.printf("TestAclReject starting ...");
     }
 
 }

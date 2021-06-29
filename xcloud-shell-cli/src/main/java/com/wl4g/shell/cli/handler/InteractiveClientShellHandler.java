@@ -115,7 +115,6 @@ public class InteractiveClientShellHandler extends DefaultClientShellHandler {
                 printError(EMPTY, e);
             }
         }
-
     }
 
     @Override
@@ -125,6 +124,7 @@ public class InteractiveClientShellHandler extends DefaultClientShellHandler {
             if (output instanceof MetaSignal) {
                 MetaSignal meta = (MetaSignal) output;
                 getSingle().merge(meta.getRegistedMethods());
+                super.sessionId = meta.getSessionId();
             }
             // Progress
             else if (output instanceof ProgressSignal) {
@@ -179,7 +179,6 @@ public class InteractiveClientShellHandler extends DefaultClientShellHandler {
         if (output instanceof CharSequence) {
             out.println(output);
         }
-
     }
 
     /**

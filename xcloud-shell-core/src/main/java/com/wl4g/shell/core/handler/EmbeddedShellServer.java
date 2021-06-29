@@ -62,7 +62,7 @@ import com.wl4g.shell.common.signal.Signal;
 import com.wl4g.shell.common.signal.StdinSignal;
 import com.wl4g.shell.core.config.ServerShellProperties;
 import com.wl4g.shell.core.config.ServerShellProperties.AclInfo;
-import com.wl4g.shell.core.config.ServerShellProperties.AclInfo.AuthInfo;
+import com.wl4g.shell.core.config.ServerShellProperties.AclInfo.CredentialsInfo;
 import com.wl4g.shell.core.utils.AuthUtils;
 
 import lombok.Getter;
@@ -179,15 +179,15 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
 
         // Check shell channel authentication.
         StdinCommandWrapper stdin = currentStdin.get();
-        AuthenticationInfo authenticationInfo = stdin.getHandler().getAuthInfo();
-        if (!authenticationInfo.isAuthenticated()) {
+        AuthenticationInfo authInfo = stdin.getHandler().getAuthenticationInfo();
+        if (!authInfo.isAuthenticated()) {
             throw new UnauthenticationShellException("Authentication failure.");
         }
 
         // Check ACL by roles.
         String[] roles = tm.getShellMethod().aclRoles();
-        AuthInfo authInfo = getConfig().getAcl().getUserAuthInfo(authenticationInfo.getUsername());
-        if (!AuthUtils.matchsRoles(roles, authInfo.getRoles())) {
+        CredentialsInfo credentials = getConfig().getAcl().getCredentialsInfo(authInfo.getUsername());
+        if (!AuthUtils.matchsRoles(roles, credentials.getRoles())) {
             throw new UnauthorizedShellException("Access permission not defined.");
         }
     }
@@ -276,7 +276,7 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
             this.currentContext = context;
         }
 
-        public AuthenticationInfo getAuthInfo() {
+        public AuthenticationInfo getAuthenticationInfo() {
             return authInfo;
         }
 
@@ -294,7 +294,7 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
                         authInfo.setSessionId(generateSessionId());
                         output = new MetaSignal(registrar.getTargetMethods(), authInfo.getSessionId());
                     } else {
-                        notNull(getAuthInfo().getSessionId(), InternalShellException.class,
+                        notNull(getAuthenticationInfo().getSessionId(), InternalShellException.class,
                                 "Internal error, shell handler sessionId required.");
                         notNull(((Signal) signal).getSessionId(), InternalShellException.class,
                                 "Internal error, request shell signal sessionId required.");
@@ -309,8 +309,10 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
                             if (acl.isEnabled()) {
                                 if (acl.matchs(login.getUsername(), login.getPassword())) {
                                     // Sets authentication success info.
-                                    authInfo.setAuthenticated(true);
                                     authInfo.setUsername(login.getUsername());
+                                    authInfo.setAuthenticated(true);
+                                    authInfo.setHost(socket.getInetAddress().getHostName());
+                                    authInfo.setTimestamp(System.currentTimeMillis());
                                     output = new LoginSignal(true, authInfo.getSessionId()).withDesc("Authenticated");
                                 } else {
                                     output = new LoginSignal(false).withDesc("Authentication failure.");
@@ -427,10 +429,14 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
     static class AuthenticationInfo {
         /** Shell session ID. */
         private String sessionId;
-        /** Authentication state. */
-        private boolean authenticated = false;
         /** Authentication username. */
         private String username;
+        /** Authentication state. */
+        private boolean authenticated = false;
+        /** Authentication host. */
+        private String host;
+        /** Authentication timestamp. */
+        private long timestamp;
     }
 
     /**

@@ -20,6 +20,9 @@ import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 
 import java.util.UUID;
 
+import com.wl4g.shell.common.annotation.ShellMethod;
+import com.wl4g.shell.core.config.ServerShellProperties;
+
 /**
  * {@link AuthUtils}
  * 
@@ -29,14 +32,29 @@ import java.util.UUID;
  */
 public abstract class AuthUtils {
 
+    /**
+     * Generate session ID.
+     * 
+     * @return
+     */
     public static String generateSessionId() {
         return UUID.randomUUID().toString().replaceAll("-", "");
     }
 
-    public static boolean matchsRoles(final String[] shellMethodRoles, final String[] userRoles) {
+    /**
+     * Matching roles.
+     * 
+     * @param methodRoles
+     *            roles from {@link ShellMethod#aclRoles()}
+     * @param userRoles
+     *            roles from
+     *            {@link ServerShellProperties.AclInfo.CredentialsInfo#getRoles()}
+     * @return
+     */
+    public static boolean matchsRoles(final String[] methodRoles, final String[] userRoles) {
         // Shell method roles is empty, means allowed anonymous access.
-        if (!isEmptyArray(shellMethodRoles)) {
-            for (String r1 : shellMethodRoles) {
+        if (!isEmptyArray(methodRoles)) {
+            for (String r1 : methodRoles) {
                 for (String r2 : userRoles) {
                     if (trimToEmpty(r1).equals(trimToEmpty(r2))) {
                         return true;
