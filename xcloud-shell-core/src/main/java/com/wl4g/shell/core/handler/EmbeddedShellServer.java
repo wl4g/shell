@@ -19,6 +19,8 @@ import static com.wl4g.component.common.lang.Assert2.isInstanceOf;
 import static com.wl4g.component.common.lang.Assert2.notNull;
 import static com.wl4g.component.common.lang.Assert2.notNullOf;
 import static com.wl4g.component.common.lang.Assert2.state;
+import static com.wl4g.shell.common.cli.BuiltInCommand.CMD_LO;
+import static com.wl4g.shell.common.cli.BuiltInCommand.CMD_LOGIN;
 import static com.wl4g.shell.common.signal.ChannelState.RUNNING;
 import static com.wl4g.shell.core.utils.AuthUtils.genSessionID;
 import static java.lang.String.format;
@@ -181,7 +183,9 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
         StdinCommandWrapper stdin = currentStdin.get();
         AuthenticationInfo authInfo = stdin.getHandler().getAuthenticationInfo();
         if (!authInfo.isAuthenticated()) {
-            throw new UnauthenticationShellException("This command methods must be authenticated to execute.");
+            throw new UnauthenticationShellException(format(
+                    "This command method must be authenticated to execution, Please exec the command: '%s|%s' to authentication.",
+                    CMD_LOGIN, CMD_LO));
         }
 
         // Check ACL by roles.
