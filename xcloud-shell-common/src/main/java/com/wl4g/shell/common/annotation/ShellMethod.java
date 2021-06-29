@@ -66,7 +66,7 @@ public @interface ShellMethod {
      * 
      * @return
      */
-    String[] aclRoles() default {};
+    String[] permissions() default {};
 
     /**
      * If lock is true, it means that concurrent execution lock is enabled

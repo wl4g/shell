@@ -20,7 +20,7 @@ spring:
         info:
           username: admin
           password: 123456
-          roles: ['normal_role']
+          permissions: ['normal']
 
 # ### Server configuration. ###
 server:

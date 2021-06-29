@@ -20,7 +20,7 @@ import static com.wl4g.component.common.lang.Assert2.notNull;
 import static com.wl4g.component.common.lang.Assert2.notNullOf;
 import static com.wl4g.component.common.lang.Assert2.state;
 import static com.wl4g.shell.common.signal.ChannelState.RUNNING;
-import static com.wl4g.shell.core.utils.AuthUtils.generateSessionId;
+import static com.wl4g.shell.core.utils.AuthUtils.genSessionID;
 import static java.lang.String.format;
 import static java.lang.Thread.sleep;
 import static java.util.Objects.isNull;
@@ -185,9 +185,9 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
         }
 
         // Check ACL by roles.
-        String[] roles = tm.getShellMethod().aclRoles();
+        String[] permissions = tm.getShellMethod().permissions();
         CredentialsInfo credentials = getConfig().getAcl().getCredentialsInfo(authInfo.getUsername());
-        if (!AuthUtils.matchsRoles(roles, credentials.getRoles())) {
+        if (!AuthUtils.matchAclPermits(permissions, credentials.getPermissions())) {
             throw new UnauthorizedShellException("Access permission not defined.");
         }
     }
@@ -291,7 +291,7 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
                     Object output = null;
                     // Register shell methods
                     if (signal instanceof MetaSignal) {
-                        authInfo.setSessionId(generateSessionId());
+                        authInfo.setSessionId(genSessionID());
                         output = new MetaSignal(registrar.getTargetMethods(), authInfo.getSessionId());
                     } else {
                         notNull(getAuthenticationInfo().getSessionId(), InternalShellException.class,

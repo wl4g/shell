@@ -222,17 +222,17 @@ public class ExampleConsole {
     // --------------- Testing for ACL. ----------------
 
     /**
-     * For example: $> testAclAllow
+     * For example: $> testAclAnon
      */
-    @ShellMethod(keys = "testAclAllow", group = GROUP_NAME, aclRoles = "normal_role", help = "This is a test execution ACL command methods")
-    public void testAclAllow(SimpleShellContext context) {
-        context.printf("TestAclAllow starting ...");
+    @ShellMethod(keys = "testAclAnon", group = GROUP_NAME, help = "This is a test execution ACL command methods")
+    public void testAclAnon(SimpleShellContext context) {
+        context.printf("TestAclAnon starting ...");
     }
 
     /**
      * For example: $> testAclReject
      */
-    @ShellMethod(keys = "testAclReject", group = GROUP_NAME, aclRoles = "administrator_role", help = "This is a test execution ACL command methods")
+    @ShellMethod(keys = "testAclReject", group = GROUP_NAME, permissions = "administrator", help = "This is a test execution ACL command methods")
     public void testAclReject(SimpleShellContext context) {
         context.printf("TestAclReject starting ...");
     }

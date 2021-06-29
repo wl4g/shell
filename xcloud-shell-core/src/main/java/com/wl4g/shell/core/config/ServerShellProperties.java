@@ -131,7 +131,7 @@ public class ServerShellProperties extends BaseShellProperties {
         public static class CredentialsInfo {
             private String username;
             private String password;
-            private String[] roles;
+            private String[] permissions;
         }
 
     }

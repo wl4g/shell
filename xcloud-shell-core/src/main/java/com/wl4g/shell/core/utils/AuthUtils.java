@@ -37,28 +37,30 @@ public abstract class AuthUtils {
      * 
      * @return
      */
-    public static String generateSessionId() {
+    public static String genSessionID() {
         return UUID.randomUUID().toString().replaceAll("-", "");
     }
 
     /**
      * Matching roles.
      * 
-     * @param methodRoles
+     * @param defineRoles
      *            roles from {@link ShellMethod#aclRoles()}
      * @param userRoles
      *            roles from
-     *            {@link ServerShellProperties.AclInfo.CredentialsInfo#getRoles()}
+     *            {@link ServerShellProperties.AclInfo.CredentialsInfo#getPermissions()}
      * @return
      */
-    public static boolean matchsRoles(final String[] methodRoles, final String[] userRoles) {
-        // Shell method roles is empty, means allowed anonymous access.
-        if (!isEmptyArray(methodRoles)) {
-            for (String r1 : methodRoles) {
-                for (String r2 : userRoles) {
-                    if (trimToEmpty(r1).equals(trimToEmpty(r2))) {
-                        return true;
-                    }
+    public static boolean matchAclPermits(final String[] defineRoles, final String[] userRoles) {
+        // Method define roles is empty, allowed anonymous access.
+        if (isEmptyArray(defineRoles)) {
+            return true;
+        }
+        // Check that the user has access permissions.
+        for (String r1 : defineRoles) {
+            for (String r2 : userRoles) {
+                if (trimToEmpty(r1).equals(trimToEmpty(r2))) {
+                    return true;
                 }
             }
         }
