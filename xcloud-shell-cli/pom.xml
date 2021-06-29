@@ -53,7 +53,7 @@
 	<parent>
 		<groupId>com.wl4g</groupId>
 		<artifactId>xcloud-shell</artifactId>
-		<version>2.2.3</version>
+		<version>3.0.0</version>
 	</parent>
 	<properties>
 		<java.version>1.8</java.version>
