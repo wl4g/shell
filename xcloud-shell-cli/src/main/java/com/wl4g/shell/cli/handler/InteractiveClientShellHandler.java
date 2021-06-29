@@ -171,7 +171,7 @@ public class InteractiveClientShellHandler extends DefaultClientShellHandler {
             // Stderr
             else if (output instanceof StderrSignal) {
                 StderrSignal stderr = (StderrSignal) output;
-                printError(EMPTY, stderr.getThrowable());
+                printError("-ERROR: ", stderr.getThrowable());
                 wakeup();
             }
             // BOF stdout
