@@ -181,7 +181,7 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
         StdinCommandWrapper stdin = currentStdin.get();
         AuthenticationInfo authInfo = stdin.getHandler().getAuthenticationInfo();
         if (!authInfo.isAuthenticated()) {
-            throw new UnauthenticationShellException("Authentication failure.");
+            throw new UnauthenticationShellException("This command method must be authenticated before it can be accessed.");
         }
 
         // Check ACL by roles.

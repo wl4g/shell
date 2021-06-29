@@ -58,7 +58,6 @@
 	<properties>
 		<java.version>1.8</java.version>
 		<jline.version>3.9.0</jline.version>
-		<final-name>shell-cli</final-name>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -234,7 +233,7 @@
 											<resource>*.*</resource>
 										</transformer>
 									</transformers>
-									<shadedArtifactId>${final-name}</shadedArtifactId>
+									<shadedArtifactId>${project.artifactId}</shadedArtifactId>
 									<shadedArtifactAttached>true</shadedArtifactAttached>
 									<shadedClassifierName>executable</shadedClassifierName>
 								</configuration>

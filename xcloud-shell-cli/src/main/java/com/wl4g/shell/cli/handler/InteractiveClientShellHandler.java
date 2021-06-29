@@ -68,7 +68,7 @@ public class InteractiveClientShellHandler extends DefaultClientShellHandler {
     /** Mark the current console pending state. */
     private volatile boolean pauseState = false;
 
-    /** Current command line stdin string. */
+    /** Current line standard input string. */
     private Object stdin;
 
     /** Payload command last sent timestamp, for timeout check. */
@@ -136,11 +136,10 @@ public class InteractiveClientShellHandler extends DefaultClientShellHandler {
                 LoginSignal login = (LoginSignal) output;
                 if (login.isAuthenticated()) {
                     out.println(login.getDesc());
-                    wakeup();
                 } else {
                     err.println(login.getDesc().concat(", "));
-                    waitForPreLoginStdin();
                 }
+                wakeup();
             }
             // Progress
             else if (output instanceof ProgressSignal) {
@@ -197,13 +196,18 @@ public class InteractiveClientShellHandler extends DefaultClientShellHandler {
         }
     }
 
+    /**
+     * Waiting input login credentials.
+     * 
+     * @return
+     */
     private PreLoginSignal waitForPreLoginStdin() {
         String username = null, password = null;
         do {
             username = lineReader.readLine("Please input username ?\n");
         } while (isEmpty(username));
         do {
-            password = lineReader.readLine("Please input password ?\n");
+            password = lineReader.readLine("Please input password ?\n", new Character('\0'));
         } while (isEmpty(password));
         return (PreLoginSignal) (stdin = new PreLoginSignal(username, password));
     }

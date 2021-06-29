@@ -269,34 +269,34 @@ public class TargetMethodWrapper implements Serializable {
      * @version v1.0 2019年5月3日
      * @since
      */
-    public static class TargetParameter implements Serializable {
-        final private static long serialVersionUID = -8763372515086222131L;
+    public static class TargetParameter implements java.io.Serializable {
+        private static final long serialVersionUID = -8763372515086222131L;
 
         /**
          * Native method
          */
-        final transient private Method method;
+        private transient final Method method;
 
         /**
          * Method parameter type
          */
-        final transient private Class<?> paramType;
+        private transient final Class<?> paramType;
 
         /**
          * Method parameter index
          */
-        final transient private int index;
+        private transient final int index;
 
         /**
          * Method parameter shell option annotation.</br>
          * Annotation for basic type parameters.
          */
-        final private ShellOption shellOption;
+        private final ShellOption shellOption;
 
         /**
          * Method parameter attributes
          */
-        final private Map<HelpOption, String> attributes = new HashMap<>(4);
+        private final Map<HelpOption, String> attributes = new HashMap<>(4);
 
         public TargetParameter(Method method, Class<?> paramType, ShellOption shOpt, int index) {
             this(method, paramType, index, shOpt, null);
