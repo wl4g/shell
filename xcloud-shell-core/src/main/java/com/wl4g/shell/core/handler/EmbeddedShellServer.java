@@ -22,6 +22,7 @@ import static com.wl4g.component.common.lang.Assert2.state;
 import static com.wl4g.shell.common.signal.ChannelState.RUNNING;
 import static com.wl4g.shell.core.utils.AuthUtils.genSessionID;
 import static java.lang.String.format;
+import static java.lang.System.currentTimeMillis;
 import static java.lang.Thread.sleep;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -159,18 +160,17 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
     }
 
     @Override
-    protected void preHandleInput(TargetMethodWrapper tm, List<Object> args) {
-        assertShellAclPermission(tm, args);
-        super.preHandleInput(tm, args);
+    protected void preHandleCommand(List<String> commands, TargetMethodWrapper tm) {
+        assertShellAclPermission(tm);
+        super.preHandleCommand(commands, tm);
     }
 
     /**
      * Assertion shell channel ACL permission by based on roles.
      * 
      * @param tm
-     * @param args
      */
-    private void assertShellAclPermission(TargetMethodWrapper tm, List<Object> args) {
+    private void assertShellAclPermission(TargetMethodWrapper tm) {
         // Skip no enabled.
         if (!getConfig().getAcl().isEnabled()) {
             log.debug("No enabled acl of shell target method: {}", tm);
@@ -303,7 +303,7 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
                     if (signal instanceof PreLoginSignal) {
                         PreLoginSignal login = (PreLoginSignal) signal;
                         if (authInfo.isAuthenticated()) {
-                            output = new LoginSignal(true, login.getSessionId()).withDesc("Authenticated");
+                            output = new LoginSignal(true, login.getSessionId()).withDesc("Authenticated.");
                         } else {
                             AclInfo acl = getConfig().getAcl();
                             if (acl.isEnabled()) {
@@ -312,13 +312,13 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
                                     authInfo.setUsername(login.getUsername());
                                     authInfo.setAuthenticated(true);
                                     authInfo.setHost(socket.getInetAddress().getHostName());
-                                    authInfo.setTimestamp(System.currentTimeMillis());
-                                    output = new LoginSignal(true, authInfo.getSessionId()).withDesc("Authenticated");
+                                    authInfo.setTimestamp(currentTimeMillis());
+                                    output = new LoginSignal(true, authInfo.getSessionId()).withDesc("Authentication success.");
                                 } else {
                                     output = new LoginSignal(false).withDesc("Authentication failure.");
                                 }
                             } else {
-                                output = new LoginSignal(false).withDesc("No authentication required");
+                                output = new LoginSignal(false).withDesc("No authentication required.");
                             }
                         }
                     }

@@ -20,8 +20,8 @@ import static com.wl4g.component.common.lang.Assert2.notNull;
 import static com.wl4g.component.common.lang.Assert2.state;
 import static com.wl4g.shell.cli.config.ClientShellHandlerRegistrar.getSingle;
 import static com.wl4g.shell.common.annotation.ShellOption.GNU_CMD_LONG;
-import static com.wl4g.shell.common.cli.BuiltInCommand.INTERNAL_HE;
-import static com.wl4g.shell.common.cli.BuiltInCommand.INTERNAL_HELP;
+import static com.wl4g.shell.common.cli.BuiltInCommand.CMD_HE;
+import static com.wl4g.shell.common.cli.BuiltInCommand.CMD_HELP;
 import static com.wl4g.shell.common.utils.LineUtils.clean;
 import static com.wl4g.shell.common.utils.LineUtils.parse;
 import static java.lang.String.format;
@@ -102,7 +102,7 @@ public abstract class DefaultClientShellHandler extends GenericShellHandler impl
     /**
      * Attributed string
      */
-    public static final AttributedString DEFAULT_ATTRIBUTED = new AttributedString("console> ");
+    public static final AttributedString DEFAULT_ATTRIBUTED = new AttributedString("console");
 
     /**
      * Shell configuration
@@ -204,10 +204,10 @@ public abstract class DefaultClientShellHandler extends GenericShellHandler impl
                     }
                     // help command? [MARK0] $> add --help
                     else if (cmds.size() > 1
-                            && equalsAny(cmds.get(1), (GNU_CMD_LONG + INTERNAL_HELP), (GNU_CMD_LONG + INTERNAL_HE))) {
+                            && equalsAny(cmds.get(1), (GNU_CMD_LONG + CMD_HELP), (GNU_CMD_LONG + CMD_HE))) {
                         isRemoteCommand = false;
                         // e.g: '$> help add'
-                        line = clean(INTERNAL_HELP) + " " + cmds.get(0);
+                        line = clean(CMD_HELP) + " " + cmds.get(0);
                         // Set current line
                         DefaultBuiltInCommand.senseLine(line);
                         process(line);
@@ -249,7 +249,7 @@ public abstract class DefaultClientShellHandler extends GenericShellHandler impl
      */
     private LineReader createLineReader() {
         try {
-            return LineReaderBuilder.builder().appName("Devops Shell Cli").completer(new DynamicCompleter(getSingle()))
+            return LineReaderBuilder.builder().appName("XCloud Shell").completer(new DynamicCompleter(getSingle()))
                     .terminal(TerminalBuilder.terminal()).build();
         } catch (IOException e) {
             throw new IllegalStateException(e);

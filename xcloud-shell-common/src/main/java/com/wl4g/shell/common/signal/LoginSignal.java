@@ -15,10 +15,6 @@
  */
 package com.wl4g.shell.common.signal;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Wither;
-
 /**
  * Login commands message
  * 
@@ -26,9 +22,6 @@ import lombok.experimental.Wither;
  * @version v1.0 2019年5月4日
  * @since
  */
-@Getter
-@Setter
-@Wither
 public class LoginSignal extends Signal {
     private static final long serialVersionUID = -8574315246731906685L;
 
@@ -45,6 +38,32 @@ public class LoginSignal extends Signal {
     public LoginSignal(boolean authenticated, String sessionId) {
         setAuthenticated(authenticated);
         setSessionId(sessionId);
+    }
+
+    public boolean isAuthenticated() {
+        return authenticated;
+    }
+
+    public void setAuthenticated(boolean authenticated) {
+        this.authenticated = authenticated;
+    }
+
+    public LoginSignal withAuthenticated(boolean authenticated) {
+        setAuthenticated(authenticated);
+        return this;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public LoginSignal withDesc(String desc) {
+        setDesc(desc);
+        return this;
     }
 
 }

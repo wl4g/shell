@@ -16,18 +16,22 @@
 package com.wl4g.shell.cli.handler;
 
 import static com.wl4g.component.common.cli.ProcessUtils.printProgress;
+import static com.wl4g.component.common.lang.StringUtils2.isEmpty;
 import static com.wl4g.shell.cli.config.ClientShellHandlerRegistrar.getSingle;
-import static com.wl4g.shell.common.cli.BuiltInCommand.INTERNAL_EX;
-import static com.wl4g.shell.common.cli.BuiltInCommand.INTERNAL_EXIT;
-import static com.wl4g.shell.common.cli.BuiltInCommand.INTERNAL_QU;
-import static com.wl4g.shell.common.cli.BuiltInCommand.INTERNAL_QUIT;
+import static com.wl4g.shell.common.cli.BuiltInCommand.CMD_EX;
+import static com.wl4g.shell.common.cli.BuiltInCommand.CMD_EXIT;
+import static com.wl4g.shell.common.cli.BuiltInCommand.CMD_LO;
+import static com.wl4g.shell.common.cli.BuiltInCommand.CMD_LOGIN;
+import static com.wl4g.shell.common.cli.BuiltInCommand.CMD_QU;
+import static com.wl4g.shell.common.cli.BuiltInCommand.CMD_QUIT;
 import static com.wl4g.shell.common.utils.ShellUtils.isTrue;
 import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
 import static java.lang.System.err;
 import static java.lang.System.out;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.equalsAny;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -39,8 +43,10 @@ import com.wl4g.shell.common.signal.AckInterruptSignal;
 import com.wl4g.shell.common.signal.AskInterruptSignal;
 import com.wl4g.shell.common.signal.BOFStdoutSignal;
 import com.wl4g.shell.common.signal.EOFStdoutSignal;
+import com.wl4g.shell.common.signal.LoginSignal;
 import com.wl4g.shell.common.signal.MetaSignal;
 import com.wl4g.shell.common.signal.PreInterruptSignal;
+import com.wl4g.shell.common.signal.PreLoginSignal;
 import com.wl4g.shell.common.signal.ProgressSignal;
 import com.wl4g.shell.common.signal.Signal;
 import com.wl4g.shell.common.signal.StderrSignal;
@@ -53,6 +59,7 @@ import com.wl4g.shell.common.signal.StdoutSignal;
  * @version v1.0 2019年4月14日
  * @since
  */
+@SuppressWarnings("unused")
 public class InteractiveClientShellHandler extends DefaultClientShellHandler {
 
     /** Running status. */
@@ -62,7 +69,7 @@ public class InteractiveClientShellHandler extends DefaultClientShellHandler {
     private volatile boolean pauseState = false;
 
     /** Current command line stdin string. */
-    private String stdin;
+    private Object stdin;
 
     /** Payload command last sent timestamp, for timeout check. */
     private long lastCmdSentTime = 0L;
@@ -88,19 +95,17 @@ public class InteractiveClientShellHandler extends DefaultClientShellHandler {
                     notifyAll(); // see:MARK3
                 }
 
-                // Payload command?
-                if (!isBlank(stdin) && !isPaused()) {
+                if (!isEmpty(stdin) && equalsAny(stdin.toString(), CMD_LOGIN, CMD_LO)) {
+                    waitForPreLoginStdin();
+                }
+
+                // Payload command
+                if (!isEmpty(stdin) && !isPaused()) {
                     paused(); // Paused wait complete
                     lastCmdSentTime = currentTimeMillis();
                     writeStdin(stdin); // Do send command
                 }
 
-                // // e.g: when the last execution is not completed, the channel
-                // // has been interrupted, need wakeup the console prompt to
-                // // resume reading.
-                // if (isPaused() && !isActive()) {
-                // wakeup();
-                // }
             } catch (UserInterruptException e) { // e.g: Ctrl+C
                 // Last command is not completed, send interrupt signal
                 // stop gracefully
@@ -108,8 +113,8 @@ public class InteractiveClientShellHandler extends DefaultClientShellHandler {
                     writeStdin(new PreInterruptSignal(true));
                 } else {
                     // Last command completed, interrupt allowed.
-                    out.println(format("Command is cancelled. to exit please use: %s|%s|%s|%s", INTERNAL_EXIT, INTERNAL_EX,
-                            INTERNAL_QUIT, INTERNAL_QU));
+                    out.println(
+                            format("Command is cancelled. to exit please use: %s|%s|%s|%s", CMD_EXIT, CMD_EX, CMD_QUIT, CMD_QU));
                 }
             } catch (Throwable e) {
                 printError(EMPTY, e);
@@ -125,6 +130,17 @@ public class InteractiveClientShellHandler extends DefaultClientShellHandler {
                 MetaSignal meta = (MetaSignal) output;
                 getSingle().merge(meta.getRegistedMethods());
                 super.sessionId = meta.getSessionId();
+            }
+            // Login
+            else if (output instanceof LoginSignal) {
+                LoginSignal login = (LoginSignal) output;
+                if (login.isAuthenticated()) {
+                    out.println(login.getDesc());
+                    wakeup();
+                } else {
+                    err.println(login.getDesc().concat(", "));
+                    waitForPreLoginStdin();
+                }
             }
             // Progress
             else if (output instanceof ProgressSignal) {
@@ -142,9 +158,9 @@ public class InteractiveClientShellHandler extends DefaultClientShellHandler {
                     synchronized (this) { // MARK3
                         wait(TIMEOUT); // see:MARK2
                     }
-                } while (isBlank(stdin));
+                } while (isEmpty(stdin));
 
-                AckInterruptSignal confirm = new AckInterruptSignal(isTrue(trimToEmpty(stdin), false));
+                AckInterruptSignal confirm = new AckInterruptSignal(isTrue(trimToEmpty(stdin.toString()), false));
                 if (confirm.getConfirm()) {
                     out.println("Command interrupting...");
                 } else {
@@ -179,6 +195,17 @@ public class InteractiveClientShellHandler extends DefaultClientShellHandler {
         if (output instanceof CharSequence) {
             out.println(output);
         }
+    }
+
+    private PreLoginSignal waitForPreLoginStdin() {
+        String username = null, password = null;
+        do {
+            username = lineReader.readLine("Please input username ?\n");
+        } while (isEmpty(username));
+        do {
+            password = lineReader.readLine("Please input password ?\n");
+        } while (isEmpty(password));
+        return (PreLoginSignal) (stdin = new PreLoginSignal(username, password));
     }
 
     /**

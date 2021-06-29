@@ -227,6 +227,7 @@ public class ExampleConsole {
     @ShellMethod(keys = "testAclAnon", group = GROUP_NAME, help = "This is a test execution ACL command methods")
     public void testAclAnon(SimpleShellContext context) {
         context.printf("TestAclAnon starting ...");
+        context.completed();
     }
 
     /**

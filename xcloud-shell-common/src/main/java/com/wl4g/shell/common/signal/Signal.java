@@ -19,9 +19,6 @@ import java.io.Serializable;
 
 import javax.annotation.Nullable;
 
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * Shell transport signal
  * 
@@ -29,16 +26,17 @@ import lombok.Setter;
  * @version v1.0 2019年5月4日
  * @since
  */
-@Getter
-@Setter
 public abstract class Signal implements Serializable {
     private static final long serialVersionUID = 771621623117425564L;
 
     private @Nullable String sessionId;
 
-    @Override
-    public String toString() {
-        return getClass().getSimpleName().concat(" - ");
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 
 }

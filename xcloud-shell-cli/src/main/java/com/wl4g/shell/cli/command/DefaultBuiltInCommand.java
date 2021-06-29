@@ -15,9 +15,16 @@
  */
 package com.wl4g.shell.cli.command;
 
-import static java.lang.System.*;
+import static com.wl4g.component.common.cli.StandardFormatter.getHelpFormat;
+import static com.wl4g.component.common.lang.Assert2.hasText;
+import static com.wl4g.component.common.lang.Assert2.notNull;
+import static com.wl4g.component.common.lang.Assert2.state;
+import static java.lang.System.err;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
+import static org.apache.commons.lang3.SystemUtils.LINE_SEPARATOR;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -31,18 +38,13 @@ import org.apache.commons.cli.Options;
 import org.jline.terminal.Terminal;
 import org.jline.utils.InfoCmp.Capability;
 
-import static org.apache.commons.lang3.SystemUtils.*;
-import static org.apache.commons.lang3.StringUtils.*;
-
 import com.wl4g.shell.cli.config.ClientShellHandlerRegistrar;
 import com.wl4g.shell.cli.handler.DefaultClientShellHandler;
+import com.wl4g.shell.cli.handler.InteractiveClientShellHandler;
 import com.wl4g.shell.common.annotation.ShellMethod;
 import com.wl4g.shell.common.cli.BuiltInCommand;
 import com.wl4g.shell.common.cli.HelpOptions;
 import com.wl4g.shell.common.utils.LineUtils;
-
-import static com.wl4g.component.common.cli.StandardFormatter.getHelpFormat;
-import static com.wl4g.component.common.lang.Assert2.*;
 
 /**
  * Default internal command.
@@ -53,264 +55,270 @@ import static com.wl4g.component.common.lang.Assert2.*;
  */
 public class DefaultBuiltInCommand extends BuiltInCommand {
 
-	/**
-	 * Built-in Default internal commands group name.
-	 */
-	final public static String DEFAULT_GROUP = "Built-in commands";
+    /**
+     * Built-in Default internal commands group name.
+     */
+    public static final String DEFAULT_GROUP = "Built-in commands";
 
-	/**
-	 * Current read line strings.
-	 */
-	final private static ThreadLocal<String> lineCache = new InheritableThreadLocal<>();
+    /**
+     * Current read line strings.
+     */
+    private static final ThreadLocal<String> lineCache = new InheritableThreadLocal<>();
 
-	/**
-	 * Shell handler bean registry
-	 */
-	final protected ClientShellHandlerRegistrar registry;
+    /**
+     * Shell handler bean registry
+     */
+    protected final ClientShellHandlerRegistrar registry;
 
-	/**
-	 * Line process runner.
-	 */
-	final protected DefaultClientShellHandler runner;
+    /**
+     * Line process runner.
+     */
+    protected final DefaultClientShellHandler runner;
 
-	public DefaultBuiltInCommand(DefaultClientShellHandler runner) {
-		notNull(runner, "runner is null, please check configure");
-		this.runner = runner;
-		this.registry = (ClientShellHandlerRegistrar) runner.getRegistrar();
-		notNull(registry, "Registry must not be null");
-	}
+    public DefaultBuiltInCommand(DefaultClientShellHandler runner) {
+        notNull(runner, "runner is null, please check configure");
+        this.runner = runner;
+        this.registry = (ClientShellHandlerRegistrar) runner.getRegistrar();
+        notNull(registry, "Registry must not be null");
+    }
 
-	@ShellMethod(keys = { INTERNAL_STACKTRACE, INTERNAL_ST }, group = DEFAULT_GROUP, help = "Exit current process")
-	public void stacktrace() {
-		err.println(runner.getLastStacktrace());
-	}
+    /**
+     * @see {@link InteractiveClientShellHandler#waitForPreLoginStdin()}
+     */
+    @ShellMethod(keys = { CMD_LOGIN, CMD_LO }, group = DEFAULT_GROUP, help = "Interactive login")
+    public void login() {
+    }
 
-	@ShellMethod(keys = { INTERNAL_QUIT, INTERNAL_QU, INTERNAL_EXIT,
-			INTERNAL_EX }, group = DEFAULT_GROUP, help = "Exit current process")
-	public void exit() {
-		runner.shutdown();
-	}
+    @ShellMethod(keys = { CMD_STACKTRACE, CMD_ST }, group = DEFAULT_GROUP, help = "Exit current process")
+    public void stacktrace() {
+        err.println(runner.getLastStacktrace());
+    }
 
-	/**
-	 * See:<a href=
-	 * "https://github.com/jline/jline3/issues/183">https://github.com/jline/jline3/issues/183</a>
-	 */
-	@ShellMethod(keys = { INTERNAL_CLEAR, INTERNAL_CLS }, group = DEFAULT_GROUP, help = "Clean up console history")
-	public void clear() {
-		Terminal terminal = runner.getLineReader().getTerminal();
-		terminal.puts(Capability.clear_screen);
-		terminal.flush();
-	}
+    @ShellMethod(keys = { CMD_QUIT, CMD_QU, CMD_EXIT, CMD_EX }, group = DEFAULT_GROUP, help = "Exit current process")
+    public void exit() {
+        runner.shutdown();
+    }
 
-	@ShellMethod(keys = { INTERNAL_HISTORY, INTERNAL_HIS }, group = DEFAULT_GROUP, help = "View commands execution history")
-	public String history() {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss").withZone(ZoneId.systemDefault());
+    /**
+     * See:<a href=
+     * "https://github.com/jline/jline3/issues/183">https://github.com/jline/jline3/issues/183</a>
+     */
+    @ShellMethod(keys = { CMD_CLEAR, CMD_CLS }, group = DEFAULT_GROUP, help = "Clean up console history")
+    public void clear() {
+        Terminal terminal = runner.getLineReader().getTerminal();
+        terminal.puts(Capability.clear_screen);
+        terminal.flush();
+    }
 
-		StringBuffer history = new StringBuffer();
-		runner.getLineReader().getHistory().forEach(h -> {
-			history.append(formatter.format(h.time()) + " - " + h.line());
-			history.append("\n");
-		});
+    @ShellMethod(keys = { CMD_HISTORY, CMD_HIS }, group = DEFAULT_GROUP, help = "View commands execution history")
+    public String history() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss").withZone(ZoneId.systemDefault());
 
-		return history.toString();
-	}
+        StringBuffer history = new StringBuffer();
+        runner.getLineReader().getHistory().forEach(h -> {
+            history.append(formatter.format(h.time()) + " - " + h.line());
+            history.append("\n");
+        });
 
-	/**
-	 * See:[{@link DefaultClientShellHandler#submit}.MARK0]
-	 * 
-	 * @return
-	 */
-	@ShellMethod(keys = { INTERNAL_HELP, INTERNAL_HE }, group = DEFAULT_GROUP, help = "View supported commands help information")
-	public String help() {
-		try {
-			// Input line string
-			String line = lineCache.get();
-			List<String> commands = LineUtils.parse(line);
-			if (isNull(commands) || commands.isEmpty()) {
-				return EMPTY;
-			}
+        return history.toString();
+    }
 
-			// For example: $> help add
-			if (commands.size() > 1) {
-				String argname = commands.get(1);
-				HelpOptions hopts = registry.getHelpOptions().get(argname);
-				return getHelpFormat(argname, hopts, hopts.getShellMethod().help());
-			}
+    /**
+     * See:[{@link DefaultClientShellHandler#submit}.MARK0]
+     * 
+     * @return
+     */
+    @ShellMethod(keys = { CMD_HELP, CMD_HE }, group = DEFAULT_GROUP, help = "View supported commands help information")
+    public String help() {
+        try {
+            // Input line string
+            String line = lineCache.get();
+            List<String> commands = LineUtils.parse(line);
+            if (isNull(commands) || commands.isEmpty()) {
+                return EMPTY;
+            }
 
-			// For example: $> add --help
-			StringBuffer helpBuf = new StringBuffer();
-			// Help options(group name dict sort)
-			Map<String, HelpGroupWrapper> hGroups = new TreeMap<>((o1, o2) -> o1.compareTo(o2));
+            // For example: $> help add
+            if (commands.size() > 1) {
+                String argname = commands.get(1);
+                HelpOptions hopts = registry.getHelpOptions().get(argname);
+                return getHelpFormat(argname, hopts, hopts.getShellMethod().help());
+            }
 
-			// Transform to group options
-			for (Entry<String, HelpOptions> ent : registry.getHelpOptions().entrySet()) { // [MARK0]
-				String argname = ent.getKey();
-				HelpOptions hopts = ent.getValue();
-				ShellMethod sm = hopts.getShellMethod();
+            // For example: $> add --help
+            StringBuffer helpBuf = new StringBuffer();
+            // Help options(group name dict sort)
+            Map<String, HelpGroupWrapper> hGroups = new TreeMap<>((o1, o2) -> o1.compareTo(o2));
 
-				HelpGroupWrapper hGroup = hGroups.get(sm.group());
-				if (hGroup == null) {
-					hGroup = new HelpGroupWrapper(sm.group());
-				}
-				HelpMethod hm = new HelpMethod(argname, hopts, sm.help());
-				if (!hGroup.getHelpMethods().contains(hm)) {
-					hGroup.getHelpMethods().add(hm);
-				}
-				hGroups.put(sm.group(), hGroup);
-			}
+            // Transform to group options
+            for (Entry<String, HelpOptions> ent : registry.getHelpOptions().entrySet()) { // [MARK0]
+                String argname = ent.getKey();
+                HelpOptions hopts = ent.getValue();
+                ShellMethod sm = hopts.getShellMethod();
 
-			// Move default group to first.
-			HelpGroupWrapper defaultGroup = hGroups.remove(DEFAULT_GROUP);
-			appendHelp(DEFAULT_GROUP, defaultGroup, helpBuf);
+                HelpGroupWrapper hGroup = hGroups.get(sm.group());
+                if (hGroup == null) {
+                    hGroup = new HelpGroupWrapper(sm.group());
+                }
+                HelpMethod hm = new HelpMethod(argname, hopts, sm.help());
+                if (!hGroup.getHelpMethods().contains(hm)) {
+                    hGroup.getHelpMethods().add(hm);
+                }
+                hGroups.put(sm.group(), hGroup);
+            }
 
-			// Print group options.
-			hGroups.forEach((group, wrap) -> appendHelp(group, wrap, helpBuf));
+            // Move default group to first.
+            HelpGroupWrapper defaultGroup = hGroups.remove(DEFAULT_GROUP);
+            appendHelp(DEFAULT_GROUP, defaultGroup, helpBuf);
 
-			return helpBuf.toString();
-		} finally {
-			lineCache.remove();
-		}
-	}
+            // Print group options.
+            hGroups.forEach((group, wrap) -> appendHelp(group, wrap, helpBuf));
 
-	/**
-	 * Append help as strings.
-	 * 
-	 * @param group
-	 * @param hGroup
-	 * @param helpString
-	 */
-	private void appendHelp(String group, HelpGroupWrapper hGroup, StringBuffer helpString) {
-		state(nonNull(hGroup), "Internal error, help group is null, please check the server's log");
+            return helpBuf.toString();
+        } finally {
+            lineCache.remove();
+        }
+    }
 
-		helpString.append("\n----- " + group + " -----\n\n");
-		for (HelpMethod hm : hGroup.getHelpMethods()) {
-			helpString.append(getHelpFormat(hm.getArgname(), hm.getOptions(), hm.getHelp()));
-			// Optimize: Printing default commands does not require line feeds.
-			if (equalsIgnoreCase(group, DEFAULT_GROUP)) {
-				helpString.delete(helpString.length() - LINE_SEPARATOR.length(), helpString.length());
-			}
-			if (!hm.getOptions().getOptions().isEmpty()) {
-				helpString.append("\n");
-			}
-		}
+    /**
+     * Append help as strings.
+     * 
+     * @param group
+     * @param hGroup
+     * @param helpString
+     */
+    private void appendHelp(String group, HelpGroupWrapper hGroup, StringBuffer helpString) {
+        state(nonNull(hGroup), "Internal error, help group is null, please check the server's log");
 
-	}
+        helpString.append("\n----- " + group + " -----\n\n");
+        for (HelpMethod hm : hGroup.getHelpMethods()) {
+            helpString.append(getHelpFormat(hm.getArgname(), hm.getOptions(), hm.getHelp()));
+            // Optimize: Printing default commands does not require line feeds.
+            if (equalsIgnoreCase(group, DEFAULT_GROUP)) {
+                helpString.delete(helpString.length() - LINE_SEPARATOR.length(), helpString.length());
+            }
+            if (!hm.getOptions().getOptions().isEmpty()) {
+                helpString.append("\n");
+            }
+        }
 
-	/**
-	 * Set current line
-	 * 
-	 * @param line
-	 */
-	public static void senseLine(String line) {
-		lineCache.set(line);
-	}
+    }
 
-	/**
-	 * Help group wrapper
-	 * 
-	 * @author Wangl.sir <983708408@qq.com>
-	 * @version v1.0 2019年5月4日
-	 * @since
-	 */
-	class HelpGroupWrapper {
+    /**
+     * Set current line
+     * 
+     * @param line
+     */
+    public static void senseLine(String line) {
+        lineCache.set(line);
+    }
 
-		final private String group;
+    /**
+     * Help group wrapper
+     * 
+     * @author Wangl.sir <983708408@qq.com>
+     * @version v1.0 2019年5月4日
+     * @since
+     */
+    class HelpGroupWrapper {
 
-		final private LinkedList<HelpMethod> helpMethods = new LinkedList<>();
+        final private String group;
 
-		public HelpGroupWrapper(String group) {
-			hasText(group, "Group must not be empty");
-			this.group = group;
-		}
+        final private LinkedList<HelpMethod> helpMethods = new LinkedList<>();
 
-		public String getGroup() {
-			return group;
-		}
+        public HelpGroupWrapper(String group) {
+            hasText(group, "Group must not be empty");
+            this.group = group;
+        }
 
-		public LinkedList<HelpMethod> getHelpMethods() {
-			return helpMethods;
-		}
+        public String getGroup() {
+            return group;
+        }
 
-		@Override
-		public String toString() {
-			return "HelpGroupWrapper [group=" + group + ", helpMethods=" + helpMethods + "]";
-		}
+        public LinkedList<HelpMethod> getHelpMethods() {
+            return helpMethods;
+        }
 
-	}
+        @Override
+        public String toString() {
+            return "HelpGroupWrapper [group=" + group + ", helpMethods=" + helpMethods + "]";
+        }
 
-	/**
-	 * Help method
-	 * 
-	 * @author Wangl.sir <983708408@qq.com>
-	 * @version v1.0 2019年5月4日
-	 * @since
-	 */
-	class HelpMethod {
+    }
 
-		final private String argname;
+    /**
+     * Help method
+     * 
+     * @author Wangl.sir <983708408@qq.com>
+     * @version v1.0 2019年5月4日
+     * @since
+     */
+    class HelpMethod {
 
-		final private Options options;
+        final private String argname;
 
-		final private String help;
+        final private Options options;
 
-		public HelpMethod(String argname, Options options, String help) {
-			hasText(argname, "Argname must not be empty");
-			notNull(options, "options must not be null");
-			hasText(argname, "Arg help must not be empty");
-			this.argname = argname;
-			this.options = options;
-			this.help = help;
-		}
+        final private String help;
 
-		public String getArgname() {
-			return argname;
-		}
+        public HelpMethod(String argname, Options options, String help) {
+            hasText(argname, "Argname must not be empty");
+            notNull(options, "options must not be null");
+            hasText(argname, "Arg help must not be empty");
+            this.argname = argname;
+            this.options = options;
+            this.help = help;
+        }
 
-		public Options getOptions() {
-			return options;
-		}
+        public String getArgname() {
+            return argname;
+        }
 
-		public String getHelp() {
-			return help;
-		}
+        public Options getOptions() {
+            return options;
+        }
 
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + getOuterType().hashCode();
-			result = prime * result + ((argname == null) ? 0 : argname.hashCode());
-			return result;
-		}
+        public String getHelp() {
+            return help;
+        }
 
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			HelpMethod other = (HelpMethod) obj;
-			if (!getOuterType().equals(other.getOuterType()))
-				return false;
-			if (argname == null) {
-				if (other.argname != null)
-					return false;
-			} else if (!argname.equals(other.argname))
-				return false;
-			return true;
-		}
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + getOuterType().hashCode();
+            result = prime * result + ((argname == null) ? 0 : argname.hashCode());
+            return result;
+        }
 
-		@Override
-		public String toString() {
-			return "HelpMethod [argname=" + argname + ", options=" + options + ", help=" + help + "]";
-		}
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj)
+                return true;
+            if (obj == null)
+                return false;
+            if (getClass() != obj.getClass())
+                return false;
+            HelpMethod other = (HelpMethod) obj;
+            if (!getOuterType().equals(other.getOuterType()))
+                return false;
+            if (argname == null) {
+                if (other.argname != null)
+                    return false;
+            } else if (!argname.equals(other.argname))
+                return false;
+            return true;
+        }
 
-		private DefaultBuiltInCommand getOuterType() {
-			return DefaultBuiltInCommand.this;
-		}
+        @Override
+        public String toString() {
+            return "HelpMethod [argname=" + argname + ", options=" + options + ", help=" + help + "]";
+        }
 
-	}
+        private DefaultBuiltInCommand getOuterType() {
+            return DefaultBuiltInCommand.this;
+        }
+
+    }
 
 }

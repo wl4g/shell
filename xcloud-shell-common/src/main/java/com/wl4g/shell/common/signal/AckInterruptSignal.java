@@ -25,25 +25,25 @@ import static com.wl4g.component.common.lang.Assert2.notNullOf;
  * @since
  */
 public class AckInterruptSignal extends Signal {
-	private static final long serialVersionUID = -8574315246731906685L;
+    private static final long serialVersionUID = -8574315246731906685L;
 
-	/**
-	 * Current confirmed state.
-	 */
-	final private boolean confirm;
+    /**
+     * Current confirmed state.
+     */
+    private final boolean confirm;
 
-	public AckInterruptSignal(boolean confirm) {
-		notNullOf(confirm, "confirm");
-		this.confirm = confirm;
-	}
+    public AckInterruptSignal(boolean confirm) {
+        notNullOf(confirm, "confirm");
+        this.confirm = confirm;
+    }
 
-	public boolean getConfirm() {
-		return confirm;
-	}
+    public boolean getConfirm() {
+        return confirm;
+    }
 
-	@Override
-	public String toString() {
-		return super.toString().concat("[confirm=" + confirm + "]");
-	}
+    @Override
+    public String toString() {
+        return super.toString().concat("[confirm=" + confirm + "]");
+    }
 
 }

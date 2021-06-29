@@ -34,65 +34,26 @@ import com.wl4g.shell.common.annotation.ShellOption;
  */
 public abstract class BuiltInCommand {
 
-    /**
-     * Default long help method suffix.
-     */
-    public final static String INTERNAL_HELP = "help";
+    public final static String CMD_LOGIN = "login";
+    public final static String CMD_LO = "lo";
 
-    /**
-     * Default short help method suffix.
-     */
-    public final static String INTERNAL_HE = "he";
+    public final static String CMD_HELP = "help";
+    public final static String CMD_HE = "he";
 
-    /**
-     * Default long exit method suffix.
-     */
-    public final static String INTERNAL_EXIT = "exit";
+    public final static String CMD_EXIT = "exit";
+    public final static String CMD_QUIT = "quit";
 
-    /**
-     * Default short quit method suffix.
-     */
-    public final static String INTERNAL_QUIT = "quit";
+    public final static String CMD_QU = "qu";
+    public final static String CMD_EX = "ex";
 
-    /**
-     * Default short quit method suffix.
-     */
-    public final static String INTERNAL_QU = "qu";
+    public final static String CMD_HISTORY = "history";
+    public final static String CMD_HIS = "his";
 
-    /**
-     * Default short exit method suffix.
-     */
-    public final static String INTERNAL_EX = "ex";
+    public final static String CMD_CLEAR = "clear";
+    public final static String CMD_CLS = "cls";
 
-    /**
-     * Default long history method suffix.
-     */
-    public final static String INTERNAL_HISTORY = "history";
-
-    /**
-     * Default short history method suffix.
-     */
-    public final static String INTERNAL_HIS = "his";
-
-    /**
-     * Default long clear method suffix.
-     */
-    public final static String INTERNAL_CLEAR = "clear";
-
-    /**
-     * Default short clear method suffix.
-     */
-    public final static String INTERNAL_CLS = "cls";
-
-    /**
-     * Default long stacktrace method suffix.
-     */
-    public final static String INTERNAL_STACKTRACE = "stacktrace";
-
-    /**
-     * Default short stacktrace method suffix.
-     */
-    public final static String INTERNAL_ST = "st";
+    public final static String CMD_STACKTRACE = "stacktrace";
+    public final static String CMD_ST = "st";
 
     final private static List<String> CMDS = new ArrayList<>();
 

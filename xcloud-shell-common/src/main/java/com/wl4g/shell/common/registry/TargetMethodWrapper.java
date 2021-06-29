@@ -61,7 +61,7 @@ import com.wl4g.shell.common.cli.HelpOptions;
  * @since
  */
 public class TargetMethodWrapper implements Serializable {
-    final private static long serialVersionUID = -8763772515086222131L;
+    private static final long serialVersionUID = -8763772515086222131L;
 
     /**
      * Shell method annotation

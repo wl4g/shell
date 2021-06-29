@@ -35,6 +35,8 @@ public class MetaSignal extends Signal {
      */
     private final Map<String, TargetMethodWrapper> registedMethods = new ConcurrentHashMap<>(16);
 
+    private boolean enabledAcl;
+
     public MetaSignal() {
     }
 
@@ -45,14 +47,23 @@ public class MetaSignal extends Signal {
     }
 
     public MetaSignal(Map<String, TargetMethodWrapper> wrapper, String sessionId) {
+        this(wrapper, sessionId, false);
+    }
+
+    public MetaSignal(Map<String, TargetMethodWrapper> wrapper, String sessionId, boolean enabledAcl) {
         if (wrapper != null) {
             this.registedMethods.putAll(wrapper);
         }
+        this.enabledAcl = enabledAcl;
         super.setSessionId(sessionId);
     }
 
     public Map<String, TargetMethodWrapper> getRegistedMethods() {
         return registedMethods;
+    }
+
+    public boolean isEnabledAcl() {
+        return enabledAcl;
     }
 
     @Override

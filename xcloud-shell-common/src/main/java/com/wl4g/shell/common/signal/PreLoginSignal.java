@@ -18,9 +18,6 @@ package com.wl4g.shell.common.signal;
 import static com.wl4g.component.common.lang.Assert2.hasTextOf;
 import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * Pre login commands message
  * 
@@ -28,8 +25,6 @@ import lombok.Setter;
  * @version v1.0 2019年5月4日
  * @since
  */
-@Getter
-@Setter
 public class PreLoginSignal extends Signal {
     private static final long serialVersionUID = -8574315246731906685L;
 
@@ -39,6 +34,14 @@ public class PreLoginSignal extends Signal {
     public PreLoginSignal(String username, String password) {
         this.username = hasTextOf(username, "username");
         this.password = hasTextOf(password, "password");
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     @Override

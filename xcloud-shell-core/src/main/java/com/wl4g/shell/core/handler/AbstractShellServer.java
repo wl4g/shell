@@ -101,7 +101,7 @@ public abstract class AbstractShellServer extends GenericShellHandler implements
     }
 
     @Override
-    protected void preHandleInput(TargetMethodWrapper tm, List<Object> args) {
+    protected void preHandleInput(List<String> commands, TargetMethodWrapper tm, List<Object> args) {
         // Get current context
         BaseShellContext context = getClient().getContext();
 

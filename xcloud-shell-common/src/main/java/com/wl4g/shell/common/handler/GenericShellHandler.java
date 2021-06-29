@@ -124,11 +124,12 @@ public abstract class GenericShellHandler implements ShellHandler {
         isTrue(registrar.contains(mainArg), format("'%s': command not found", mainArg));
         TargetMethodWrapper tm = registrar.getTargetMethods().get(mainArg);
 
+        preHandleCommand(commands, tm);
+
         // Resolve method parameters
         List<Object> args = resolveArguments(commands, tm);
 
-        // Pre handling
-        preHandleInput(tm, args);
+        preHandleInput(commands, tm, args);
 
         // Invocation
         return tm.getMethod().invoke(tm.getTarget(), args.toArray());
@@ -230,12 +231,22 @@ public abstract class GenericShellHandler implements ShellHandler {
     }
 
     /**
+     * Prepared resolving parameters before handle.
+     * 
+     * @param tm
+     * @param args
+     */
+    protected void preHandleCommand(List<String> commands, TargetMethodWrapper tm) {
+
+    }
+
+    /**
      * It the resolving parameters before handle.
      * 
      * @param tm
      * @param args
      */
-    protected void preHandleInput(TargetMethodWrapper tm, List<Object> args) {
+    protected void preHandleInput(List<String> commands, TargetMethodWrapper tm, List<Object> args) {
 
     }
 

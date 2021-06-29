@@ -32,80 +32,80 @@ import com.wl4g.shell.core.handler.EmbeddedShellServer;
  */
 public class EmbeddedShellServerBuilder {
 
-	/** Shell application name */
-	private String appName = "defaultShellApplication";
+    /** Shell application name */
+    private String appName = "defaultShellApplication";
 
-	/** {@link ServerShellProperties} */
-	private ServerShellProperties config = new ServerShellProperties();
+    /** {@link ServerShellProperties} */
+    private ServerShellProperties config = new ServerShellProperties();
 
-	/** {@link ShellHandlerRegistrar} */
-	private ShellHandlerRegistrar registrar = new ShellHandlerRegistrar();
+    /** {@link ShellHandlerRegistrar} */
+    private ShellHandlerRegistrar registrar = new ShellHandlerRegistrar();
 
-	private EmbeddedShellServerBuilder() {
-	}
+    private EmbeddedShellServerBuilder() {
+    }
 
-	/**
-	 * New instantial of {@link EmbeddedShellServer}
-	 * 
-	 * @return
-	 */
-	public static EmbeddedShellServerBuilder newBuilder() {
-		return new EmbeddedShellServerBuilder();
-	}
+    /**
+     * New instantial of {@link EmbeddedShellServer}
+     * 
+     * @return
+     */
+    public static EmbeddedShellServerBuilder newBuilder() {
+        return new EmbeddedShellServerBuilder();
+    }
 
-	/**
-	 * Sets shell application name.
-	 * 
-	 * @param appName
-	 * @return
-	 */
-	public EmbeddedShellServerBuilder withAppName(String appName) {
-		hasTextOf(appName, "appName");
-		this.appName = appName;
-		return this;
-	}
+    /**
+     * Sets shell application name.
+     * 
+     * @param appName
+     * @return
+     */
+    public EmbeddedShellServerBuilder withAppName(String appName) {
+        hasTextOf(appName, "appName");
+        this.appName = appName;
+        return this;
+    }
 
-	/**
-	 * Sets shell configuration of {@link ServerShellProperties}.
-	 * 
-	 * @param appName
-	 * @return
-	 */
-	public EmbeddedShellServerBuilder withConfiguration(ServerShellProperties config) {
-		notNullOf(config, "config");
-		this.config = config;
-		return this;
-	}
+    /**
+     * Sets shell configuration of {@link ServerShellProperties}.
+     * 
+     * @param appName
+     * @return
+     */
+    public EmbeddedShellServerBuilder withConfiguration(ServerShellProperties config) {
+        notNullOf(config, "config");
+        this.config = config;
+        return this;
+    }
 
-	/**
-	 * Sets shell handler registry of {@link ShellHandlerRegistrar}.
-	 * 
-	 * @param appName
-	 * @return
-	 */
-	public EmbeddedShellServerBuilder withRegistrar(ShellHandlerRegistrar registrar) {
-		notNullOf(registrar, "registrar");
-		this.registrar = registrar;
-		return this;
-	}
+    /**
+     * Sets shell handler registry of {@link ShellHandlerRegistrar}.
+     * 
+     * @param appName
+     * @return
+     */
+    public EmbeddedShellServerBuilder withRegistrar(ShellHandlerRegistrar registrar) {
+        notNullOf(registrar, "registrar");
+        this.registrar = registrar;
+        return this;
+    }
 
-	/**
-	 * Registration shell component instance.
-	 * 
-	 * @param shellComponents
-	 * @return
-	 */
-	public EmbeddedShellServerBuilder register(Object... shellComponents) {
-		if (nonNull(shellComponents)) {
-			for (Object c : shellComponents) {
-				this.registrar.register(c);
-			}
-		}
-		return this;
-	}
+    /**
+     * Registration shell component instance.
+     * 
+     * @param shellComponents
+     * @return
+     */
+    public EmbeddedShellServerBuilder register(Object... shellComponents) {
+        if (nonNull(shellComponents)) {
+            for (Object c : shellComponents) {
+                this.registrar.register(c);
+            }
+        }
+        return this;
+    }
 
-	public EmbeddedShellServer build() {
-		return new EmbeddedShellServer(config, appName, registrar);
-	}
+    public EmbeddedShellServer build() {
+        return new EmbeddedShellServer(config, appName, registrar);
+    }
 
 }

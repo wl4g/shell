@@ -25,25 +25,25 @@ import static com.wl4g.component.common.lang.Assert2.hasTextOf;
  * @since
  */
 public class AskInterruptSignal extends Signal {
-	private static final long serialVersionUID = -8574315246731906685L;
+    private static final long serialVersionUID = -8574315246731906685L;
 
-	/**
-	 * Current confirm message subject.
-	 */
-	final private String subject;
+    /**
+     * Current confirm message subject.
+     */
+    private final String subject;
 
-	public AskInterruptSignal(String subject) {
-		hasTextOf(subject, "subject");
-		this.subject = subject;
-	}
+    public AskInterruptSignal(String subject) {
+        hasTextOf(subject, "subject");
+        this.subject = subject;
+    }
 
-	public String getSubject() {
-		return subject;
-	}
+    public String getSubject() {
+        return subject;
+    }
 
-	@Override
-	public String toString() {
-		return super.toString().concat("[subject=" + subject + "]");
-	}
+    @Override
+    public String toString() {
+        return super.toString().concat("[subject=" + subject + "]");
+    }
 
 }

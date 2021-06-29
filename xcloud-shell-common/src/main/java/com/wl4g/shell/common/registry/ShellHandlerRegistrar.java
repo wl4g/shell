@@ -15,12 +15,16 @@
  */
 package com.wl4g.shell.common.registry;
 
+import static com.wl4g.component.common.lang.Assert2.notNull;
+import static com.wl4g.component.common.lang.Assert2.state;
+import static java.lang.reflect.Modifier.isAbstract;
+import static java.lang.reflect.Modifier.isInterface;
+import static java.lang.reflect.Modifier.isNative;
+import static java.lang.reflect.Modifier.isStatic;
+import static java.lang.reflect.Modifier.isTransient;
+
 import java.io.Serializable;
 import java.lang.reflect.Method;
-
-import static com.wl4g.component.common.lang.Assert2.*;
-import static java.lang.reflect.Modifier.*;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -34,60 +38,60 @@ import com.wl4g.shell.common.annotation.ShellMethod;
  * @since
  */
 public class ShellHandlerRegistrar implements Serializable {
-	final private static long serialVersionUID = -8763772555086222131L;
+    private static final long serialVersionUID = -8763772555086222131L;
 
-	/**
-	 * Local registed shell targetMethodWrappers
-	 */
-	final private Map<String, TargetMethodWrapper> registry = new ConcurrentHashMap<>(16);
+    /**
+     * Local registed shell targetMethodWrappers
+     */
+    private final Map<String, TargetMethodWrapper> registry = new ConcurrentHashMap<>(16);
 
-	public Map<String, TargetMethodWrapper> getTargetMethods() {
-		return registry;
-	}
+    public Map<String, TargetMethodWrapper> getTargetMethods() {
+        return registry;
+    }
 
-	public TargetMethodWrapper getTargetMethod(String argname) {
-		return registry.get(argname);
-	}
+    public TargetMethodWrapper getTargetMethod(String argname) {
+        return registry.get(argname);
+    }
 
-	public boolean contains(String argname) {
-		return getTargetMethods().containsKey(argname);
-	}
+    public boolean contains(String argname) {
+        return getTargetMethods().containsKey(argname);
+    }
 
-	/**
-	 * Registion shell component of bean
-	 * 
-	 * @param bean
-	 */
-	public ShellHandlerRegistrar register(Object bean) {
-		notNull(bean, "bean is null, please check configure");
+    /**
+     * Registion shell component of bean
+     * 
+     * @param bean
+     */
+    public ShellHandlerRegistrar register(Object bean) {
+        notNull(bean, "bean is null, please check configure");
 
-		for (Method m : bean.getClass().getDeclaredMethods()) {
-			int mod = m.getModifiers();
-			if (isStatic(mod) || isAbstract(mod) || isTransient(mod) || isAbstract(mod) || isNative(mod) || isInterface(mod)) {
-				continue;
-			}
+        for (Method m : bean.getClass().getDeclaredMethods()) {
+            int mod = m.getModifiers();
+            if (isStatic(mod) || isAbstract(mod) || isTransient(mod) || isAbstract(mod) || isNative(mod) || isInterface(mod)) {
+                continue;
+            }
 
-			// Shell method?
-			ShellMethod sm = m.getAnnotation(ShellMethod.class);
-			if (sm != null) {
-				notNull(sm.keys(), "Shell method key must not be null");
-				for (String k : sm.keys()) {
-					register0(k, new TargetMethodWrapper(sm, m, bean));
-				}
-			}
-		}
+            // Shell method?
+            ShellMethod sm = m.getAnnotation(ShellMethod.class);
+            if (sm != null) {
+                notNull(sm.keys(), "Shell method key must not be null");
+                for (String k : sm.keys()) {
+                    register0(k, new TargetMethodWrapper(sm, m, bean));
+                }
+            }
+        }
 
-		return this;
-	}
+        return this;
+    }
 
-	/**
-	 * Internal registion shell bean stored
-	 * 
-	 * @param mainOpt
-	 * @param tm
-	 */
-	private void register0(String mainOpt, TargetMethodWrapper tm) {
-		state(registry.putIfAbsent(mainOpt, tm) == null, String.format("Repeatedly defined shell method: '%s'", mainOpt));
-	}
+    /**
+     * Internal registion shell bean stored
+     * 
+     * @param mainOpt
+     * @param tm
+     */
+    private void register0(String mainOpt, TargetMethodWrapper tm) {
+        state(registry.putIfAbsent(mainOpt, tm) == null, String.format("Repeatedly defined shell method: '%s'", mainOpt));
+    }
 
 }
