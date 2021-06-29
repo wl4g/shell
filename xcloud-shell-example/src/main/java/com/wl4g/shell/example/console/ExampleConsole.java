@@ -70,10 +70,10 @@ public class ExampleConsole {
     }
 
     /**
-     * For example: $> testPirnt -a 1 -b 123
+     * For example: $> testPrint -a 1 -b 123
      */
-    @ShellMethod(keys = "testPirnt", group = GROUP_NAME, help = "A simple shell summation method, the calculation process will be printed")
-    public void testPirnt(SimpleShellContext context, @ShellOption(opt = "a", lopt = "add1", help = "Add number") int a,
+    @ShellMethod(keys = "testPrint", group = GROUP_NAME, help = "A simple shell summation method, the calculation process will be printed")
+    public void testPrint(SimpleShellContext context, @ShellOption(opt = "a", lopt = "add1", help = "Add number") int a,
             @ShellOption(opt = "b", lopt = "add2", help = "Added number", defaultValue = "1") int b) {
         context.printf(exampleService.add(new SumArgument(a, b)).toString());
         context.completed();
@@ -222,20 +222,20 @@ public class ExampleConsole {
     // --------------- Testing for ACL. ----------------
 
     /**
-     * For example: $> testAclAnon
+     * For example: $> testOnlyAuth
      */
-    @ShellMethod(keys = "testAclAnon", group = GROUP_NAME, help = "This is a test execution ACL command methods")
-    public void testAclAnon(SimpleShellContext context) {
-        context.printf("TestAclAnon starting ...");
+    @ShellMethod(keys = "testOnlyAuth", group = GROUP_NAME, help = "This is a test execution ACL command methods")
+    public void testOnlyAuth(SimpleShellContext context) {
+        context.printf("testOnlyAuth starting ...");
         context.completed();
     }
 
     /**
-     * For example: $> testAclReject
+     * For example: $> testMustAcl
      */
-    @ShellMethod(keys = "testAclReject", group = GROUP_NAME, permissions = "administrator", help = "This is a test execution ACL command methods")
-    public void testAclReject(SimpleShellContext context) {
-        context.printf("TestAclReject starting ...");
+    @ShellMethod(keys = "testMustAcl", group = GROUP_NAME, permissions = "administrator", help = "This is a test execution ACL command methods")
+    public void testMustAcl(SimpleShellContext context) {
+        context.printf("testMustAcl starting ...");
     }
 
 }
