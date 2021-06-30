@@ -15,13 +15,10 @@
  */
 package com.wl4g.shell.springboot.config;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
 import com.wl4g.shell.core.config.ServerShellProperties;
-import com.wl4g.shell.core.handler.EmbeddedShellServer;
 import com.wl4g.shell.springboot.EmbeddedShellServerStartup;
 
 /**
@@ -42,13 +39,6 @@ public class ShellAutoConfiguration {
     @Bean
     public AnnotationShellHandlerRegistrar annotationShellHandlerRegistrar() {
         return new AnnotationShellHandlerRegistrar();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public EmbeddedShellServer embeddedShellServer(@Value("${spring.application.name}") String appName,
-            ServerShellProperties config, AnnotationShellHandlerRegistrar registrar) {
-        return new EmbeddedShellServer(config, appName, registrar);
     }
 
     @Bean

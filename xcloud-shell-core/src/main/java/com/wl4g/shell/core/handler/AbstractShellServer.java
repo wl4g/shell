@@ -16,6 +16,7 @@
 package com.wl4g.shell.core.handler;
 
 import static com.wl4g.component.common.lang.Assert2.hasTextOf;
+import static com.wl4g.component.common.lang.Assert2.notNullOf;
 import static com.wl4g.component.common.lang.Assert2.state;
 import static com.wl4g.component.common.log.SmartLoggerFactory.getLogger;
 import static java.lang.String.format;
@@ -23,13 +24,13 @@ import static java.lang.String.format;
 import java.io.Closeable;
 import java.util.List;
 
-import org.slf4j.Logger;
-
+import com.wl4g.component.common.log.SmartLogger;
 import com.wl4g.shell.common.handler.GenericShellHandler;
 import com.wl4g.shell.common.registry.ShellHandlerRegistrar;
 import com.wl4g.shell.common.registry.TargetMethodWrapper;
 import com.wl4g.shell.core.config.ServerShellProperties;
 import com.wl4g.shell.core.handler.EmbeddedShellServer.ServerSignalHandler;
+import com.wl4g.shell.core.session.ShellSessionDAO;
 
 /**
  * Server abstract shell component handler
@@ -39,7 +40,7 @@ import com.wl4g.shell.core.handler.EmbeddedShellServer.ServerSignalHandler;
  * @since
  */
 public abstract class AbstractShellServer extends GenericShellHandler implements Closeable {
-    protected final Logger log = getLogger(getClass());
+    protected final SmartLogger log = getLogger(getClass());
 
     /**
      * Accept socket client handlers.
@@ -49,12 +50,18 @@ public abstract class AbstractShellServer extends GenericShellHandler implements
     /**
      * Spring application name.
      */
-    private final String appName;
+    protected final String appName;
 
-    public AbstractShellServer(ServerShellProperties config, String appName, ShellHandlerRegistrar registrar) {
+    /**
+     * Shell session DAO.
+     */
+    protected final ShellSessionDAO sessionDAO;
+
+    public AbstractShellServer(ServerShellProperties config, String appName, ShellHandlerRegistrar registrar,
+            ShellSessionDAO sessionDAO) {
         super(config, registrar);
-        hasTextOf(appName, "appName");
-        this.appName = appName;
+        this.appName = hasTextOf(appName, "appName");
+        this.sessionDAO = notNullOf(sessionDAO, "sessionDAO");
     }
 
     /**

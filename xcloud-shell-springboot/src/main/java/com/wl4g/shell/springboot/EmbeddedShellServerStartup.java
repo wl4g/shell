@@ -17,6 +17,7 @@ package com.wl4g.shell.springboot;
 
 import static com.wl4g.component.common.lang.Assert2.notNullOf;
 import static com.wl4g.component.common.log.SmartLoggerFactory.getLogger;
+import static java.util.Objects.nonNull;
 
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,13 @@ import com.wl4g.component.common.log.SmartLogger;
 import com.wl4g.shell.core.EmbeddedShellServerBuilder;
 import com.wl4g.shell.core.config.ServerShellProperties;
 import com.wl4g.shell.core.handler.EmbeddedShellServer;
+import com.wl4g.shell.core.session.JedisShellSessionDAO;
+import com.wl4g.shell.core.session.MemoryShellSessionDAO;
+import com.wl4g.shell.core.session.ShellSessionDAO;
 import com.wl4g.shell.springboot.config.AnnotationShellHandlerRegistrar;
+
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisCluster;
 
 /**
  * {@link EmbeddedShellServerStartup}
@@ -40,14 +47,18 @@ import com.wl4g.shell.springboot.config.AnnotationShellHandlerRegistrar;
 public class EmbeddedShellServerStartup implements ApplicationRunner, DisposableBean {
     protected final SmartLogger log = getLogger(getClass());
 
+    /** {@link Environment} */
+    protected @Autowired Environment environment;
+
     /** {@link ServerShellProperties} */
     protected final ServerShellProperties config;
 
     /** {@link AnnotationShellHandlerRegistrar} */
     protected final AnnotationShellHandlerRegistrar registrar;
 
-    /** {@link Environment} */
-    protected @Autowired Environment environment;
+    /** Using of {@link ShellSessionDAO} */
+    protected @Autowired(required = false) JedisCluster jedisCluster;
+    protected @Autowired(required = false) Jedis jedis;
 
     /** {@link EmbeddedShellServer} */
     protected EmbeddedShellServer shellServer;
@@ -59,17 +70,26 @@ public class EmbeddedShellServerStartup implements ApplicationRunner, Disposable
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        log.info("Shell server init starting on {} ...", config.getBeginPort());
+        log.info("Shell server init starting on [{}, {}] ...", config.getBeginPort(), config.getEndPort());
 
-        this.shellServer = EmbeddedShellServerBuilder.newBuilder()
+        // Create shell session DAO.
+        ShellSessionDAO sessionDAO = new MemoryShellSessionDAO();
+        if (nonNull(jedisCluster)) {
+            sessionDAO = new JedisShellSessionDAO(jedisCluster);
+        } else if (nonNull(jedis)) {
+            sessionDAO = new JedisShellSessionDAO(jedis);
+        }
+
+        // Build shell server.
+        shellServer = EmbeddedShellServerBuilder.newBuilder()
                 .withAppName(environment.getRequiredProperty("spring.application.name")).withConfiguration(config)
-                .withRegistrar(registrar).build();
-        this.shellServer.start();
+                .withRegistrar(registrar).withShellSessionDAO(sessionDAO).build();
+        shellServer.start();
     }
 
     @Override
     public void destroy() throws Exception {
-        this.shellServer.close();
+        shellServer.close();
     }
 
 }

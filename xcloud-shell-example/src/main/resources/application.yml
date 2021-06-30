@@ -18,9 +18,12 @@ spring:
       acl:
         enabled: true
         info:
-          - username: admin
+          - username: guest
             password: 123456
             permissions: ['normal']
+          - username: admin
+            password: 123456
+            permissions: ['administrator']
 
 # ### Server configuration. ###
 server:

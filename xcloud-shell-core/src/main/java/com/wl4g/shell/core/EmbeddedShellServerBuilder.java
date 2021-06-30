@@ -22,6 +22,8 @@ import static java.util.Objects.nonNull;
 import com.wl4g.shell.common.registry.ShellHandlerRegistrar;
 import com.wl4g.shell.core.config.ServerShellProperties;
 import com.wl4g.shell.core.handler.EmbeddedShellServer;
+import com.wl4g.shell.core.session.MemoryShellSessionDAO;
+import com.wl4g.shell.core.session.ShellSessionDAO;
 
 /**
  * Budiler of {@link EmbeddedShellServer}
@@ -37,6 +39,9 @@ public class EmbeddedShellServerBuilder {
 
     /** {@link ServerShellProperties} */
     private ServerShellProperties config = new ServerShellProperties();
+
+    /** {@link ShellSessionDAO} */
+    private ShellSessionDAO sessionDAO = new MemoryShellSessionDAO();
 
     /** {@link ShellHandlerRegistrar} */
     private ShellHandlerRegistrar registrar = new ShellHandlerRegistrar();
@@ -60,8 +65,7 @@ public class EmbeddedShellServerBuilder {
      * @return
      */
     public EmbeddedShellServerBuilder withAppName(String appName) {
-        hasTextOf(appName, "appName");
-        this.appName = appName;
+        appName = hasTextOf(appName, "appName");
         return this;
     }
 
@@ -72,8 +76,18 @@ public class EmbeddedShellServerBuilder {
      * @return
      */
     public EmbeddedShellServerBuilder withConfiguration(ServerShellProperties config) {
-        notNullOf(config, "config");
-        this.config = config;
+        config = notNullOf(config, "config");
+        return this;
+    }
+
+    /**
+     * Sets shell session DAO of {@link ShellSessionDAO}.
+     * 
+     * @param appName
+     * @return
+     */
+    public EmbeddedShellServerBuilder withShellSessionDAO(ShellSessionDAO sessionDAO) {
+        sessionDAO = notNullOf(sessionDAO, "sessionDAO");
         return this;
     }
 
@@ -84,8 +98,7 @@ public class EmbeddedShellServerBuilder {
      * @return
      */
     public EmbeddedShellServerBuilder withRegistrar(ShellHandlerRegistrar registrar) {
-        notNullOf(registrar, "registrar");
-        this.registrar = registrar;
+        registrar = notNullOf(registrar, "registrar");
         return this;
     }
 
@@ -98,14 +111,14 @@ public class EmbeddedShellServerBuilder {
     public EmbeddedShellServerBuilder register(Object... shellComponents) {
         if (nonNull(shellComponents)) {
             for (Object c : shellComponents) {
-                this.registrar.register(c);
+                registrar.register(c);
             }
         }
         return this;
     }
 
     public EmbeddedShellServer build() {
-        return new EmbeddedShellServer(config, appName, registrar);
+        return new EmbeddedShellServer(config, appName, registrar, sessionDAO);
     }
 
 }

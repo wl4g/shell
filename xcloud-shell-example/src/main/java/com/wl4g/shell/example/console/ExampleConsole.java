@@ -62,14 +62,6 @@ public class ExampleConsole {
     // --------------- Testing for simple injection. ----------------
 
     /**
-     * For example: $> testSimple -a 1 -b 123
-     */
-    @ShellMethod(keys = "testSimple", group = GROUP_NAME, help = "A simple shell summation method")
-    public void testSimpleSum(SumArgument arg) {
-        exampleService.add(arg);
-    }
-
-    /**
      * For example: $> testPrint -a 1 -b 123
      */
     @ShellMethod(keys = "testPrint", group = GROUP_NAME, help = "A simple shell summation method, the calculation process will be printed")
@@ -236,6 +228,7 @@ public class ExampleConsole {
     @ShellMethod(keys = "testMustAcl", group = GROUP_NAME, permissions = "administrator", help = "This is a test execution ACL command methods")
     public void testMustAcl(SimpleShellContext context) {
         context.printf("testMustAcl starting ...");
+        context.completed();
     }
 
 }

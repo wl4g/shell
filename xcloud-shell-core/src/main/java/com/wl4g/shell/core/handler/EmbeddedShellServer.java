@@ -30,6 +30,7 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace;
 
 import java.io.EOFException;
@@ -49,6 +50,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
+import javax.annotation.Nullable;
+
 import com.wl4g.shell.common.exception.InternalShellException;
 import com.wl4g.shell.common.exception.UnauthenticationShellException;
 import com.wl4g.shell.common.exception.UnauthorizedShellException;
@@ -64,13 +67,10 @@ import com.wl4g.shell.common.signal.PreLoginSignal;
 import com.wl4g.shell.common.signal.Signal;
 import com.wl4g.shell.common.signal.StdinSignal;
 import com.wl4g.shell.core.config.ServerShellProperties;
-import com.wl4g.shell.core.config.ServerShellProperties.AclInfo;
 import com.wl4g.shell.core.config.ServerShellProperties.AclInfo.CredentialsInfo;
+import com.wl4g.shell.core.session.ShellSession;
+import com.wl4g.shell.core.session.ShellSessionDAO;
 import com.wl4g.shell.core.utils.AuthUtils;
-
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 /**
  * Embedded shell handle server
@@ -102,8 +102,9 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
      */
     protected Thread boss;
 
-    public EmbeddedShellServer(ServerShellProperties config, String appName, ShellHandlerRegistrar registrar) {
-        super(config, appName, registrar);
+    public EmbeddedShellServer(ServerShellProperties config, String appName, ShellHandlerRegistrar registrar,
+            ShellSessionDAO sessionDAO) {
+        super(config, appName, registrar, sessionDAO);
         this.workers = new ConcurrentHashMap<>(config.getMaxClients());
     }
 
@@ -181,8 +182,8 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
 
         // Check shell channel authentication.
         StdinCommandWrapper stdin = currentStdin.get();
-        AuthenticationInfo authInfo = stdin.getHandler().getAuthenticationInfo();
-        if (!authInfo.isAuthenticated()) {
+        ShellSession session = stdin.getHandler().getShellSession();
+        if (!session.isAuthenticated()) {
             throw new UnauthenticationShellException(format(
                     "This command method must be authenticated to execution, Please exec the command: '%s|%s' to authentication.",
                     CMD_LOGIN, CMD_LO));
@@ -190,7 +191,7 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
 
         // Check ACL by roles.
         String[] permissions = tm.getShellMethod().permissions();
-        CredentialsInfo credentials = getConfig().getAcl().getCredentialsInfo(authInfo.getUsername());
+        CredentialsInfo credentials = getConfig().getAcl().getCredentialsInfo(session.getUsername());
         if (!AuthUtils.matchAclPermits(permissions, credentials.getPermissions())) {
             throw new UnauthorizedShellException("Access permission not defined.");
         }
@@ -248,18 +249,18 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
      */
     class ServerSignalHandler extends BaseSignalHandler {
 
-        /** Running process command worker */
+        /** Current shell commands process worker */
         private final ExecutorService processWorker;
 
-        /** Running current command {@link ShellContext} */
-        private BaseShellContext currentContext;
+        /** Current shell commands context of {@link ShellContext} */
+        private BaseShellContext shellContext;
 
-        /** Authentication info. */
-        private AuthenticationInfo authInfo = new AuthenticationInfo();
+        /** Binding shell channel session ID. {@link ShellSession}. */
+        private String bindSessionId;
 
         public ServerSignalHandler(ShellHandlerRegistrar registrar, Socket client, Function<String, Object> func) {
             super(registrar, client, func);
-            this.currentContext = new BaseShellContext(this) {
+            this.shellContext = new BaseShellContext(this) {
             };
             // Init worker
             final AtomicInteger incr = new AtomicInteger(0);
@@ -272,52 +273,72 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
         }
 
         BaseShellContext getContext() {
-            return currentContext;
+            return shellContext;
         }
 
         void setContext(BaseShellContext context) {
-            notNullOf(context, "ShellContext");
-            this.currentContext = context;
+            this.shellContext = notNullOf(context, "ShellContext");
         }
 
-        public AuthenticationInfo getAuthenticationInfo() {
-            return authInfo;
+        ShellSession obtainShellSession(@Nullable String sessionId) {
+            ShellSession session = null;
+            if (!isBlank(sessionId)) {
+                session = sessionDAO.get(sessionId);
+            }
+            if (isNull(session)) {
+                session = new ShellSession(genSessionID(), null, false, null, 0, 0);
+                updateSession(session);
+            }
+            bindSessionId = session.getSessionId();
+            return notNull(session, "Cannot obtain shell session.");
+        }
+
+        ShellSession getShellSession() {
+            return notNull(sessionDAO.get(bindSessionId), InternalShellException.class,
+                    "Internal error, not shell signal binding sessionId.");
+        }
+
+        void updateSession(ShellSession session) {
+            if (nonNull(session)) {
+                session.setLatestTimestamp(currentTimeMillis());
+                sessionDAO.put(session);
+            }
         }
 
         @Override
         public void run() {
             while (running.get() && isActive()) {
                 try {
-                    Object signal = new ObjectInputStream(_in).readObject();
-                    isInstanceOf(Signal.class, signal);
-                    log.info("<= {}", signal);
+                    Object input = new ObjectInputStream(_in).readObject();
+                    isInstanceOf(Signal.class, input);
+                    Signal signal = (Signal) input;
+                    log.debug("<= {}", signal);
 
                     Object output = null;
+                    ShellSession session = obtainShellSession(signal.getSessionId());
                     // Register shell methods
                     if (signal instanceof MetaSignal) {
-                        authInfo.setSessionId(genSessionID());
-                        output = new MetaSignal(registrar.getTargetMethods(), authInfo.getSessionId());
+                        output = new MetaSignal(registrar.getTargetMethods(), session.getSessionId());
                     } else {
-                        notNull(getAuthenticationInfo().getSessionId(), InternalShellException.class,
-                                "Internal error, shell handler sessionId required.");
                         notNull(((Signal) signal).getSessionId(), InternalShellException.class,
                                 "Internal error, request shell signal sessionId required.");
+                        updateSession(session);
                     }
                     // Pre login
                     if (signal instanceof PreLoginSignal) {
                         PreLoginSignal login = (PreLoginSignal) signal;
-                        if (authInfo.isAuthenticated()) {
-                            output = new LoginSignal(true, login.getSessionId()).withDesc("Authenticated.");
+                        if (session.isAuthenticated()) {
+                            output = new LoginSignal(true, session.getSessionId()).withDesc("Authenticated.");
                         } else {
-                            AclInfo acl = getConfig().getAcl();
-                            if (acl.isEnabled()) {
-                                if (acl.matchs(login.getUsername(), login.getPassword())) {
+                            if (getConfig().getAcl().isEnabled()) {
+                                if (getConfig().getAcl().matchs(login.getUsername(), login.getPassword())) {
                                     // Sets authentication success info.
-                                    authInfo.setUsername(login.getUsername());
-                                    authInfo.setAuthenticated(true);
-                                    authInfo.setHost(socket.getInetAddress().getHostName());
-                                    authInfo.setTimestamp(currentTimeMillis());
-                                    output = new LoginSignal(true, authInfo.getSessionId()).withDesc("Authentication success.");
+                                    session.setUsername(login.getUsername());
+                                    session.setAuthenticated(true);
+                                    session.setHost(socket.getInetAddress().getHostName());
+                                    session.setStartTimestamp(currentTimeMillis());
+                                    updateSession(session);
+                                    output = new LoginSignal(true, session.getSessionId()).withDesc("Authentication success.");
                                 } else {
                                     output = new LoginSignal(false).withDesc("Authentication failure.");
                                 }
@@ -329,7 +350,7 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
                     // Ask interruption.
                     else if (signal instanceof PreInterruptSignal) {
                         // Call pre-interrupt events.
-                        currentContext.getUnmodifiableEventListeners().forEach(l -> l.onPreInterrupt(currentContext));
+                        shellContext.getUnmodifiableEventListeners().forEach(l -> l.onPreInterrupt(shellContext));
                         // Ask if the client is interrupt.
                         output = new AskInterruptSignal("Are you sure you want to cancel execution? (y|n)");
                     }
@@ -337,14 +358,13 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
                     else if (signal instanceof AckInterruptSignal) {
                         AckInterruptSignal ack = (AckInterruptSignal) signal;
                         // Call interrupt events.
-                        currentContext.getUnmodifiableEventListeners()
-                                .forEach(l -> l.onInterrupt(currentContext, ack.getConfirm()));
+                        shellContext.getUnmodifiableEventListeners().forEach(l -> l.onInterrupt(shellContext, ack.getConfirm()));
                     }
                     // Stdin of commands
                     else if (signal instanceof StdinSignal) {
                         StdinSignal stdin = (StdinSignal) signal;
                         // Call command events.
-                        currentContext.getUnmodifiableEventListeners().forEach(l -> l.onCommand(currentContext, stdin.getLine()));
+                        shellContext.getUnmodifiableEventListeners().forEach(l -> l.onCommand(shellContext, stdin.getLine()));
 
                         // Resolve that client input cannot be received during
                         // blocking execution.
@@ -362,8 +382,8 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
                                 /**
                                  * see:{@link EmbeddedServerShellHandler#preHandleInput()}#MARK2
                                  */
-                                if (currentContext.getState() != RUNNING) {
-                                    currentContext.completed();
+                                if (shellContext.getState() != RUNNING) {
+                                    shellContext.completed();
                                 }
                             } catch (Throwable e) {
                                 log.error(format("Failed to handle shell command: [%s]", stdin.getLine()), e);
@@ -375,7 +395,7 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
                     }
 
                     if (nonNull(output)) { // Write to console.
-                        currentContext.printf0(output);
+                        shellContext.printf0(output);
                     }
                 } catch (Throwable th) {
                     handleError(th);
@@ -419,28 +439,9 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
                     log.error("Close failure.", e);
                 }
             } else {
-                currentContext.printf0(th);
+                shellContext.printf0(th);
             }
         }
-    }
-
-    /**
-     * Shell channel authentication information.
-     */
-    @Getter
-    @Setter
-    @ToString
-    static class AuthenticationInfo {
-        /** Shell session ID. */
-        private String sessionId;
-        /** Authentication username. */
-        private String username;
-        /** Authentication state. */
-        private boolean authenticated = false;
-        /** Authentication host. */
-        private String host;
-        /** Authentication timestamp. */
-        private long timestamp;
     }
 
     /**
