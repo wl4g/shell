@@ -28,25 +28,34 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisCluster;
 
 /**
- * {@link JedisShellSessionDAO}
+ * {@link NativeJedisShellSessionDAO}
  * 
  * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
  * @version 2021-06-30 v1.0.0
  * @see v1.0.0
  */
-public class JedisShellSessionDAO implements ShellSessionDAO {
+public class NativeJedisShellSessionDAO extends AbstractRedisShellSessionDAO {
 
-    protected final JedisCluster jedisCluster; // priority of use
+    protected final JedisCluster jedisCluster;
     protected final Jedis jedis;
 
-    public JedisShellSessionDAO(JedisCluster jedisCluster) {
-        this.jedisCluster = notNullOf(jedisCluster, "jedisCluster");
-        this.jedis = null;
-    }
-
-    public JedisShellSessionDAO(Jedis jedis) {
-        this.jedisCluster = null;
-        this.jedis = notNullOf(jedis, "jedis");
+    /**
+     * @param redisObj
+     *            type of {@link JedisCluster} or {@link Jedis}
+     */
+    public NativeJedisShellSessionDAO(Object redisObj) {
+        notNullOf(redisObj, "redisObj");
+        if (redisObj instanceof JedisCluster) {
+            this.jedisCluster = (JedisCluster) redisObj;
+            notNullOf(jedisCluster, "jedisCluster");
+            this.jedis = null;
+        } else if (redisObj instanceof JedisCluster) {
+            this.jedis = (Jedis) redisObj;
+            this.jedisCluster = null;
+            notNullOf(jedis, "jedis");
+        } else {
+            throw new IllegalStateException();
+        }
     }
 
     @Override
@@ -60,7 +69,7 @@ public class JedisShellSessionDAO implements ShellSessionDAO {
     @Override
     public List<ShellSession> getAll() {
         if (nonNull(jedisCluster)) {
-            return safeMap(jedisCluster.hgetAll("")).values().stream().map(s -> parseJSON(s, ShellSession.class))
+            return safeMap(jedisCluster.hgetAll(getOpsKey())).values().stream().map(s -> parseJSON(s, ShellSession.class))
                     .collect(toList());
         }
         return safeMap(jedis.hgetAll("")).values().stream().map(s -> parseJSON(s, ShellSession.class)).collect(toList());
@@ -69,37 +78,31 @@ public class JedisShellSessionDAO implements ShellSessionDAO {
     @Override
     public boolean put(ShellSession session) {
         if (nonNull(jedisCluster)) {
-            Long ret = jedisCluster.hset(getOpsKey(session.getSessionId()), session.getSessionId(), toJSONString(session));
+            Long ret = jedisCluster.hset(getOpsKey(), session.getSessionId(), toJSONString(session));
             return nonNull(ret) && ret > 0;
         }
-        Long ret = jedis.hset(getOpsKey(session.getSessionId()), session.getSessionId(), toJSONString(session));
+        Long ret = jedis.hset(getOpsKey(), session.getSessionId(), toJSONString(session));
         return nonNull(ret) && ret > 0;
     }
 
     @Override
     public boolean putIfAbsent(ShellSession session) {
         if (nonNull(jedisCluster)) {
-            Long ret = jedisCluster.hsetnx(getOpsKey(session.getSessionId()), session.getSessionId(), toJSONString(session));
+            Long ret = jedisCluster.hsetnx(getOpsKey(), session.getSessionId(), toJSONString(session));
             return nonNull(ret) && ret > 0;
         }
-        Long ret = jedis.hsetnx(getOpsKey(session.getSessionId()), session.getSessionId(), toJSONString(session));
+        Long ret = jedis.hsetnx(getOpsKey(), session.getSessionId(), toJSONString(session));
         return nonNull(ret) && ret > 0;
     }
 
     @Override
     public boolean remove(String sessionId) {
         if (nonNull(jedisCluster)) {
-            Long ret = jedisCluster.hdel(getOpsKey(sessionId), sessionId);
+            Long ret = jedisCluster.hdel(getOpsKey(), sessionId);
             return nonNull(ret) && ret > 0;
         }
-        Long ret = jedis.hdel(getOpsKey(sessionId), sessionId);
+        Long ret = jedis.hdel(getOpsKey(), sessionId);
         return nonNull(ret) && ret > 0;
     }
-
-    protected String getOpsKey(String sessionId) {
-        return SESSION_KEY_PREFIX.concat(sessionId);
-    }
-
-    public static final String SESSION_KEY_PREFIX = "shell:session:";
 
 }

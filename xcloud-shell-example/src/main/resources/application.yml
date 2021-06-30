@@ -11,6 +11,13 @@
 spring:
   application.name: shell-example
   xcloud:
+    component:
+      support:
+        jedis:
+          enable: true
+          passwd: 123456
+          #nodes: localhost:6379,localhost:6380,localhost:6381,localhost:7379,localhost:7380,localhost:7381
+          nodes: localhost:6379
     shell:
       #bind-addr: 127.0.0.1
       #backlog: 16

@@ -16,26 +16,26 @@
 package com.wl4g.shell.springboot;
 
 import static com.wl4g.component.common.lang.Assert2.notNullOf;
+import static com.wl4g.component.common.lang.ClassUtils2.resolveClassNameNullable;
 import static com.wl4g.component.common.log.SmartLoggerFactory.getLogger;
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.core.env.Environment;
+import org.springframework.context.ApplicationContext;
 
 import com.wl4g.component.common.log.SmartLogger;
 import com.wl4g.shell.core.EmbeddedShellServerBuilder;
 import com.wl4g.shell.core.config.ServerShellProperties;
 import com.wl4g.shell.core.handler.EmbeddedShellServer;
-import com.wl4g.shell.core.session.JedisShellSessionDAO;
+import com.wl4g.shell.core.session.JedisClientShellSessionDAO;
 import com.wl4g.shell.core.session.MemoryShellSessionDAO;
 import com.wl4g.shell.core.session.ShellSessionDAO;
 import com.wl4g.shell.springboot.config.AnnotationShellHandlerRegistrar;
-
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisCluster;
 
 /**
  * {@link EmbeddedShellServerStartup}
@@ -47,18 +47,14 @@ import redis.clients.jedis.JedisCluster;
 public class EmbeddedShellServerStartup implements ApplicationRunner, DisposableBean {
     protected final SmartLogger log = getLogger(getClass());
 
-    /** {@link Environment} */
-    protected @Autowired Environment environment;
+    /** {@link ApplicationContext} */
+    protected @Autowired ApplicationContext applicationContext;
 
     /** {@link ServerShellProperties} */
     protected final ServerShellProperties config;
 
     /** {@link AnnotationShellHandlerRegistrar} */
     protected final AnnotationShellHandlerRegistrar registrar;
-
-    /** Using of {@link ShellSessionDAO} */
-    protected @Autowired(required = false) JedisCluster jedisCluster;
-    protected @Autowired(required = false) Jedis jedis;
 
     /** {@link EmbeddedShellServer} */
     protected EmbeddedShellServer shellServer;
@@ -74,16 +70,28 @@ public class EmbeddedShellServerStartup implements ApplicationRunner, Disposable
 
         // Create shell session DAO.
         ShellSessionDAO sessionDAO = new MemoryShellSessionDAO();
-        if (nonNull(jedisCluster)) {
-            sessionDAO = new JedisShellSessionDAO(jedisCluster);
-        } else if (nonNull(jedis)) {
-            sessionDAO = new JedisShellSessionDAO(jedis);
+        // Jedis in classpath.(if neccssary)
+        if (nonNull(JEDIS_CLUSTER_CLASS) && nonNull(JEDIS_CLASS)) {
+            Object jedisCluster = obtainNullableBean(JEDIS_CLUSTER_CLASS);
+            Object jedis = obtainNullableBean(JEDIS_CLASS);
+            Object jedisClient = obtainNullableBean(JEDIS_CLIENT_CLASS);
+            Object redisTemplate = obtainNullableBean(REDIS_TEMPLATE_CLASS);
+            if (nonNull(jedisCluster)) {
+                sessionDAO = new JedisClientShellSessionDAO(jedisCluster);
+            } else if (nonNull(jedis)) {
+                sessionDAO = new JedisClientShellSessionDAO(jedis);
+            } else if (nonNull(jedisClient)) {
+                sessionDAO = new JedisClientShellSessionDAO(jedisClient);
+            } else if (nonNull(redisTemplate)) {
+                sessionDAO = new JedisClientShellSessionDAO(redisTemplate);
+            }
         }
+        log.info("Using shell session DAO: {}", sessionDAO);
 
         // Build shell server.
         shellServer = EmbeddedShellServerBuilder.newBuilder()
-                .withAppName(environment.getRequiredProperty("spring.application.name")).withConfiguration(config)
-                .withRegistrar(registrar).withShellSessionDAO(sessionDAO).build();
+                .withAppName(applicationContext.getEnvironment().getRequiredProperty("spring.application.name"))
+                .withConfiguration(config).withRegistrar(registrar).withShellSessionDAO(sessionDAO).build();
         shellServer.start();
     }
 
@@ -91,5 +99,23 @@ public class EmbeddedShellServerStartup implements ApplicationRunner, Disposable
     public void destroy() throws Exception {
         shellServer.close();
     }
+
+    private Object obtainNullableBean(Class<?> beanClazz) {
+        if (isNull(beanClazz)) {
+            return null;
+        }
+        try {
+            return applicationContext.getBean(beanClazz);
+        } catch (NoSuchBeanDefinitionException e) {
+            return null;
+        }
+    }
+
+    private static final Class<?> JEDIS_CLUSTER_CLASS = resolveClassNameNullable("redis.clients.jedis.JedisCluster");
+    private static final Class<?> JEDIS_CLASS = resolveClassNameNullable("redis.clients.jedis.Jedis");
+    private static final Class<?> JEDIS_CLIENT_CLASS = resolveClassNameNullable(
+            "com.wl4g.component.support.cache.jedis.JedisClient");
+    private static final Class<?> REDIS_TEMPLATE_CLASS = resolveClassNameNullable(
+            "org.springframework.data.redis.core.RedisTemplate");
 
 }
