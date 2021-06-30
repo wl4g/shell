@@ -26,6 +26,7 @@ import static com.wl4g.component.common.lang.Exceptions.getRootCausesString;
 import static com.wl4g.component.common.lang.SystemUtils2.LOCAL_PROCESS_ID;
 import static com.wl4g.component.common.reflect.ReflectionUtils2.doFullWithFields;
 import static com.wl4g.component.common.reflect.ReflectionUtils2.isGenericModifier;
+import static com.wl4g.shell.common.i18n.I18nResourceMessageBundles.getMessage;
 import static com.wl4g.shell.common.utils.ShellUtils.instantiateWithInitOptionValue;
 import static java.lang.String.format;
 import static java.lang.System.err;
@@ -121,7 +122,7 @@ public abstract class GenericShellHandler implements ShellHandler {
         String mainArg = commands.remove(0);
 
         // Target method wrap
-        isTrue(registrar.contains(mainArg), format("'%s': command not found", mainArg));
+        isTrue(registrar.contains(mainArg), getMessage("label.command.notfount", mainArg));
         TargetMethodWrapper tm = registrar.getTargetMethods().get(mainArg);
 
         preHandleCommand(commands, tm);

@@ -28,7 +28,7 @@ import com.wl4g.shell.springboot.EmbeddedShellServerStartup;
  * @version v1.0 2019年4月30日
  * @since
  */
-public class ShellAutoConfiguration {
+public class ServerShellAutoConfiguration {
 
     @Bean
     @ConfigurationProperties(prefix = "spring.xcloud.shell")

@@ -107,7 +107,8 @@ public class ServerShellProperties extends BaseShellProperties {
     @Getter
     @Setter
     public static class AclInfo {
-        private boolean enabled;
+        private boolean enabled = false;
+        private long timeoutMs = 5 * 60 * 1000L;
         private List<CredentialsInfo> info = new ArrayList<>();
 
         public final CredentialsInfo getCredentialsInfo(final String username) {

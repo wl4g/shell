@@ -89,10 +89,10 @@ public class EmbeddedShellServerStartup implements ApplicationRunner, Disposable
         log.info("Using shell session DAO: {}", sessionDAO);
 
         // Build shell server.
-        shellServer = EmbeddedShellServerBuilder.newBuilder()
+        this.shellServer = EmbeddedShellServerBuilder.newBuilder()
                 .withAppName(applicationContext.getEnvironment().getRequiredProperty("spring.application.name"))
                 .withConfiguration(config).withRegistrar(registrar).withShellSessionDAO(sessionDAO).build();
-        shellServer.start();
+        this.shellServer.start();
     }
 
     @Override

@@ -97,7 +97,7 @@ public abstract class DefaultClientShellHandler extends GenericShellHandler impl
     /**
      * Enable debugging
      */
-    public static final long TIMEOUT = Long.parseLong(getProperty("timeout", valueOf(180_000L)));
+    public static final long TIMEOUT = Long.parseLong(getProperty("timeout", valueOf(60_000L)));
 
     /**
      * Attributed string

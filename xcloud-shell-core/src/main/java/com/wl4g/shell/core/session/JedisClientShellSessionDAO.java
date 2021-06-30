@@ -52,7 +52,7 @@ public class JedisClientShellSessionDAO extends AbstractRedisShellSessionDAO {
 
     @Override
     public ShellSession get(String sessionId) {
-        return parseJSON(jedisClient.hget("", sessionId), ShellSession.class);
+        return parseJSON(jedisClient.hget(getOpsKey(), sessionId), ShellSession.class);
     }
 
     @Override

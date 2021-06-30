@@ -32,7 +32,6 @@ import java.io.Serializable;
  * @since
  */
 public abstract class BaseShellProperties implements Serializable {
-
     private static final long serialVersionUID = -5897277204687388946L;
 
     /**

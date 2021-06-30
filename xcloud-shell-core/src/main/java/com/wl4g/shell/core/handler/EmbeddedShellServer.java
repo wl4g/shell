@@ -21,8 +21,10 @@ import static com.wl4g.component.common.lang.Assert2.notNullOf;
 import static com.wl4g.component.common.lang.Assert2.state;
 import static com.wl4g.shell.common.cli.BuiltInCommand.CMD_LO;
 import static com.wl4g.shell.common.cli.BuiltInCommand.CMD_LOGIN;
+import static com.wl4g.shell.common.i18n.I18nResourceMessageBundles.getMessage;
 import static com.wl4g.shell.common.signal.ChannelState.RUNNING;
 import static com.wl4g.shell.core.utils.AuthUtils.genSessionID;
+import static java.lang.Math.abs;
 import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
 import static java.lang.Thread.sleep;
@@ -184,16 +186,14 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
         StdinCommandWrapper stdin = currentStdin.get();
         ShellSession session = stdin.getHandler().getShellSession();
         if (!session.isAuthenticated()) {
-            throw new UnauthenticationShellException(format(
-                    "This command method must be authenticated to execution, Please exec the command: '%s|%s' to authentication.",
-                    CMD_LOGIN, CMD_LO));
+            throw new UnauthenticationShellException(getMessage("label.login.tip", CMD_LOGIN, CMD_LO));
         }
 
         // Check ACL by roles.
         String[] permissions = tm.getShellMethod().permissions();
         CredentialsInfo credentials = getConfig().getAcl().getCredentialsInfo(session.getUsername());
         if (!AuthUtils.matchAclPermits(permissions, credentials.getPermissions())) {
-            throw new UnauthorizedShellException("Access permission not defined.");
+            throw new UnauthorizedShellException(getMessage("label.login.notpermission"));
         }
     }
 
@@ -284,6 +284,12 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
             ShellSession session = null;
             if (!isBlank(sessionId)) {
                 session = sessionDAO.get(sessionId);
+                // Check expired?
+                if (nonNull(session)
+                        && abs(currentTimeMillis() - session.getLatestTimestamp()) >= getConfig().getAcl().getTimeoutMs()) {
+                    sessionDAO.remove(session.getSessionId());
+                    session = null;
+                }
             }
             if (isNull(session)) {
                 session = new ShellSession(genSessionID(), null, false, null, 0, 0);
@@ -328,7 +334,8 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
                     if (signal instanceof PreLoginSignal) {
                         PreLoginSignal login = (PreLoginSignal) signal;
                         if (session.isAuthenticated()) {
-                            output = new LoginSignal(true, session.getSessionId()).withDesc("Authenticated.");
+                            output = new LoginSignal(true, session.getSessionId())
+                                    .withDesc(getMessage("label.login.authenticated"));
                         } else {
                             if (getConfig().getAcl().isEnabled()) {
                                 if (getConfig().getAcl().matchs(login.getUsername(), login.getPassword())) {
@@ -338,12 +345,13 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
                                     session.setHost(socket.getInetAddress().getHostName());
                                     session.setStartTimestamp(currentTimeMillis());
                                     updateSession(session);
-                                    output = new LoginSignal(true, session.getSessionId()).withDesc("Authentication success.");
+                                    output = new LoginSignal(true, session.getSessionId())
+                                            .withDesc(getMessage("label.login.authentication.success"));
                                 } else {
-                                    output = new LoginSignal(false).withDesc("Authentication failure.");
+                                    output = new LoginSignal(false).withDesc(getMessage("label.login.authentication.fail"));
                                 }
                             } else {
-                                output = new LoginSignal(false).withDesc("No authentication required.");
+                                output = new LoginSignal(false).withDesc(getMessage("label.login.label.login.noauthentication"));
                             }
                         }
                     }
@@ -352,7 +360,7 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
                         // Call pre-interrupt events.
                         shellContext.getUnmodifiableEventListeners().forEach(l -> l.onPreInterrupt(shellContext));
                         // Ask if the client is interrupt.
-                        output = new AskInterruptSignal("Are you sure you want to cancel execution? (y|n)");
+                        output = new AskInterruptSignal(getMessage("label.interrupt.confirm"));
                     }
                     // Confirm interruption
                     else if (signal instanceof AckInterruptSignal) {

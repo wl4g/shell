@@ -24,6 +24,7 @@ import static com.wl4g.shell.common.cli.BuiltInCommand.CMD_LO;
 import static com.wl4g.shell.common.cli.BuiltInCommand.CMD_LOGIN;
 import static com.wl4g.shell.common.cli.BuiltInCommand.CMD_QU;
 import static com.wl4g.shell.common.cli.BuiltInCommand.CMD_QUIT;
+import static com.wl4g.shell.common.i18n.I18nResourceMessageBundles.getMessage;
 import static com.wl4g.shell.common.utils.ShellUtils.isTrue;
 import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
@@ -137,7 +138,7 @@ public class InteractiveClientShellHandler extends DefaultClientShellHandler {
                 if (login.isAuthenticated()) {
                     out.println(login.getDesc());
                 } else {
-                    err.println(login.getDesc().concat(", "));
+                    err.println(login.getDesc());
                 }
                 wakeup();
             }
@@ -163,7 +164,7 @@ public class InteractiveClientShellHandler extends DefaultClientShellHandler {
                 if (confirm.getConfirm()) {
                     out.println("Command interrupting...");
                 } else {
-                    out.println("Cancel interrupt!");
+                    out.println(getMessage("label.interrupt.cancel"));
                 }
                 // Echo interrupt
                 writeStdin(confirm);
@@ -204,10 +205,10 @@ public class InteractiveClientShellHandler extends DefaultClientShellHandler {
     private PreLoginSignal waitForPreLoginStdin() {
         String username = null, password = null;
         do {
-            username = lineReader.readLine("Please input username ?\n");
+            username = lineReader.readLine(getMessage("label.input.username").concat("\n"));
         } while (isEmpty(username));
         do {
-            password = lineReader.readLine("Please input password ?\n", new Character('\0'));
+            password = lineReader.readLine(getMessage("label.input.password").concat("\n"), new Character('\0'));
         } while (isEmpty(password));
         return (PreLoginSignal) (stdin = new PreLoginSignal(username, password));
     }

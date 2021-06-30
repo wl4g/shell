@@ -23,12 +23,12 @@ import java.lang.annotation.Target;
 
 import org.springframework.context.annotation.Import;
 
-import com.wl4g.shell.springboot.config.ShellAutoConfiguration;
+import com.wl4g.shell.springboot.config.ServerShellAutoConfiguration;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Documented
-@Import({ ShellAutoConfiguration.class })
+@Import({ ServerShellAutoConfiguration.class })
 public @interface EnableShellServer {
 
 }

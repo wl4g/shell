@@ -65,7 +65,7 @@ public class EmbeddedShellServerBuilder {
      * @return
      */
     public EmbeddedShellServerBuilder withAppName(String appName) {
-        appName = hasTextOf(appName, "appName");
+        this.appName = hasTextOf(appName, "appName");
         return this;
     }
 
@@ -76,7 +76,7 @@ public class EmbeddedShellServerBuilder {
      * @return
      */
     public EmbeddedShellServerBuilder withConfiguration(ServerShellProperties config) {
-        config = notNullOf(config, "config");
+        this.config = notNullOf(config, "config");
         return this;
     }
 
@@ -87,7 +87,7 @@ public class EmbeddedShellServerBuilder {
      * @return
      */
     public EmbeddedShellServerBuilder withShellSessionDAO(ShellSessionDAO sessionDAO) {
-        sessionDAO = notNullOf(sessionDAO, "sessionDAO");
+        this.sessionDAO = notNullOf(sessionDAO, "sessionDAO");
         return this;
     }
 
@@ -98,7 +98,7 @@ public class EmbeddedShellServerBuilder {
      * @return
      */
     public EmbeddedShellServerBuilder withRegistrar(ShellHandlerRegistrar registrar) {
-        registrar = notNullOf(registrar, "registrar");
+        this.registrar = notNullOf(registrar, "registrar");
         return this;
     }
 

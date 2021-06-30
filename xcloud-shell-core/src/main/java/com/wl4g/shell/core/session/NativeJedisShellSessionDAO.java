@@ -61,7 +61,7 @@ public class NativeJedisShellSessionDAO extends AbstractRedisShellSessionDAO {
     @Override
     public ShellSession get(String sessionId) {
         if (nonNull(jedisCluster)) {
-            return parseJSON(jedisCluster.hget("", sessionId), ShellSession.class);
+            return parseJSON(jedisCluster.hget(getOpsKey(), sessionId), ShellSession.class);
         }
         return parseJSON(jedis.hget("", sessionId), ShellSession.class);
     }
