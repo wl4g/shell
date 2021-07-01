@@ -70,24 +70,27 @@ public interface ShellCache {
     }
 
     public static class Factory {
-        public static ShellCache build(Object jedisObj) {
+
+        public static ShellCache build(Object cacheClientObj) {
             ShellCache shellCache = new MemoryShellCache();
-            if (nonNull(jedisObj) && nonNull(JEDIS_CLUSTER_CLASS) && JEDIS_CLUSTER_CLASS.isInstance(jedisObj)) {
-                shellCache = new NativeJedisShellCache(jedisObj);
-            } else if (nonNull(jedisObj) && nonNull(JEDIS_CLASS) && JEDIS_CLASS.isInstance(jedisObj)) {
-                shellCache = new NativeJedisShellCache(jedisObj);
-            } else if (nonNull(jedisObj) && nonNull(JEDIS_CLIENT_CLASS) && JEDIS_CLIENT_CLASS.isInstance(jedisObj)) {
-                shellCache = new JedisClientShellCache(jedisObj);
-            } else if (nonNull(jedisObj) && nonNull(REDIS_TEMPLATE_CLASS) && REDIS_TEMPLATE_CLASS.isInstance(jedisObj)) {
-                shellCache = new RedisTemplateShellCache(jedisObj);
+            if (nonNull(cacheClientObj)) {
+                if (nonNull(JEDIS_CLIENT_CLASS) && JEDIS_CLIENT_CLASS.isInstance(cacheClientObj)) {
+                    shellCache = new JedisClientShellCache(cacheClientObj);
+                } else if (nonNull(JEDIS_CLUSTER_CLASS) && JEDIS_CLUSTER_CLASS.isInstance(cacheClientObj)) {
+                    shellCache = new NativeJedisShellCache(cacheClientObj);
+                } else if (nonNull(JEDIS_CLASS) && JEDIS_CLASS.isInstance(cacheClientObj)) {
+                    shellCache = new NativeJedisShellCache(cacheClientObj);
+                } else if (nonNull(REDIS_TEMPLATE_CLASS) && REDIS_TEMPLATE_CLASS.isInstance(cacheClientObj)) {
+                    shellCache = new RedisTemplateShellCache(cacheClientObj);
+                }
             }
             return shellCache;
         }
 
-        public static final Class<?> JEDIS_CLUSTER_CLASS = resolveClassNameNullable("redis.clients.jedis.JedisCluster");
-        public static final Class<?> JEDIS_CLASS = resolveClassNameNullable("redis.clients.jedis.Jedis");
         public static final Class<?> JEDIS_CLIENT_CLASS = resolveClassNameNullable(
                 "com.wl4g.component.support.cache.jedis.JedisClient");
+        public static final Class<?> JEDIS_CLUSTER_CLASS = resolveClassNameNullable("redis.clients.jedis.JedisCluster");
+        public static final Class<?> JEDIS_CLASS = resolveClassNameNullable("redis.clients.jedis.Jedis");
         public static final Class<?> REDIS_TEMPLATE_CLASS = resolveClassNameNullable(
                 "org.springframework.data.redis.core.RedisTemplate");
     }

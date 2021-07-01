@@ -60,4 +60,34 @@ public class MemoryShellCache implements ShellCache {
         return nonNull(localStore.remove(key));
     }
 
+    @Override
+    public <V> V get(String key, Class<V> valueClass) {
+        // TODO Auto-generated method stub
+        return ShellCache.super.get(key, valueClass);
+    }
+
+    @Override
+    public <V> boolean set(String key, V value, long expireMs) {
+        // TODO Auto-generated method stub
+        return ShellCache.super.set(key, value, expireMs);
+    }
+
+    @Override
+    public <V> boolean setnx(String key, V value, long expireMs) {
+        // TODO Auto-generated method stub
+        return ShellCache.super.setnx(key, value, expireMs);
+    }
+
+    @Override
+    public <V> boolean del(String key) {
+        // TODO Auto-generated method stub
+        return ShellCache.super.del(key);
+    }
+
+    @Override
+    public Object eval(String script, List<String> keys, List<String> args) {
+        // TODO Auto-generated method stub
+        return ShellCache.super.eval(script, keys, args);
+    }
+
 }
