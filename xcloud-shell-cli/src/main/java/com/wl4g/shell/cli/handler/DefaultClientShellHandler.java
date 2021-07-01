@@ -431,7 +431,7 @@ public abstract class DefaultClientShellHandler extends GenericShellHandler impl
                     Object input = new ObjectInputStream(_in).readObject();
 
                     // Post process
-                    postHandleOutput(input);
+                    afterShellExecution(input);
 
                 } catch (SocketException | EOFException e) {
                     err.println("Connection tunnel closed!");

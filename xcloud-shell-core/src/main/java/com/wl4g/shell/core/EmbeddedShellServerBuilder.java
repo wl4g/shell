@@ -41,7 +41,7 @@ public class EmbeddedShellServerBuilder {
     private ServerShellProperties config = new ServerShellProperties();
 
     /** {@link ShellCache} */
-    private ShellCache shellCache = new MemoryShellCache();
+    private ShellCache shellCache = new MemoryShellCache(config);
 
     /** {@link ShellHandlerRegistrar} */
     private ShellHandlerRegistrar registrar = new ShellHandlerRegistrar();

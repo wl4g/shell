@@ -71,21 +71,21 @@ public class EmbeddedShellServerStartup implements ApplicationRunner, Disposable
         log.info("Shell server init starting on [{}, {}] ...", config.getBeginPort(), config.getEndPort());
 
         // Create shell session DAO.
-        ShellCache shellCache = new MemoryShellCache();
         // Redis clients in CLASSPATH. (if neccssary)
+        ShellCache shellCache = new MemoryShellCache(config);
         if (nonNull(JEDIS_CLUSTER_CLASS) && nonNull(JEDIS_CLASS)) {
             Object jedisCluster = obtainNullableBean(JEDIS_CLUSTER_CLASS);
             Object jedis = obtainNullableBean(JEDIS_CLASS);
             Object jedisClient = obtainNullableBean(JEDIS_CLIENT_CLASS);
             Object redisTemplate = obtainNullableBean(REDIS_TEMPLATE_CLASS);
             if (nonNull(jedisCluster)) {
-                shellCache = ShellCache.Factory.build(jedisCluster);
+                shellCache = ShellCache.Factory.build(config, jedisCluster);
             } else if (nonNull(jedis)) {
-                shellCache = ShellCache.Factory.build(jedis);
+                shellCache = ShellCache.Factory.build(config, jedis);
             } else if (nonNull(jedisClient)) {
-                shellCache = ShellCache.Factory.build(jedisClient);
+                shellCache = ShellCache.Factory.build(config, jedisClient);
             } else if (nonNull(redisTemplate)) {
-                shellCache = ShellCache.Factory.build(redisTemplate);
+                shellCache = ShellCache.Factory.build(config, redisTemplate);
             }
         }
         log.info("Using shell cache: {}", shellCache);

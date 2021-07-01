@@ -15,6 +15,10 @@
  */
 package com.wl4g.shell.core.cache;
 
+import static com.wl4g.component.common.lang.Assert2.notNullOf;
+
+import com.wl4g.shell.core.config.ServerShellProperties;
+
 /**
  * {@link AbstractRedisShellCache}
  * 
@@ -23,6 +27,13 @@ package com.wl4g.shell.core.cache;
  * @see v1.0.0
  */
 public abstract class AbstractRedisShellCache implements ShellCache {
+    protected static final String UNLOCK_LUA = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
+
+    protected final ServerShellProperties config;
+
+    public AbstractRedisShellCache(ServerShellProperties config) {
+        this.config = notNullOf(config, "config");
+    }
 
     protected String getOpsKey() {
         return SESSION_KEY_PREFIX;

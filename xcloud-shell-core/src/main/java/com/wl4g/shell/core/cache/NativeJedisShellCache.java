@@ -19,10 +19,13 @@ import static com.wl4g.component.common.collection.CollectionUtils2.safeMap;
 import static com.wl4g.component.common.lang.Assert2.notNullOf;
 import static com.wl4g.component.common.serialize.JacksonUtils.parseJSON;
 import static com.wl4g.component.common.serialize.JacksonUtils.toJSONString;
+import static java.util.Collections.singletonList;
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
+
+import com.wl4g.shell.core.config.ServerShellProperties;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisCluster;
@@ -44,7 +47,8 @@ public class NativeJedisShellCache extends AbstractRedisShellCache {
      * @param redisObj
      *            type of {@link JedisCluster} or {@link Jedis}
      */
-    public NativeJedisShellCache(Object redisObj) {
+    public NativeJedisShellCache(ServerShellProperties config, Object redisObj) {
+        super(config);
         notNullOf(redisObj, "redisObj");
         if (redisObj instanceof JedisCluster) {
             this.jedisCluster = (JedisCluster) redisObj;
@@ -149,11 +153,11 @@ public class NativeJedisShellCache extends AbstractRedisShellCache {
     }
 
     @Override
-    public Object eval(String script, List<String> keys, List<String> args) {
+    public Object deleq(String key, String arg) {
         if (nonNull(jedisCluster)) {
-            return jedisCluster.eval(script, keys, args);
+            return jedisCluster.eval(UNLOCK_LUA, singletonList(key), singletonList(arg));
         }
-        return jedis.eval(script, keys, args);
+        return jedis.eval(UNLOCK_LUA, singletonList(key), singletonList(arg));
     }
 
 }

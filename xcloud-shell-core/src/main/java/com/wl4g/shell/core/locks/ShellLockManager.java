@@ -23,7 +23,6 @@ import static java.lang.String.format;
 import static java.lang.Thread.currentThread;
 import static java.lang.Thread.interrupted;
 import static java.lang.Thread.sleep;
-import static java.util.Collections.singletonList;
 import static java.util.Objects.isNull;
 import static org.springframework.util.Assert.hasText;
 import static org.springframework.util.Assert.isTrue;
@@ -51,7 +50,6 @@ public class ShellLockManager {
     protected static final String NXXX = "NX";
     protected static final String EXPX = "PX";
     protected static final long FRAME_INTERVAL_MS = 50L;
-    protected static final String UNLOCK_LUA = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
 
     protected final ShellCache shellCache;
 
@@ -130,7 +128,7 @@ public class ShellLockManager {
         /** Current locker name. */
         protected final String name;
         /** Current locker request ID. */
-        protected final String currentProcessId;
+        protected final String requestId;
         /** Current locker expired time(MS). */
         protected final long expiredMs;
         /**
@@ -154,7 +152,7 @@ public class ShellLockManager {
 
         public FastReentrantUnfairDistributedRedLock(String name, String currentProcessId, long expiredMs, AtomicLong counter) {
             this.name = hasTextOf(name, "lockName");
-            this.currentProcessId = hasTextOf(currentProcessId, "currentProcessId");
+            this.requestId = hasTextOf(currentProcessId, "currentProcessId");
             isTrue(expiredMs > 0, "Lock expiredMs must greater than 0");
             this.expiredMs = expiredMs;
             this.counter = counter;
@@ -202,11 +200,11 @@ public class ShellLockManager {
         @Override
         public void unlock() {
             // Obtain locked processId.
-            String acquiredProcessId = shellCache.get(name, String.class);
+            String acquiredRequestId = shellCache.get(name, String.class);
             // Current thread is holder?
-            if (!currentProcessId.equals(acquiredProcessId)) {
-                log.debug("No need to unlock of currentProcessId: {}, acquiredProcessId: {}, counter: {}", currentProcessId,
-                        acquiredProcessId, counter);
+            if (!requestId.equals(acquiredRequestId)) {
+                log.debug("No need to unlock of requestId: {}, acquiredRequestId: {}, counter: {}", requestId, acquiredRequestId,
+                        counter);
                 return;
             }
 
@@ -215,11 +213,11 @@ public class ShellLockManager {
             log.debug("No need to unlock and reenter the stack lock layer, counter: {}", counter);
 
             if (counter.longValue() == 0L) { // All thread stack layers exited?
-                Object res = shellCache.eval(UNLOCK_LUA, singletonList(name), singletonList(currentProcessId));
+                Object res = shellCache.deleq(name, requestId);
                 if (!assertValidity(res)) {
-                    log.debug("Failed to unlock for %{}@{}", currentProcessId, name);
+                    log.debug("Failed to unlock for %{}@{}", requestId, name);
                 } else {
-                    log.debug("Unlock successful for %{}@{}", currentProcessId, name);
+                    log.debug("Unlock successful for %{}@{}", requestId, name);
                 }
             }
         }
@@ -237,7 +235,7 @@ public class ShellLockManager {
          */
         private final boolean doTryAcquire() {
             String acquiredProcessId = shellCache.get(name, String.class); // Locked-processId.
-            if (currentProcessId.equals(acquiredProcessId)) {
+            if (requestId.equals(acquiredProcessId)) {
                 // Obtain lock record once cumulatively.
                 counter.incrementAndGet();
                 log.debug("Reuse acquire lock for name: {}, acquiredProcessId: {}, counter: {}", name, acquiredProcessId,
@@ -249,7 +247,7 @@ public class ShellLockManager {
             }
 
             // Try to acquire a new lock from the server.
-            if (assertValidity(shellCache.setnx(name, currentProcessId, expiredMs))) {
+            if (assertValidity(shellCache.setnx(name, requestId, expiredMs))) {
                 // Obtain lock record once cumulatively.
                 counter.incrementAndGet();
                 return true;

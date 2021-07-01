@@ -96,11 +96,31 @@ public abstract class GenericShellHandler implements ShellHandler {
             return null;
         }
         try {
-            // Invocation
-            Object output = doProcess(resolveCommands(line));
+            // Resolving line commands.
+            List<String> commands = resolveCommands(line);
+            notNull(commands, "Console input commands must not be null");
 
-            // Post output result processing
-            postHandleOutput(output);
+            // Extract main argument option.
+            String mainArg = commands.remove(0);
+
+            // Check target method existing.
+            isTrue(registrar.contains(mainArg), getMessage("label.command.notfount", mainArg));
+            TargetMethodWrapper tm = registrar.getTargetMethods().get(mainArg);
+
+            // Call prepare to resolve parameters.
+            preHandleCommands(commands, tm);
+
+            // Resolving method parameters.
+            List<Object> parameters = resolveParameters(commands, tm);
+
+            // Call before execution.
+            beforeShellExecution(commands, tm, parameters);
+
+            // Invoking
+            Object output = doInvoke(tm, parameters);
+
+            // Call after execution.
+            afterShellExecution(output);
 
             return output;
         } catch (Exception e) {
@@ -109,30 +129,14 @@ public abstract class GenericShellHandler implements ShellHandler {
     }
 
     /**
-     * Commands processing
+     * Invocation execution command method.
      * 
-     * @param commands
+     * @param tm
+     * @param args
      * @return
      * @throws Exception
      */
-    protected Object doProcess(List<String> commands) throws Exception {
-        notNull(commands, "Console input commands must not be null");
-
-        // Main argument option.(remove)
-        String mainArg = commands.remove(0);
-
-        // Target method wrap
-        isTrue(registrar.contains(mainArg), getMessage("label.command.notfount", mainArg));
-        TargetMethodWrapper tm = registrar.getTargetMethods().get(mainArg);
-
-        preHandleCommand(commands, tm);
-
-        // Resolve method parameters
-        List<Object> args = resolveArguments(commands, tm);
-
-        preHandleInput(commands, tm, args);
-
-        // Invocation
+    protected Object doInvoke(TargetMethodWrapper tm, List<Object> args) throws Exception {
         return tm.getMethod().invoke(tm.getTarget(), args.toArray());
     }
 
@@ -147,7 +151,7 @@ public abstract class GenericShellHandler implements ShellHandler {
      * @throws InstantiationException
      * @throws Exception
      */
-    protected List<Object> resolveArguments(List<String> commands, TargetMethodWrapper tm)
+    protected List<Object> resolveParameters(List<String> commands, TargetMethodWrapper tm)
             throws IllegalArgumentException, IllegalAccessException, InstantiationException {
         notNull(tm, "Error, Should targetMethodWrapper not be null?");
 
@@ -237,7 +241,7 @@ public abstract class GenericShellHandler implements ShellHandler {
      * @param tm
      * @param args
      */
-    protected void preHandleCommand(List<String> commands, TargetMethodWrapper tm) {
+    protected void preHandleCommands(List<String> commands, TargetMethodWrapper tm) {
 
     }
 
@@ -245,19 +249,18 @@ public abstract class GenericShellHandler implements ShellHandler {
      * It the resolving parameters before handle.
      * 
      * @param tm
-     * @param args
+     * @param parameters
      */
-    protected void preHandleInput(List<String> commands, TargetMethodWrapper tm, List<Object> args) {
-
+    protected void beforeShellExecution(List<String> commands, TargetMethodWrapper tm, List<Object> parameters) {
     }
 
     /**
-     * Post invocation stdout message.
+     * Post invocation standard output message.
      * 
      * @param output
      * @throws Exception
      */
-    protected void postHandleOutput(Object output) throws Exception {
+    protected void afterShellExecution(Object output) throws Exception {
 
     }
 

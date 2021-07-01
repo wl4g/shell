@@ -19,9 +19,14 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
 
+import java.time.Duration;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+
+import org.apache.commons.lang3.StringUtils;
+
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.wl4g.shell.core.config.ServerShellProperties;
 
 /**
  * {@link MemoryShellCache}
@@ -31,63 +36,69 @@ import java.util.concurrent.ConcurrentHashMap;
  * @see v1.0.0
  */
 @SuppressWarnings("unchecked")
-public class MemoryShellCache implements ShellCache {
+public class MemoryShellCache extends AbstractRedisShellCache {
 
-    private static final Map<String, Object> localStore = new ConcurrentHashMap<>(16);
+    private final Cache<Object, Object> localCache;
+
+    public MemoryShellCache(ServerShellProperties config) {
+        super(config);
+        this.localCache = CacheBuilder.newBuilder().expireAfterAccess(Duration.ofMillis(config.getSharedLockTimeoutMs())).build();
+    }
 
     @Override
     public <V> V hget(String key, Class<V> valueClass) {
-        return (V) localStore.get(key);
+        return (V) localCache.asMap().get(getOpsKey().concat(key));
     }
 
     @Override
     public <V> List<V> hgetAll(Class<V> valueClass) {
-        return (List<V>) localStore.values().stream().collect(toList());
+        return localCache.asMap().values().stream().map(e -> (V) e).collect(toList());
     }
 
     @Override
     public <V> boolean hset(String key, V value) {
-        return nonNull(localStore.put(key, value));
+        localCache.put(getOpsKey().concat(key), value);
+        return true;
     }
 
     @Override
     public <V> boolean hsetnx(String key, V value) {
-        return isNull(localStore.putIfAbsent(key, value));
+        return isNull(localCache.asMap().putIfAbsent(key, value));
     }
 
     @Override
     public <V> boolean hdel(String key) {
-        return nonNull(localStore.remove(key));
+        return nonNull(localCache.asMap().remove(key));
     }
 
     @Override
     public <V> V get(String key, Class<V> valueClass) {
-        // TODO Auto-generated method stub
-        return ShellCache.super.get(key, valueClass);
+        return (V) localCache.asMap().get(key);
     }
 
     @Override
     public <V> boolean set(String key, V value, long expireMs) {
-        // TODO Auto-generated method stub
-        return ShellCache.super.set(key, value, expireMs);
+        return nonNull(localCache.asMap().put(key, value));
     }
 
     @Override
-    public <V> boolean setnx(String key, V value, long expireMs) {
-        // TODO Auto-generated method stub
-        return ShellCache.super.setnx(key, value, expireMs);
+    public <V> boolean setnx(String key, V value, @Deprecated long expireMs) {
+        return isNull(localCache.asMap().putIfAbsent(key, value));
     }
 
     @Override
     public <V> boolean del(String key) {
-        // TODO Auto-generated method stub
-        return ShellCache.super.del(key);
+        localCache.invalidate(key);
+        return true;
     }
 
     @Override
-    public Object eval(String script, List<String> keys, List<String> args) {
-        // TODO Auto-generated method stub
-        return ShellCache.super.eval(script, keys, args);
+    public synchronized Object deleq(String key, String arg) {
+        String value = get(key, String.class);
+        if (StringUtils.equals(value, arg)) {
+            return del(key) ? "OK" : null;
+        }
+        return null;
     }
 
 }

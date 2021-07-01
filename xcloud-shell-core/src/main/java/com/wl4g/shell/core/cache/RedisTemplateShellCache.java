@@ -15,11 +15,11 @@
  */
 package com.wl4g.shell.core.cache;
 
-import static com.wl4g.component.common.collection.CollectionUtils2.safeList;
 import static com.wl4g.component.common.collection.CollectionUtils2.safeMap;
 import static com.wl4g.component.common.lang.Assert2.notNullOf;
 import static com.wl4g.component.common.serialize.JacksonUtils.parseJSON;
 import static com.wl4g.component.common.serialize.JacksonUtils.toJSONString;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
 import java.time.Duration;
@@ -28,6 +28,8 @@ import java.util.Map;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.RedisScript;
+
+import com.wl4g.shell.core.config.ServerShellProperties;
 
 /**
  * {@link RedisTemplateShellCache}
@@ -45,7 +47,8 @@ public class RedisTemplateShellCache extends AbstractRedisShellCache {
      *            type of {@link RedisTemplate}
      */
     @SuppressWarnings("unchecked")
-    public RedisTemplateShellCache(Object redisObj) {
+    public RedisTemplateShellCache(ServerShellProperties config, Object redisObj) {
+        super(config);
         notNullOf(redisObj, "redisObj");
         if (redisObj instanceof RedisTemplate) {
             this.redisTemplate = (RedisTemplate<String, String>) redisObj;
@@ -108,10 +111,8 @@ public class RedisTemplateShellCache extends AbstractRedisShellCache {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Object eval(String script, List<String> keys, List<String> args) {
-        Object[] args0 = safeList(args).toArray();
-        redisTemplate.execute(RedisScript.of(script, Object.class), keys, args0);
-        return super.eval(script, keys, args);
+    public Object deleq(String key, String arg) {
+        return redisTemplate.execute(RedisScript.of(UNLOCK_LUA, Object.class), singletonList(key), arg);
     }
 
 }

@@ -19,12 +19,14 @@ import static com.wl4g.component.common.collection.CollectionUtils2.safeMap;
 import static com.wl4g.component.common.lang.Assert2.notNullOf;
 import static com.wl4g.component.common.serialize.JacksonUtils.parseJSON;
 import static com.wl4g.component.common.serialize.JacksonUtils.toJSONString;
+import static java.util.Collections.singletonList;
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
 
 import com.wl4g.component.support.cache.jedis.JedisClient;
+import com.wl4g.shell.core.config.ServerShellProperties;
 
 import redis.clients.jedis.params.SetParams;
 
@@ -43,7 +45,8 @@ public class JedisClientShellCache extends AbstractRedisShellCache {
      * @param redisObj
      *            type of {@link JedisClient}
      */
-    public JedisClientShellCache(Object redisObj) {
+    public JedisClientShellCache(ServerShellProperties config, Object redisObj) {
+        super(config);
         notNullOf(redisObj, "redisObj");
         if (redisObj instanceof JedisClient) {
             this.jedisClient = (JedisClient) redisObj;
@@ -105,8 +108,8 @@ public class JedisClientShellCache extends AbstractRedisShellCache {
     }
 
     @Override
-    public Object eval(String script, List<String> keys, List<String> args) {
-        return jedisClient.eval(script, keys, args);
+    public Object deleq(String key, String arg) {
+        return jedisClient.eval(UNLOCK_LUA, singletonList(key), singletonList(arg));
     }
 
 }

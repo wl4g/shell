@@ -124,7 +124,7 @@ public class InteractiveClientShellHandler extends DefaultClientShellHandler {
     }
 
     @Override
-    protected void postHandleOutput(Object output) throws Exception {
+    protected void afterShellExecution(Object output) throws Exception {
         if (output instanceof Signal) { // Remote command stdout?
             // Meta
             if (output instanceof MetaSignal) {

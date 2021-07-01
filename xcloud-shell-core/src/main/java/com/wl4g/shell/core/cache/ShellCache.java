@@ -20,6 +20,8 @@ import static java.util.Objects.nonNull;
 
 import java.util.List;
 
+import com.wl4g.shell.core.config.ServerShellProperties;
+
 /**
  * {@link ShellCache}
  * 
@@ -57,6 +59,14 @@ public interface ShellCache {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Trying lock
+     * 
+     * @param key
+     * @param value
+     * @param expireMs
+     * @return
+     */
     default <V> boolean setnx(String key, V value, long expireMs) {
         throw new UnsupportedOperationException();
     }
@@ -65,23 +75,32 @@ public interface ShellCache {
         throw new UnsupportedOperationException();
     }
 
-    default Object eval(String script, List<String> keys, List<String> args) {
+    /**
+     * Unlock </br>
+     * Deletion key equals argument.
+     * 
+     * @param script
+     * @param keys
+     * @param args
+     * @return
+     */
+    default Object deleq(String key, String arg) {
         throw new UnsupportedOperationException();
     }
 
-    public static class Factory {
+    public final static class Factory {
 
-        public static ShellCache build(Object cacheClientObj) {
-            ShellCache shellCache = new MemoryShellCache();
+        public static ShellCache build(ServerShellProperties config, Object cacheClientObj) {
+            ShellCache shellCache = new MemoryShellCache(config);
             if (nonNull(cacheClientObj)) {
                 if (nonNull(JEDIS_CLIENT_CLASS) && JEDIS_CLIENT_CLASS.isInstance(cacheClientObj)) {
-                    shellCache = new JedisClientShellCache(cacheClientObj);
+                    shellCache = new JedisClientShellCache(config, cacheClientObj);
                 } else if (nonNull(JEDIS_CLUSTER_CLASS) && JEDIS_CLUSTER_CLASS.isInstance(cacheClientObj)) {
-                    shellCache = new NativeJedisShellCache(cacheClientObj);
+                    shellCache = new NativeJedisShellCache(config, cacheClientObj);
                 } else if (nonNull(JEDIS_CLASS) && JEDIS_CLASS.isInstance(cacheClientObj)) {
-                    shellCache = new NativeJedisShellCache(cacheClientObj);
+                    shellCache = new NativeJedisShellCache(config, cacheClientObj);
                 } else if (nonNull(REDIS_TEMPLATE_CLASS) && REDIS_TEMPLATE_CLASS.isInstance(cacheClientObj)) {
-                    shellCache = new RedisTemplateShellCache(cacheClientObj);
+                    shellCache = new RedisTemplateShellCache(config, cacheClientObj);
                 }
             }
             return shellCache;

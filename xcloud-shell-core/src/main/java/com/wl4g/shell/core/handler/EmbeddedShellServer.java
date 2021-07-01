@@ -50,11 +50,13 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
 import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
 import com.wl4g.shell.common.exception.InternalShellException;
+import com.wl4g.shell.common.exception.UnableObtainLockShellException;
 import com.wl4g.shell.common.exception.UnauthenticationShellException;
 import com.wl4g.shell.common.exception.UnauthorizedShellException;
 import com.wl4g.shell.common.handler.BaseSignalHandler;
@@ -165,10 +167,33 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
     }
 
     @Override
-    protected void preHandleCommand(List<String> commands, TargetMethodWrapper tm) {
+    protected void preHandleCommands(List<String> commands, TargetMethodWrapper tm) {
+        // Assertion shell ACL permissions.
         assertShellAclPermission(tm);
-        assertShellSharedLock(tm);
-        super.preHandleCommand(commands, tm);
+        super.preHandleCommands(commands, tm);
+    }
+
+    @Override
+    protected Object doInvoke(TargetMethodWrapper tm, List<Object> args) throws Exception {
+        // Check whether the shell channel current command allows shared
+        // parallel execution.
+        if (tm.getShellMethod().lock()) {
+            Lock lock = lockManager.getLock(EmbeddedShellServer.class.getSimpleName());
+            if (lock.tryLock()) {
+                try {
+                    log.debug("Try shell execution lock: {}, tm: {}", lock, tm);
+                    return super.doInvoke(tm, args);
+                } finally {
+                    lock.unlock();
+                    log.debug("Released shell execution lock: {}, tm: {}", lock, tm);
+                }
+            } else {
+                throw new UnableObtainLockShellException(getMessage("label.command.unablegetlock"));
+            }
+        }
+
+        // No enable lock, can be executed in parallel.
+        return super.doInvoke(tm, args);
     }
 
     /**
@@ -195,18 +220,6 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
         CredentialsInfo credentials = getConfig().getAcl().getCredentialsInfo(session.getUsername());
         if (!AuthUtils.matchAclPermits(permissions, credentials.getPermissions())) {
             throw new UnauthorizedShellException(getMessage("label.login.notpermission"));
-        }
-    }
-
-    /**
-     * Asserts whether the shell channel current command allows shared parallel
-     * execution.
-     * 
-     * @param tm
-     */
-    private void assertShellSharedLock(TargetMethodWrapper tm) {
-        if (tm.getShellMethod().lock()) {
-            // TODO
         }
     }
 
