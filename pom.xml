@@ -59,7 +59,7 @@
 		<module>xcloud-shell-core</module>
 		<module>xcloud-shell-springboot</module>
 		<module>xcloud-shell-cli</module>
-		<module>xcloud-shell-example</module>
+		<!-- <module>xcloud-shell-example</module> -->
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
