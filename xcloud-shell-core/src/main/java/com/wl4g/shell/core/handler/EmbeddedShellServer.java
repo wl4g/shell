@@ -79,9 +79,9 @@ import com.wl4g.shell.core.utils.AuthUtils;
 /**
  * Embedded shell handle server
  * 
- * @author Wangl.sir <983708408@qq.com>
- * @version v1.0 2019年5月1日
- * @since
+ * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
+ * @version v1.0 2019-5月1日
+ * @since v1.0
  */
 public class EmbeddedShellServer extends AbstractShellServer implements Runnable {
 
@@ -270,9 +270,9 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
     /**
      * Server shell signal channel handler
      * 
-     * @author Wangl.sir <983708408@qq.com>
-     * @version v1.0 2019年5月2日
-     * @since
+     * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
+     * @version v1.0 2019-5月2日
+     * @since v1.0
      */
     class ServerSignalHandler extends BaseSignalHandler {
 

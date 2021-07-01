@@ -24,9 +24,9 @@ import com.wl4g.shell.cli.config.ClientShellConfiguration;
 /**
  * Script command line(client) shell handler.
  *
- * @author Wangl.sir <983708408@qq.com>
- * @version v1.0 2019年4月14日
- * @since
+ * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
+ * @version v1.0 2019-4月14日
+ * @since v1.0
  */
 public class ScriptShellHandler extends DefaultClientShellHandler {
 

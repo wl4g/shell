@@ -23,7 +23,7 @@ import com.wl4g.shell.common.signal.ChannelState;
  * {@link ShellEventListener}
  * 
  * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
- * @version 2020年2月2日 v1.0.0
+ * @version 2020-2月2日 v1.0.0
  * @see
  */
 public interface ShellEventListener extends EventListener {

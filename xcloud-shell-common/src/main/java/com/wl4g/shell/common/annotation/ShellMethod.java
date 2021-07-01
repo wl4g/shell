@@ -24,9 +24,9 @@ import java.lang.annotation.Target;
 /**
  * {@link ShellMethod}
  * 
- * @author Wangl.sir <wanglsir@gmail.com, 983708408@qq.com>
- * @version v1.0 2019年04月17日
- * @since
+ * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
+ * @version v1.0 2019-04-17
+ * @since v1.0 v1.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD })
@@ -34,37 +34,29 @@ import java.lang.annotation.Target;
 public @interface ShellMethod {
 
     /**
-     * Command names definition.</br>
+     * Command names definition.<br/>
      * 
      * e.g:
      * 
      * <pre>
-     * $ > mylist
+     * $ &gt; mylist
      * </pre>
-     * 
-     * @return
      */
     String[] keys();
 
     /**
      * Command group name.
-     * 
-     * @return
      */
     String group();
 
     /**
      * Whether to allow command line execution to be interrupted.
-     * 
-     * @return
      */
     InterruptType interruptible() default InterruptType.NOT_ALLOW;
 
     /**
      * The list of roles required by the access control mechanism takes effect
      * only when the global ACL is enabled.
-     * 
-     * @return
      */
     String[] permissions() default {};
 
@@ -73,25 +65,14 @@ public @interface ShellMethod {
      * (cluster is supported if redis exists in classpath). Default: true, that
      * is, any client executing a command must wait for the last execution
      * (possibly other clients) to end.
-     * 
-     * @return
      */
     boolean lock() default true;
 
     /**
      * Command help description.
-     * 
-     * @return
      */
     String help();
 
-    /**
-     * {@link InterruptType}
-     * 
-     * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
-     * @version 2020年2月4日 v1.0.0
-     * @see
-     */
     public static enum InterruptType {
         ALLOW, NOT_ALLOW
     }

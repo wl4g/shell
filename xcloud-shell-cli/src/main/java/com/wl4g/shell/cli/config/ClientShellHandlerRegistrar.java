@@ -28,9 +28,9 @@ import com.wl4g.shell.common.registry.TargetMethodWrapper;
 /**
  * Shell CLI bean registrar
  * 
- * @author Wangl.sir <983708408@qq.com>
- * @version v1.0 2019年5月3日
- * @since
+ * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
+ * @version v1.0 2019-5月3日
+ * @since v1.0
  */
 public class ClientShellHandlerRegistrar extends ShellHandlerRegistrar {
     private static final long serialVersionUID = -6852880158146389409L;

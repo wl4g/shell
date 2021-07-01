@@ -83,7 +83,7 @@ public class ShellLockManager {
     }
 
     /**
-     * Get current thread unique process ID. </br>
+     * Get current thread unique process ID. <br/>
      * 
      * <pre>
      * Host serial + local processId + threadId
@@ -96,8 +96,8 @@ public class ShellLockManager {
     }
 
     /**
-     * Fast unsafe reentrant unfair redlock implemented by REDIS cluster.</br>
-     * </br>
+     * Fast unsafe reentrant unfair redlock implemented by REDIS cluster.<br/>
+     * <br/>
      * <font color=red style="text-decoration:underline;">Note: This
      * implementation is not strictly strong consistency. It is recommended to
      * use this distributed lock for scenarios with high performance
@@ -110,8 +110,8 @@ public class ShellLockManager {
      * will be serious consequences of locking.</font>
      * 
      * @author Wangl.sir <wanglsir@gmail.com, 983708408@qq.com>
-     * @version v1.0 2019年3月21日
-     * @since
+     * @version v1.0 2019-3月21日
+     * @since v1.0
      * @see <a href=
      *      'https://blog.csdn.net/matt8/article/details/64442064'>Discuss
      *      Antirez failover analysis</a>
@@ -132,7 +132,7 @@ public class ShellLockManager {
         /** Current locker expired time(MS). */
         protected final long expiredMs;
         /**
-         * Current locker reentrant counter.</br>
+         * Current locker reentrant counter.<br/>
          * <font color=red>Special Note: assuming that the situation of retry to
          * obtain lock occurs, it must be in the same JVM process.</font>
          */
@@ -228,7 +228,7 @@ public class ShellLockManager {
         }
 
         /**
-         * Execution try acquire locker by reentrant info.</br>
+         * Execution try acquire locker by reentrant info.<br/>
          * 
          * @see ShellLockManager.java
          * @return

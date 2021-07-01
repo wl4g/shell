@@ -20,12 +20,12 @@ import org.apache.commons.cli.Options;
 import com.wl4g.shell.common.annotation.ShellMethod;
 
 /**
- * Help option.</br>
+ * Help option.<br/>
  * See:{@link com.wl4g.devops.shell.command.DefaultInternalCommand#help()}[MARK0]
  * 
- * @author Wangl.sir <983708408@qq.com>
- * @version v1.0 2019年5月4日
- * @since
+ * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
+ * @version v1.0 2019-5月4日
+ * @since v1.0
  */
 public class HelpOptions extends Options {
 	private static final long serialVersionUID = 2206030510132539771L;

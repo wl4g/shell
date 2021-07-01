@@ -20,7 +20,7 @@ package com.wl4g.shell.common.signal;
  *
  * @author Wangl.sir <wanglsir@gmail.com, 983708408@qq.com>
  * @version v1.0 2019-06-21
- * @since
+ * @since v1.0
  */
 public class BOFStdoutSignal extends Signal {
 	private static final long serialVersionUID = -5574318886731906685L;

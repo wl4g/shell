@@ -30,7 +30,7 @@ import com.wl4g.shell.core.handler.EmbeddedShellServer;
  *
  * @author Wangl.sir <wanglsir@gmail.com, 983708408@qq.com>
  * @version v1.0 2020-08-10
- * @since
+ * @since v1.0
  */
 public class EmbeddedShellServerBuilder {
 

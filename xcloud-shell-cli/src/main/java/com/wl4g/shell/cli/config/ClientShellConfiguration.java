@@ -31,9 +31,9 @@ import com.wl4g.shell.common.config.BaseShellProperties;
 /**
  * Shell properties configuration
  * 
- * @author Wangl.sir <983708408@qq.com>
- * @version v1.0 2019年5月1日
- * @since
+ * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
+ * @version v1.0 2019-5月1日
+ * @since v1.0
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "configuration")
@@ -87,9 +87,9 @@ public class ClientShellConfiguration extends BaseShellProperties {
 	/**
 	 * Internal utility tools
 	 * 
-	 * @author Wangl.sir <983708408@qq.com>
-	 * @version v1.0 2019年5月9日
-	 * @since
+	 * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
+	 * @version v1.0 2019-5月9日
+	 * @since v1.0
 	 */
 	static abstract class Util {
 

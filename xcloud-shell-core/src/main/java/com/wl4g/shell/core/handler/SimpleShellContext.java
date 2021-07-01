@@ -21,7 +21,7 @@ import com.wl4g.shell.common.exception.ChannelShellException;
  * {@link SimpleShellContext}
  * 
  * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
- * @version 2020年2月4日 v1.0.0
+ * @version 2020-2月4日 v1.0.0
  * @see
  */
 public class SimpleShellContext extends BaseShellContext {

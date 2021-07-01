@@ -34,9 +34,9 @@ import com.wl4g.shell.common.utils.LineUtils;
 /**
  * Dynamic completer
  * 
- * @author Wangl.sir <983708408@qq.com>
- * @version v1.0 2019年5月4日
- * @since
+ * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
+ * @version v1.0 2019-5月4日
+ * @since v1.0
  */
 public class DynamicCompleter implements Completer {
 
@@ -75,7 +75,7 @@ public class DynamicCompleter implements Completer {
 	}
 
 	/**
-	 * Check if candidate parameters have been completing completed</br>
+	 * Check if candidate parameters have been completing completed<br/>
 	 * 
 	 * e.g. $> add -a 11 -b 22
 	 * 

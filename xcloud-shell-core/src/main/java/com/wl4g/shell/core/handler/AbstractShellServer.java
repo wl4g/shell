@@ -38,9 +38,9 @@ import com.wl4g.shell.core.session.ShellSessionDAO;
 /**
  * Server abstract shell component handler
  * 
- * @author Wangl.sir <983708408@qq.com>
- * @version v1.0 2019年4月14日
- * @since
+ * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
+ * @version v1.0 2019-4月14日
+ * @since v1.0
  */
 public abstract class AbstractShellServer extends GenericShellHandler implements Closeable {
     protected final SmartLogger log = getLogger(getClass());

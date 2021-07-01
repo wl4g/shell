@@ -62,9 +62,9 @@ import com.wl4g.shell.common.utils.LineUtils;
 /**
  * Generic abstract shell component actuator handler.
  * 
- * @author Wangl.sir <983708408@qq.com>
- * @version v1.0 2019年4月14日
- * @since
+ * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
+ * @version v1.0 2019-4月14日
+ * @since v1.0
  */
 public abstract class GenericShellHandler implements ShellHandler {
 
@@ -160,7 +160,7 @@ public abstract class GenericShellHandler implements ShellHandler {
         notNull(tm, "Error, Should targetMethodWrapper not be null?");
 
         /*
-         * Commands to javaBean map and validate protected. </br>
+         * Commands to javaBean map and validate protected. <br/>
          * (javaBean.fieldName or params.index(native type))->value
          */
         final Map<String, String> beanMap = new HashMap<>();

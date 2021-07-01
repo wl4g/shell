@@ -21,14 +21,14 @@ import com.wl4g.shell.cli.handler.InteractiveClientShellHandler;
 /**
  * Shell bootstrap program for client.
  * 
- * @author Wangl.sir <983708408@qq.com>
- * @version v1.0 2019年5月2日
- * @since
+ * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
+ * @version v1.0 2019-5月2日
+ * @since v1.0
  */
 public class ShellBootstrap {
 
 	/**
-	 * For examples:</br>
+	 * For examples:<br/>
 	 * 
 	 * <pre>
 	 * [Way1]:

@@ -56,9 +56,9 @@ import com.wl4g.shell.common.cli.HelpOptions;
 /**
  * Shell component target method wrapper
  * 
- * @author Wangl.sir <983708408@qq.com>
- * @version v1.0 2019年4月14日
- * @since
+ * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
+ * @version v1.0 2019-4月14日
+ * @since v1.0
  */
 public class TargetMethodWrapper implements Serializable {
     private static final long serialVersionUID = -8763772515086222131L;
@@ -84,7 +84,7 @@ public class TargetMethodWrapper implements Serializable {
     private final List<TargetParameter> parameters = new ArrayList<>(4);
 
     /**
-     * Constructor target method.</br>
+     * Constructor target method.<br/>
      * 
      * See: <a href=
      * "https://www.cnblogs.com/guangshan/p/4660564.html">https://www.cnblogs.com/guangshan/p/4660564.html</a>
@@ -265,9 +265,9 @@ public class TargetMethodWrapper implements Serializable {
     /**
      * Target parameter definition
      * 
-     * @author Wangl.sir <983708408@qq.com>
-     * @version v1.0 2019年5月3日
-     * @since
+     * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
+     * @version v1.0 2019-5月3日
+     * @since v1.0
      */
     public static class TargetParameter implements java.io.Serializable {
         private static final long serialVersionUID = -8763372515086222131L;
@@ -288,7 +288,7 @@ public class TargetMethodWrapper implements Serializable {
         private transient final int index;
 
         /**
-         * Method parameter shell option annotation.</br>
+         * Method parameter shell option annotation.<br/>
          * Annotation for basic type parameters.
          */
         private final ShellOption shellOption;

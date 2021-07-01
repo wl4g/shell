@@ -18,12 +18,12 @@ package com.wl4g.shell.common.registry;
 import com.wl4g.shell.common.registry.TargetMethodWrapper.TargetParameter;
 
 /**
- * Built-in injectable parameters, such as ShellContext.</br>
+ * Built-in injectable parameters, such as ShellContext.<br/>
  * {@link TargetParameter#extractHierarchyFields}
  * 
  * @author wangl.sir
- * @version v1.0 2019年5月24日
- * @since
+ * @version v1.0 2019-5月24日
+ * @since v1.0
  */
 public interface ShellAware {
 

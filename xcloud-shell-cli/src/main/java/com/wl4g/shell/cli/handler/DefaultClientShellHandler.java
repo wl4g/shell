@@ -71,9 +71,9 @@ import com.wl4g.shell.common.signal.StdinSignal;
 /**
  * CLi shell component runner
  * 
- * @author Wangl.sir <983708408@qq.com>
- * @version v1.0 2019年4月14日
- * @since
+ * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
+ * @version v1.0 2019-4月14日
+ * @since v1.0
  */
 public abstract class DefaultClientShellHandler extends GenericShellHandler implements ClientShellHandler {
 
@@ -348,7 +348,7 @@ public abstract class DefaultClientShellHandler extends GenericShellHandler impl
         }
 
         //
-        // Direct use of specified point.</br>
+        // Direct use of specified point.<br/>
         // Can be used to connect to remote service console.
         //
         if (isNotBlank(servPoint)) {
@@ -362,7 +362,7 @@ public abstract class DefaultClientShellHandler extends GenericShellHandler impl
         }
 
         //
-        // Obtain port according to PIDS.</br>
+        // Obtain port according to PIDS.<br/>
         // Can only be used to connect to the local service console.
         //
 
@@ -396,9 +396,9 @@ public abstract class DefaultClientShellHandler extends GenericShellHandler impl
     /**
      * Client shell message channel handler
      * 
-     * @author Wangl.sir <983708408@qq.com>
-     * @version v1.0 2019年5月2日
-     * @since
+     * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
+     * @version v1.0 2019-5月2日
+     * @since v1.0
      */
     class ClientSignalHandler extends BaseSignalHandler {
 

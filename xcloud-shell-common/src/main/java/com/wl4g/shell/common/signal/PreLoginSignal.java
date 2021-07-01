@@ -21,9 +21,9 @@ import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 /**
  * Pre login commands message
  * 
- * @author Wangl.sir <983708408@qq.com>
- * @version v1.0 2019年5月4日
- * @since
+ * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
+ * @version v1.0 2019-5月4日
+ * @since v1.0
  */
 public class PreLoginSignal extends Signal {
     private static final long serialVersionUID = -8574315246731906685L;

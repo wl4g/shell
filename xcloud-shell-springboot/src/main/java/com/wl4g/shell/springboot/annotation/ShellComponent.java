@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  *
  * @author Wangl.sir <wanglsir@gmail.com, 983708408@qq.com>
  * @version v1.0 2019-08-10
- * @since
+ * @since v1.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE })

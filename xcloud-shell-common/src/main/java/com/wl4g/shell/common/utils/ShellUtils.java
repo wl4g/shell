@@ -32,13 +32,13 @@ import java.util.Map;
  * Shell CLI server support utility tools
  * 
  * @author wangl.sir
- * @version v1.0 2019年5月10日
- * @since
+ * @version v1.0 2019-5月10日
+ * @since v1.0
  */
 public abstract class ShellUtils extends BeanUtils2 {
 
 	/**
-	 * Is true <br/>
+	 * Is true 
 	 * 
 	 * @param value
 	 * @param defaultValue

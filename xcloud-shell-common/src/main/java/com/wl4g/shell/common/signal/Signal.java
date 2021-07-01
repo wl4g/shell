@@ -22,9 +22,9 @@ import javax.annotation.Nullable;
 /**
  * Shell transport signal
  * 
- * @author Wangl.sir <983708408@qq.com>
- * @version v1.0 2019年5月4日
- * @since
+ * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
+ * @version v1.0 2019-5月4日
+ * @since v1.0
  */
 public abstract class Signal implements Serializable {
     private static final long serialVersionUID = 771621623117425564L;

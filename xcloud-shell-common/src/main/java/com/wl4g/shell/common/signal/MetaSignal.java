@@ -23,9 +23,9 @@ import com.wl4g.shell.common.registry.TargetMethodWrapper;
 /**
  * Meta configuration/commands message
  * 
- * @author Wangl.sir <983708408@qq.com>
- * @version v1.0 2019年5月4日
- * @since
+ * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
+ * @version v1.0 2019-5月4日
+ * @since v1.0
  */
 public class MetaSignal extends Signal {
     private static final long serialVersionUID = -8574315248835509685L;

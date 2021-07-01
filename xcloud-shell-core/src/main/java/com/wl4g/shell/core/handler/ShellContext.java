@@ -25,16 +25,16 @@ import java.util.Collection;
  * Shell handler context
  *
  * @author wangl.sir
- * @version v1.0 2019年5月24日
- * @since
+ * @version v1.0 2019-5月24日
+ * @since v1.0
  */
 public interface ShellContext extends ShellAware {
 	final public static String DEFAULT_INTERRUPT_LISTENER = "defaultInterruptEventListener";
 
 	/**
 	 * Complete processing the current command line channel, effect: the client
-	 * will reopen the console prompt.</br>
-	 * </br>
+	 * will reopen the console prompt.<br/>
+	 * <br/>
 	 * <b><font color=red>Note: Don't forget to execute it, or the client
 	 * console will pause until it timeout.</font><b>
 	 * 

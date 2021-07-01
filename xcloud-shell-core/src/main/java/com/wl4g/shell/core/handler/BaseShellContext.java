@@ -57,8 +57,8 @@ import com.wl4g.shell.core.handler.EmbeddedShellServer.ServerSignalHandler;
  * Base shell handler context
  *
  * @author wangl.sir
- * @version v1.0 2019年5月24日
- * @since
+ * @version v1.0 2019-5月24日
+ * @since v1.0
  */
 abstract class BaseShellContext implements ShellContext {
     public static final String DEFAULT_INTERRUPT_LISTENER = "defaultInterruptEventListener";
@@ -159,8 +159,8 @@ abstract class BaseShellContext implements ShellContext {
 
     /**
      * Complete processing the current command line channel, effect: the client
-     * will reopen the console prompt.</br>
-     * </br>
+     * will reopen the console prompt.<br/>
+     * <br/>
      * <b><font color=red>Note: Don't forget to execute it, or the client
      * console will pause until it timeout.</font><b>
      * 
@@ -175,7 +175,7 @@ abstract class BaseShellContext implements ShellContext {
     /**
      * Are you currently in an interrupt state? (if the current thread does not
      * open the shell channel, it will return false, that is, uninterrupted)
-     * </br>
+     * <br/>
      * 
      * @return
      * @throws NoSupportedInterruptShellException

@@ -18,9 +18,9 @@ package com.wl4g.shell.common.handler;
 /**
  * Shell handler actuator.
  * 
- * @author Wangl.sir <983708408@qq.com>
- * @version v1.0 2019年4月21日
- * @since
+ * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
+ * @version v1.0 2019-4月21日
+ * @since v1.0
  */
 public interface ShellHandler {
 

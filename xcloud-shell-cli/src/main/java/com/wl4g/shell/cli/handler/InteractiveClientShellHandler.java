@@ -56,9 +56,9 @@ import com.wl4g.shell.common.signal.StdoutSignal;
 /**
  * Interactive shell component runner
  * 
- * @author Wangl.sir <983708408@qq.com>
- * @version v1.0 2019年4月14日
- * @since
+ * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
+ * @version v1.0 2019-4月14日
+ * @since v1.0
  */
 @SuppressWarnings("unused")
 public class InteractiveClientShellHandler extends DefaultClientShellHandler {
@@ -214,7 +214,7 @@ public class InteractiveClientShellHandler extends DefaultClientShellHandler {
     }
 
     /**
-     * Pause wait for completed. </br>
+     * Pause wait for completed. <br/>
      * {@link DefaultClientShellHandler#wakeup()}
      */
     private void paused() {
@@ -223,7 +223,7 @@ public class InteractiveClientShellHandler extends DefaultClientShellHandler {
     }
 
     /**
-     * Wake-up for lineReader watching. </br>
+     * Wake-up for lineReader watching. <br/>
      * 
      * {@link DefaultClientShellHandler#waitForComplished()}
      */

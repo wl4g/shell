@@ -34,7 +34,7 @@ import com.wl4g.shell.common.signal.ProgressSignal;
  * {@link ProgressShellContext}
  * 
  * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
- * @version 2020年2月3日 v1.0.0
+ * @version 2020-2月3日 v1.0.0
  * @see
  */
 public class ProgressShellContext extends BaseShellContext {
@@ -82,8 +82,8 @@ public class ProgressShellContext extends BaseShellContext {
 
 	/**
 	 * Complete command execution manually, for example, when receiving an
-	 * interrupt event, call it to output the message for the last time. </br>
-	 * </br>
+	 * interrupt event, call it to output the message for the last time. <br/>
+	 * <br/>
 	 * <b><font color=red>Note: Don't forget to execute it, or the client
 	 * console will pause until it timeout.</font><b>
 	 * 
@@ -138,7 +138,7 @@ public class ProgressShellContext extends BaseShellContext {
 	 * different method stacks, the tool class is specially provided.
 	 * 
 	 * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
-	 * @version 2020年2月2日 v1.0.0
+	 * @version 2020-2月2日 v1.0.0
 	 * @see
 	 */
 	public static final class UserShellContextBinders {
@@ -162,7 +162,7 @@ public class ProgressShellContext extends BaseShellContext {
 		}
 
 		/**
-		 * Got current bind {@link ProgressShellContext}. </br>
+		 * Got current bind {@link ProgressShellContext}. <br/>
 		 * 
 		 * @see {@link EmbeddedServerShellHandler#run()#MARK1}
 		 * @return
@@ -190,7 +190,7 @@ public class ProgressShellContext extends BaseShellContext {
 	 * {@link NoOpProgressShellContext}
 	 * 
 	 * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
-	 * @version 2020年2月5日 v1.0.0
+	 * @version 2020-2月5日 v1.0.0
 	 * @see
 	 */
 	public static class NoOpProgressShellContext extends ProgressShellContext {

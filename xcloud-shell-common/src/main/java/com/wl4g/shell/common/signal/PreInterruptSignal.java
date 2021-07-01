@@ -20,9 +20,9 @@ import static java.lang.String.valueOf;
 /**
  * Pre transmit interrupt signal
  * 
- * @author Wangl.sir <983708408@qq.com>
- * @version v1.0 2019年5月4日
- * @since
+ * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
+ * @version v1.0 2019-5月4日
+ * @since v1.0
  */
 public class PreInterruptSignal extends Signal {
     private static final long serialVersionUID = -5574318886731906685L;

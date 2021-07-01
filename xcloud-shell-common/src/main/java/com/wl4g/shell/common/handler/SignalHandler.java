@@ -27,9 +27,9 @@ import com.wl4g.shell.common.registry.ShellHandlerRegistrar;
 /**
  * Shell signal handler
  * 
- * @author Wangl.sir <983708408@qq.com>
- * @version v1.0 2019年5月2日
- * @since
+ * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
+ * @version v1.0 2019-5月2日
+ * @since v1.0
  */
 public abstract class SignalHandler implements Runnable, Closeable {
 

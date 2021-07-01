@@ -34,9 +34,9 @@ import lombok.Setter;
 /**
  * Shell properties configuration
  * 
- * @author Wangl.sir <983708408@qq.com>
- * @version v1.0 2019年5月1日
- * @since
+ * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
+ * @version v1.0 2019-5月1日
+ * @since v1.0
  */
 public class ServerShellProperties extends BaseShellProperties {
     private static final long serialVersionUID = -24798955162679115L;

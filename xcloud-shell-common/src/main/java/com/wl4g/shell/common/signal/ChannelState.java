@@ -19,8 +19,8 @@ package com.wl4g.shell.common.signal;
  * Line result message state
  * 
  * @author wangl.sir
- * @version v1.0 2019年5月24日
- * @since
+ * @version v1.0 2019-5月24日
+ * @since v1.0
  */
 public enum ChannelState {
 

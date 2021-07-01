@@ -18,26 +18,26 @@ package com.wl4g.shell.common.signal;
 /**
  * Stdout result message.
  * 
- * @author Wangl.sir <983708408@qq.com>
- * @version v1.0 2019年5月4日
- * @since
+ * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
+ * @version v1.0 2019-5月4日
+ * @since v1.0
  */
 public class StdoutSignal extends Signal {
-	private static final long serialVersionUID = -8574311246731909685L;
+    private static final long serialVersionUID = -8574311246731909685L;
 
-	final private String content;
+    private final String content;
 
-	public StdoutSignal(String content) {
-		this.content = content;
-	}
+    public StdoutSignal(String content) {
+        this.content = content;
+    }
 
-	public String getContent() {
-		return content;
-	}
+    public String getContent() {
+        return content;
+    }
 
-	@Override
-	public String toString() {
-		return "stdout [" + content + "]";
-	}
+    @Override
+    public String toString() {
+        return "stdout [" + content + "]";
+    }
 
 }

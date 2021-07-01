@@ -28,8 +28,8 @@ import java.io.Serializable;
  * Base shell properties configuration
  * 
  * @author wangl.sir
- * @version v1.0 2019年5月8日
- * @since
+ * @version v1.0 2019-5月8日
+ * @since v1.0
  */
 public abstract class BaseShellProperties implements Serializable {
     private static final long serialVersionUID = -5897277204687388946L;

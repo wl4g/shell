@@ -25,11 +25,11 @@ import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.*;
 
 /**
- * Help option.</br>
+ * Help option.<br/>
  * 
- * @author Wangl.sir <983708408@qq.com>
- * @version v1.0 2019年5月12日
- * @since
+ * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
+ * @version v1.0 2019-5月12日
+ * @since v1.0
  */
 public class HelpOption extends Option {
 	private static final long serialVersionUID = 1950613325131445963L;

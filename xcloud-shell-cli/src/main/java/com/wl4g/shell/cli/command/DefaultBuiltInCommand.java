@@ -50,8 +50,8 @@ import com.wl4g.shell.common.utils.LineUtils;
  * Default internal command.
  * 
  * @author wangl.sir
- * @version v1.0 2019年5月8日
- * @since
+ * @version v1.0 2019-5月8日
+ * @since v1.0
  */
 public class DefaultBuiltInCommand extends BuiltInCommand {
 
@@ -216,9 +216,9 @@ public class DefaultBuiltInCommand extends BuiltInCommand {
     /**
      * Help group wrapper
      * 
-     * @author Wangl.sir <983708408@qq.com>
-     * @version v1.0 2019年5月4日
-     * @since
+     * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
+     * @version v1.0 2019-5月4日
+     * @since v1.0
      */
     class HelpGroupWrapper {
 
@@ -249,9 +249,9 @@ public class DefaultBuiltInCommand extends BuiltInCommand {
     /**
      * Help method
      * 
-     * @author Wangl.sir <983708408@qq.com>
-     * @version v1.0 2019年5月4日
-     * @since
+     * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
+     * @version v1.0 2019-5月4日
+     * @since v1.0
      */
     class HelpMethod {
 

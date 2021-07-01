@@ -41,14 +41,14 @@ import com.wl4g.shell.example.service.ExampleService;
 import com.wl4g.shell.springboot.annotation.ShellComponent;
 
 /**
- * Example console.</br>
+ * Example console.<br/>
  * Note: for the shell program to take effect, you must inject {@link Component}
  * or {@link Service} or {@link Bean} into the spring
  * {@link ApplicationContext}.
  * 
  * @author Wangl.sir &lt;Wanglsir@gmail.com, 983708408@qq.com&gt;
  * @version v1.0.0 2019-04-21
- * @since
+ * @since v1.0
  */
 @Component
 @ShellComponent

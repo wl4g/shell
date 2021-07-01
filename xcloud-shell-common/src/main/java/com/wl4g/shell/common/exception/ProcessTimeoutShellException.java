@@ -55,7 +55,7 @@ public class ProcessTimeoutShellException extends ShellException {
 	 *            {@link #getCause()} method). (A <tt>null</tt> value is
 	 *            permitted, and indicates that the cause is nonexistent or
 	 *            unknown.)
-	 * @since 1.4
+	 * @since v1.0 1.4
 	 */
 	public ProcessTimeoutShellException(String message, Throwable cause) {
 		super(message, cause);
@@ -73,7 +73,7 @@ public class ProcessTimeoutShellException extends ShellException {
 	 *            {@link #getCause()} method). (A <tt>null</tt> value is
 	 *            permitted, and indicates that the cause is nonexistent or
 	 *            unknown.)
-	 * @since 1.4
+	 * @since v1.0 1.4
 	 */
 	public ProcessTimeoutShellException(Throwable cause) {
 		super(cause);
@@ -94,7 +94,7 @@ public class ProcessTimeoutShellException extends ShellException {
 	 * @param writableStackTrace
 	 *            whether or not the stack trace should be writable
 	 *
-	 * @since 1.7
+	 * @since v1.0 1.7
 	 */
 	protected ProcessTimeoutShellException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);

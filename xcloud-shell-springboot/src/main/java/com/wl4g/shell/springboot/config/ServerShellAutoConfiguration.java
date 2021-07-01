@@ -24,9 +24,9 @@ import com.wl4g.shell.springboot.EmbeddedShellServerStartup;
 /**
  * Shell component services auto configuration
  * 
- * @author Wangl.sir <983708408@qq.com>
- * @version v1.0 2019年4月30日
- * @since
+ * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
+ * @version v1.0 2019-4月30日
+ * @since v1.0
  */
 public class ServerShellAutoConfiguration {
 
