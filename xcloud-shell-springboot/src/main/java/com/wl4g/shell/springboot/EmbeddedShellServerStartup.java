@@ -16,8 +16,11 @@
 package com.wl4g.shell.springboot;
 
 import static com.wl4g.component.common.lang.Assert2.notNullOf;
-import static com.wl4g.component.common.lang.ClassUtils2.resolveClassNameNullable;
 import static com.wl4g.component.common.log.SmartLoggerFactory.getLogger;
+import static com.wl4g.shell.core.cache.ShellCache.Factory.JEDIS_CLASS;
+import static com.wl4g.shell.core.cache.ShellCache.Factory.JEDIS_CLIENT_CLASS;
+import static com.wl4g.shell.core.cache.ShellCache.Factory.JEDIS_CLUSTER_CLASS;
+import static com.wl4g.shell.core.cache.ShellCache.Factory.REDIS_TEMPLATE_CLASS;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
@@ -30,11 +33,10 @@ import org.springframework.context.ApplicationContext;
 
 import com.wl4g.component.common.log.SmartLogger;
 import com.wl4g.shell.core.EmbeddedShellServerBuilder;
+import com.wl4g.shell.core.cache.MemoryShellCache;
+import com.wl4g.shell.core.cache.ShellCache;
 import com.wl4g.shell.core.config.ServerShellProperties;
 import com.wl4g.shell.core.handler.EmbeddedShellServer;
-import com.wl4g.shell.core.session.JedisClientShellSessionDAO;
-import com.wl4g.shell.core.session.MemoryShellSessionDAO;
-import com.wl4g.shell.core.session.ShellSessionDAO;
 import com.wl4g.shell.springboot.config.AnnotationShellHandlerRegistrar;
 
 /**
@@ -69,29 +71,29 @@ public class EmbeddedShellServerStartup implements ApplicationRunner, Disposable
         log.info("Shell server init starting on [{}, {}] ...", config.getBeginPort(), config.getEndPort());
 
         // Create shell session DAO.
-        ShellSessionDAO sessionDAO = new MemoryShellSessionDAO();
-        // Jedis in classpath.(if neccssary)
+        ShellCache shellCache = new MemoryShellCache();
+        // Redis clients in CLASSPATH. (if neccssary)
         if (nonNull(JEDIS_CLUSTER_CLASS) && nonNull(JEDIS_CLASS)) {
             Object jedisCluster = obtainNullableBean(JEDIS_CLUSTER_CLASS);
             Object jedis = obtainNullableBean(JEDIS_CLASS);
             Object jedisClient = obtainNullableBean(JEDIS_CLIENT_CLASS);
             Object redisTemplate = obtainNullableBean(REDIS_TEMPLATE_CLASS);
             if (nonNull(jedisCluster)) {
-                sessionDAO = new JedisClientShellSessionDAO(jedisCluster);
+                shellCache = ShellCache.Factory.build(jedisCluster);
             } else if (nonNull(jedis)) {
-                sessionDAO = new JedisClientShellSessionDAO(jedis);
+                shellCache = ShellCache.Factory.build(jedis);
             } else if (nonNull(jedisClient)) {
-                sessionDAO = new JedisClientShellSessionDAO(jedisClient);
+                shellCache = ShellCache.Factory.build(jedisClient);
             } else if (nonNull(redisTemplate)) {
-                sessionDAO = new JedisClientShellSessionDAO(redisTemplate);
+                shellCache = ShellCache.Factory.build(redisTemplate);
             }
         }
-        log.info("Using shell session DAO: {}", sessionDAO);
+        log.info("Using shell cache: {}", shellCache);
 
         // Build shell server.
         this.shellServer = EmbeddedShellServerBuilder.newBuilder()
                 .withAppName(applicationContext.getEnvironment().getRequiredProperty("spring.application.name"))
-                .withConfiguration(config).withRegistrar(registrar).withShellSessionDAO(sessionDAO).build();
+                .withConfiguration(config).withRegistrar(registrar).withShellCache(shellCache).build();
         this.shellServer.start();
     }
 
@@ -110,12 +112,5 @@ public class EmbeddedShellServerStartup implements ApplicationRunner, Disposable
             return null;
         }
     }
-
-    private static final Class<?> JEDIS_CLUSTER_CLASS = resolveClassNameNullable("redis.clients.jedis.JedisCluster");
-    private static final Class<?> JEDIS_CLASS = resolveClassNameNullable("redis.clients.jedis.Jedis");
-    private static final Class<?> JEDIS_CLIENT_CLASS = resolveClassNameNullable(
-            "com.wl4g.component.support.cache.jedis.JedisClient");
-    private static final Class<?> REDIS_TEMPLATE_CLASS = resolveClassNameNullable(
-            "org.springframework.data.redis.core.RedisTemplate");
 
 }

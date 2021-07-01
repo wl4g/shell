@@ -68,10 +68,10 @@ import com.wl4g.shell.common.signal.PreInterruptSignal;
 import com.wl4g.shell.common.signal.PreLoginSignal;
 import com.wl4g.shell.common.signal.Signal;
 import com.wl4g.shell.common.signal.StdinSignal;
+import com.wl4g.shell.core.cache.ShellCache;
 import com.wl4g.shell.core.config.ServerShellProperties;
 import com.wl4g.shell.core.config.ServerShellProperties.AclInfo.CredentialsInfo;
 import com.wl4g.shell.core.session.ShellSession;
-import com.wl4g.shell.core.session.ShellSessionDAO;
 import com.wl4g.shell.core.utils.AuthUtils;
 
 /**
@@ -105,8 +105,8 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
     protected Thread boss;
 
     public EmbeddedShellServer(ServerShellProperties config, String appName, ShellHandlerRegistrar registrar,
-            ShellSessionDAO sessionDAO) {
-        super(config, appName, registrar, sessionDAO);
+            ShellCache shellCache) {
+        super(config, appName, registrar, shellCache);
         this.workers = new ConcurrentHashMap<>(config.getMaxClients());
     }
 
@@ -167,6 +167,7 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
     @Override
     protected void preHandleCommand(List<String> commands, TargetMethodWrapper tm) {
         assertShellAclPermission(tm);
+        assertShellSharedLock(tm);
         super.preHandleCommand(commands, tm);
     }
 
@@ -194,6 +195,18 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
         CredentialsInfo credentials = getConfig().getAcl().getCredentialsInfo(session.getUsername());
         if (!AuthUtils.matchAclPermits(permissions, credentials.getPermissions())) {
             throw new UnauthorizedShellException(getMessage("label.login.notpermission"));
+        }
+    }
+
+    /**
+     * Asserts whether the shell channel current command allows shared parallel
+     * execution.
+     * 
+     * @param tm
+     */
+    private void assertShellSharedLock(TargetMethodWrapper tm) {
+        if (tm.getShellMethod().lock()) {
+            // TODO
         }
     }
 

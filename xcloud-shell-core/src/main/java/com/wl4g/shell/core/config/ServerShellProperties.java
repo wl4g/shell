@@ -57,6 +57,11 @@ public class ServerShellProperties extends BaseShellProperties {
     private int maxClients = 3;
 
     /**
+     * Lock timeout for concurrent execution control.
+     */
+    private long sharedLockTimeoutMs = 60 * 1000L;
+
+    /**
      * Authetication configuration.
      */
     private AclInfo acl = new AclInfo();
@@ -94,6 +99,14 @@ public class ServerShellProperties extends BaseShellProperties {
     public void setMaxClients(int maxClients) {
         isTrue(maxClients > 0, String.format("maxClients must greater than 0, actual is %s", backlog));
         this.maxClients = maxClients;
+    }
+
+    public long getSharedLockTimeoutMs() {
+        return sharedLockTimeoutMs;
+    }
+
+    public void setSharedLockTimeoutMs(long sharedLockTimeoutMs) {
+        this.sharedLockTimeoutMs = sharedLockTimeoutMs;
     }
 
     public AclInfo getAcl() {

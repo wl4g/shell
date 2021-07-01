@@ -20,10 +20,10 @@ import static com.wl4g.component.common.lang.Assert2.notNullOf;
 import static java.util.Objects.nonNull;
 
 import com.wl4g.shell.common.registry.ShellHandlerRegistrar;
+import com.wl4g.shell.core.cache.MemoryShellCache;
+import com.wl4g.shell.core.cache.ShellCache;
 import com.wl4g.shell.core.config.ServerShellProperties;
 import com.wl4g.shell.core.handler.EmbeddedShellServer;
-import com.wl4g.shell.core.session.MemoryShellSessionDAO;
-import com.wl4g.shell.core.session.ShellSessionDAO;
 
 /**
  * Budiler of {@link EmbeddedShellServer}
@@ -40,8 +40,8 @@ public class EmbeddedShellServerBuilder {
     /** {@link ServerShellProperties} */
     private ServerShellProperties config = new ServerShellProperties();
 
-    /** {@link ShellSessionDAO} */
-    private ShellSessionDAO sessionDAO = new MemoryShellSessionDAO();
+    /** {@link ShellCache} */
+    private ShellCache shellCache = new MemoryShellCache();
 
     /** {@link ShellHandlerRegistrar} */
     private ShellHandlerRegistrar registrar = new ShellHandlerRegistrar();
@@ -81,13 +81,13 @@ public class EmbeddedShellServerBuilder {
     }
 
     /**
-     * Sets shell session DAO of {@link ShellSessionDAO}.
+     * Sets shell cache of {@link ShellCache}.
      * 
      * @param appName
      * @return
      */
-    public EmbeddedShellServerBuilder withShellSessionDAO(ShellSessionDAO sessionDAO) {
-        this.sessionDAO = notNullOf(sessionDAO, "sessionDAO");
+    public EmbeddedShellServerBuilder withShellCache(ShellCache shellCache) {
+        this.shellCache = notNullOf(shellCache, "shellCache");
         return this;
     }
 
@@ -118,7 +118,7 @@ public class EmbeddedShellServerBuilder {
     }
 
     public EmbeddedShellServer build() {
-        return new EmbeddedShellServer(config, appName, registrar, sessionDAO);
+        return new EmbeddedShellServer(config, appName, registrar, shellCache);
     }
 
 }

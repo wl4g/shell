@@ -13,21 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wl4g.shell.core.session;
+package com.wl4g.shell.core.cache;
 
 /**
- * {@link AbstractRedisShellSessionDAO}
+ * {@link AbstractRedisShellCache}
  * 
  * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
  * @version 2021-06-30 v1.0.0
  * @see v1.0.0
  */
-public abstract class AbstractRedisShellSessionDAO implements ShellSessionDAO {
+public abstract class AbstractRedisShellCache implements ShellCache {
 
     protected String getOpsKey() {
         return SESSION_KEY_PREFIX;
     }
 
-    public static final String SESSION_KEY_PREFIX = "shell:session:";
+    public static final String SESSION_KEY_PREFIX = "shell:cache:";
 
 }

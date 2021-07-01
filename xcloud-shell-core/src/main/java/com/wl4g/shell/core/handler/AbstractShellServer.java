@@ -28,8 +28,11 @@ import com.wl4g.component.common.log.SmartLogger;
 import com.wl4g.shell.common.handler.GenericShellHandler;
 import com.wl4g.shell.common.registry.ShellHandlerRegistrar;
 import com.wl4g.shell.common.registry.TargetMethodWrapper;
+import com.wl4g.shell.core.cache.ShellCache;
 import com.wl4g.shell.core.config.ServerShellProperties;
 import com.wl4g.shell.core.handler.EmbeddedShellServer.ServerSignalHandler;
+import com.wl4g.shell.core.locks.ShellLockManager;
+import com.wl4g.shell.core.session.CachingShellSessionDAO;
 import com.wl4g.shell.core.session.ShellSessionDAO;
 
 /**
@@ -53,15 +56,27 @@ public abstract class AbstractShellServer extends GenericShellHandler implements
     protected final String appName;
 
     /**
+     * Shell cache.
+     */
+    protected final ShellCache shellCache;
+
+    /**
      * Shell session DAO.
      */
     protected final ShellSessionDAO sessionDAO;
 
+    /**
+     * Shell locks manager.
+     */
+    protected final ShellLockManager lockManager;
+
     public AbstractShellServer(ServerShellProperties config, String appName, ShellHandlerRegistrar registrar,
-            ShellSessionDAO sessionDAO) {
+            ShellCache shellCache) {
         super(config, registrar);
         this.appName = hasTextOf(appName, "appName");
-        this.sessionDAO = notNullOf(sessionDAO, "sessionDAO");
+        this.shellCache = notNullOf(shellCache, "shellCache");
+        this.sessionDAO = new CachingShellSessionDAO(shellCache);
+        this.lockManager = new ShellLockManager(shellCache);
     }
 
     /**
