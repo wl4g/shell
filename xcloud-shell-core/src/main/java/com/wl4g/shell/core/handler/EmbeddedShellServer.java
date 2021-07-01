@@ -174,7 +174,8 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
     }
 
     @Override
-    protected Object doInvoke(TargetMethodWrapper tm, List<Object> args) throws Exception {
+    protected Object doInvoke(String line, List<String> commands, String mainArg, TargetMethodWrapper tm, List<Object> args)
+            throws Exception {
         // Check whether the shell channel current command allows shared
         // parallel execution.
         if (tm.getShellMethod().lock()) {
@@ -182,18 +183,18 @@ public class EmbeddedShellServer extends AbstractShellServer implements Runnable
             if (lock.tryLock()) {
                 try {
                     log.debug("Try shell execution lock: {}, tm: {}", lock, tm);
-                    return super.doInvoke(tm, args);
+                    return super.doInvoke(line, commands, mainArg, tm, args);
                 } finally {
                     lock.unlock();
                     log.debug("Released shell execution lock: {}, tm: {}", lock, tm);
                 }
             } else {
-                throw new UnableObtainLockShellException(getMessage("label.command.unablegetlock"));
+                throw new UnableObtainLockShellException(getMessage("label.command.unablegetlock", mainArg));
             }
         }
 
         // No enable lock, can be executed in parallel.
-        return super.doInvoke(tm, args);
+        return super.doInvoke(line, commands, mainArg, tm, args);
     }
 
     /**

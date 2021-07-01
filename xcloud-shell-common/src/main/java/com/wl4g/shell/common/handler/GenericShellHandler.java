@@ -117,7 +117,7 @@ public abstract class GenericShellHandler implements ShellHandler {
             beforeShellExecution(commands, tm, parameters);
 
             // Invoking
-            Object output = doInvoke(tm, parameters);
+            Object output = doInvoke(line, commands, mainArg, tm, parameters);
 
             // Call after execution.
             afterShellExecution(output);
@@ -131,12 +131,16 @@ public abstract class GenericShellHandler implements ShellHandler {
     /**
      * Invocation execution command method.
      * 
+     * @param line
+     * @param commands
+     * @param mainArg
      * @param tm
      * @param args
      * @return
      * @throws Exception
      */
-    protected Object doInvoke(TargetMethodWrapper tm, List<Object> args) throws Exception {
+    protected Object doInvoke(String line, List<String> commands, String mainArg, TargetMethodWrapper tm, List<Object> args)
+            throws Exception {
         return tm.getMethod().invoke(tm.getTarget(), args.toArray());
     }
 
