@@ -1,90 +1,103 @@
-Shell-cli is an open source command-line tool based on spring boot component, which is similar to the way spark-shell works.
+# XCloud-Shell
+A command line framework based on Java/SpringBoot enables your application to have the same function as spark shell.
 
-[中文说明/中文文档](README_CN.md)
+English version goes [here](README.md).
 
-# Quick start
+## Quick start
 
-## Maven dependencies
-- Springboot project only needs to rely on
+### Maven dependencies
+- SpringBoot project only relies:
 ```
 <!-- https://mvnrepository.com/artifact/com.wl4g/xcloud-shell-springboot -->
 <dependency>
   <groupId>com.wl4g</groupId>
   <artifactId>xcloud-shell-springboot</artifactId>
-  <version>2.0.0</version> <!-- Please use the latest version -->
+  <version>${latest.version}</version>
 </dependency>
 <!-- https://mvnrepository.com/artifact/com.wl4g/xcloud-shell-cli -->
 <dependency>
   <groupId>com.wl4g</groupId>
   <artifactId>xcloud-shell-cli</artifactId>
-  <version>2.0.0</version> <!-- Please use the latest version -->
+  <version>${latest.version}</version>
 </dependency>
 ```
 
-- Java project only needs to rely on
+- Java project only relies:
 ```
 <!-- https://mvnrepository.com/artifact/com.wl4g/xcloud-shell-core -->
 <dependency>
   <groupId>com.wl4g</groupId>
   <artifactId>xcloud-shell-core</artifactId>
-  <version>2.0.0</version> <!-- Please use the latest version -->
+  <version>${latest.version}</version>
 </dependency>
 <!-- https://mvnrepository.com/artifact/com.wl4g/xcloud-shell-cli -->
 <dependency>
   <groupId>com.wl4g</groupId>
   <artifactId>xcloud-shell-cli</artifactId>
-  <version>2.0.0</version> <!-- Please use the latest version -->
+  <version>${latest.version}</version>
 </dependency>
 ```
 
-[Example of custom command processing class](xcloud-shell-example/src/main/java/com/wl4g/shell/example/console/ExampleConsole.java)
+[Custom commands example](xcloud-shell-example/src/main/java/com/wl4g/shell/example/console/ExampleConsole.java)
 
-
-## Source code Compilation
+## Source code compilation (recommended for secondary development)
 ```
 cd xcloud-shell
 mvn clean install -DskipTests -T 2C
 ```
 
-### Way1
-Specify the port of the service and then run as a client (for client mode, usually temporarily used to connect application services):
+## Startup CLI
+
+### Mode1
+Specify the port of the service, and then run as a client (applicable to the client mode, usually temporarily used to connect to the application service):
 
 ```
-java -Dservpoint=127.0.0.1:60103 -Dprompt=my-shell -Dtimeout=5000 -jar shell-cli-master-executable.jar
+java -Dservpoint=127.0.0.1:60103 -Dprompt=my-shell -Dtimeout=5000 -jar xcloud-shell-cli-${version}-executable.jar
 ```
 
-In the above command, the -Dservpoint indicates the SpringBoot/Cloud service listening address and port to connect to.
+In the command above -dservpoint represents the service listening address and port to connect to.
 
-### Way2
-Specify the name of the service and then run directly as a client (for local mode, usually as a built-in console for application services).
+### Mode2
+Specify the name of the service and run it directly as a client (for local mode, usually as a built-in console for application services):
 
 ```
-java -Dservname=shell-example -Dprompt=my-shell -Dtimeout=5000 -jar shell-cli-master-executable.jar
+java -Dservname=shell-example -Dprompt=my-shell -Dtimeout=5000 -jar xcloud-shell-cli-${version}-executable.jar
 ```
 
-In the above command, the -Dservname represents the Spring Cloud application name on the server side 
-(corresponding to 'spring.application.name'), which automatically finds the service port locally based on the servname
-and establishes the connection (pay attention to case). You can also use Mode 1 (#Way1) to display the specified service
-endpoint with -Dservpoint, where -Dprompt is used to set the command line prompt of the shell console. -Dtimeout specifies
-the time-out for waiting results to return (default: 180_000ms), and can print debugging information using -Dxdebug.
+In the above command, the `-Dservname` indicates the application name of the server(`spring.application.name` is used by default for springboot application). It will be automatically checked locally according to servname Find the service port to establish a connection (pay attention to case). You can also use [Mode1](#Mode1) to display the specified service endpoint with -dservpoint, where `-Dprompt` is used to set up the shell
+Command line prompt of console, `-Dtimeout` specifies the timeout time for waiting results to return (default: `180_000`ms), and can also print debugging information using `-Dxdebug`.
 
-## Features
-- Ctrl+A cursor jumps to the beginning of the line, Ctrl+E cursor jumps to the end of the line, Ctrl+C exits the console (follow GNU)
-![tab auto-completion](shots/use_tab.jpg)
-- Connect use serverpoint
-![Connect use serverpoint](shots/use_servpoint.jpg)
-- help
-![help](shots/use_help.jpg)
-- Forced interruption of tasks running
-![Forced interruption of tasks running](shots/force_interrupt.jpg)
-- Support interactive operation of real-time progress bar and interrupt confirmation
-![progress and interrupt confirm](shots/progress_interrupt.jpg)
 
-## Built-in commands:
-- clear/cls    Cleaning console
-- exit/ex/quit/qu    Exit console
-- history/his    View the history command (persistent file: $USER_HOME/.devops/shell/history)
-- stacktrace/st    View stack information for the last exception (if any)
-- help/he    Use help, such as: help/help sumTest/sumTest --help/sumTest --he/ where sumTest is a summation test command
+## Features  
+> Before you can test the sample command, you must run the example server first: [com.wl4g.ShellExample](xcloud-shell-example/src/main/java/com/wl4g/ShellExample.java)   
 
-	
+##### 1. Connect with serverpoint (choose one of servname)  
+![Connect using serverpoint](shots/servpoint_connect.png)  
+
+##### 2. Help commands  
+![help帮助](shots/help.png)
+
+##### 3. Support common shortcut keys, such as tab automatic completion, Ctrl ++A cursor jump to the beginning of line, Ctrl+E cursor jump to the end of line, and Ctrl+C exit console (follow GNU)  
+![Tab automatic completion](shots/tab.png)
+
+##### 4. Support authentication protection  
+![Support authentication protection](shots/auth.png)  
+
+##### 5. Support ACL access control  
+![Support ACL access control](shots/acl.png)  
+
+##### 6. Support real-time progress display and forced interruption  
+![Support real-time progress display and forced interruption](shots/progress_interrupt.png)
+
+##### 7. Support concurrency control lock  (Source refer: [ShellMethod#lock()](xcloud-shell-common/src/main/java/com/wl4g/shell/common/annotation/ShellMethod.java))   
+![支持实时进度显示与强制中断](shots/concurrent_lock.png)
+
+## Built-in commands
+|long-opt|short-opt|Description|
+|-|-|-|
+|clear|cls|Cleanup console|
+|exit/quit|ex/qu|Exting console|
+|history|his|Show history commands (Default save to: $USER_HOME/.wl4g/shell/history)|
+|stacktrace|st|Show last error stacktrace information|
+|help|he|Show help usage information|
+|login|lo|Request login(for example, When `spring.xcloud.shell.acl.enabled=true`, all command execution must log in, otherwise there is no need to login.)|

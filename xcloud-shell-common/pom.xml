@@ -65,6 +65,25 @@
 		</dependency>
 	</dependencies>
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.properties</include>
+				</includes>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+				<filtering>false</filtering>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>**/*.*</include>
+				</includes>
+				<filtering>false</filtering>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -106,9 +125,9 @@
 									<goal>jar</goal>
 								</goals>
 								<configuration>
-                                    <additionalOptions>-Xdoclint:none</additionalOptions> <!-- 3.0.0+ -->
-                                    <!-- <additionalparam>-Xdoclint:none</additionalparam> --> <!-- 2.0.0 -->
-                                </configuration>
+									<additionalOptions>-Xdoclint:none</additionalOptions> <!-- 3.0.0+ -->
+									<!-- <additionalparam>-Xdoclint:none</additionalparam> --> <!-- 2.0.0 -->
+								</configuration>
 							</execution>
 						</executions>
 					</plugin>

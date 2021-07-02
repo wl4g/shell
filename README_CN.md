@@ -1,4 +1,5 @@
-# XCloud-Shell，一个基于Java/SpringBoot的命令行框架，让你的应用也能像使用spark-shell一样
+# XCloud-Shell
+一个基于Java/SpringBoot的命令行框架，让你的应用也拥有类似spark-shell一样的功能。
 
 English version goes [here](README.md).
 
@@ -88,6 +89,9 @@ java -Dservname=shell-example -Dprompt=my-shell -Dtimeout=5000 -jar xcloud-shell
 
 ##### 6. 支持实时进度显示与强制中断  
 ![支持实时进度显示与强制中断](shots/progress_interrupt.png)
+
+##### 7. 支持并发控制锁 (源码参考: [ShellMethod#lock()](xcloud-shell-common/src/main/java/com/wl4g/shell/common/annotation/ShellMethod.java))  
+![支持实时进度显示与强制中断](shots/concurrent_lock.png)
 
 
 ## 内置命令

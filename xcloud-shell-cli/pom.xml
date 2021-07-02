@@ -140,9 +140,9 @@
 									<goal>jar</goal>
 								</goals>
 								<configuration>
-                                    <additionalOptions>-Xdoclint:none</additionalOptions> <!-- 3.0.0+ -->
-                                    <!-- <additionalparam>-Xdoclint:none</additionalparam> --> <!-- 2.0.0 -->
-                                </configuration>
+									<additionalOptions>-Xdoclint:none</additionalOptions> <!-- 3.0.0+ -->
+									<!-- <additionalparam>-Xdoclint:none</additionalparam> --> <!-- 2.0.0 -->
+								</configuration>
 							</execution>
 						</executions>
 					</plugin>
@@ -212,6 +212,18 @@
 												<exclude>org/junit/experimental/**</exclude>
 												<exclude>org/junit/runners/**</exclude>
 											</excludes>
+										</filter>
+										<filter>
+											<artifact>com.wl4g:*</artifact>
+											<includes>
+												<include>**/*.java</include>
+												<include>**.java</include>
+												<include>**/*.class</include>
+												<include>**.class</include>
+												<include>**/*.properties</include>
+												<include>**.properties</include>
+												<include>**.*</include>
+											</includes>
 										</filter>
 										<filter>
 											<artifact>*:*</artifact>
