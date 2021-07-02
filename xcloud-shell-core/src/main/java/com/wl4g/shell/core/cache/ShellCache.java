@@ -27,7 +27,7 @@ import com.wl4g.shell.core.config.ServerShellProperties;
  * 
  * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
  * @version 2021-06-30 v1.0.0
- * @see v1.0.0
+ * 
  */
 public interface ShellCache {
 
@@ -76,7 +76,7 @@ public interface ShellCache {
     }
 
     /**
-     * Unlock <br/>
+     * Unlock 
      * Deletion key equals argument.
      * 
      * @param script

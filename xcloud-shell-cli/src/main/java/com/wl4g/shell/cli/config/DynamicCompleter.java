@@ -75,7 +75,7 @@ public class DynamicCompleter implements Completer {
 	}
 
 	/**
-	 * Check if candidate parameters have been completing completed<br/>
+	 * Check if candidate parameters have been completing completed
 	 * 
 	 * e.g. $> add -a 11 -b 22
 	 * 

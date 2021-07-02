@@ -18,7 +18,7 @@ package com.wl4g.shell.common.signal;
 /**
  * {@link BOFStdoutSignal} 
  *
- * @author Wangl.sir <wanglsir@gmail.com, 983708408@qq.com>
+ * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
  * @version v1.0 2019-06-21
  * @since v1.0
  */

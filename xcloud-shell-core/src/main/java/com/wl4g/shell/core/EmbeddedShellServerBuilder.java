@@ -28,7 +28,7 @@ import com.wl4g.shell.core.handler.EmbeddedShellServer;
 /**
  * Budiler of {@link EmbeddedShellServer}
  *
- * @author Wangl.sir <wanglsir@gmail.com, 983708408@qq.com>
+ * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
  * @version v1.0 2020-08-10
  * @since v1.0
  */

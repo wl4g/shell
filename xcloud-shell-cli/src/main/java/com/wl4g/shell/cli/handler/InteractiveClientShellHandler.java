@@ -214,7 +214,7 @@ public class InteractiveClientShellHandler extends DefaultClientShellHandler {
     }
 
     /**
-     * Pause wait for completed. <br/>
+     * Pause wait for completed. 
      * {@link DefaultClientShellHandler#wakeup()}
      */
     private void paused() {
@@ -223,7 +223,7 @@ public class InteractiveClientShellHandler extends DefaultClientShellHandler {
     }
 
     /**
-     * Wake-up for lineReader watching. <br/>
+     * Wake-up for lineReader watching. 
      * 
      * {@link DefaultClientShellHandler#waitForComplished()}
      */

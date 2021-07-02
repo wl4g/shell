@@ -348,7 +348,7 @@ public abstract class DefaultClientShellHandler extends GenericShellHandler impl
         }
 
         //
-        // Direct use of specified point.<br/>
+        // Direct use of specified point.
         // Can be used to connect to remote service console.
         //
         if (isNotBlank(servPoint)) {
@@ -362,7 +362,7 @@ public abstract class DefaultClientShellHandler extends GenericShellHandler impl
         }
 
         //
-        // Obtain port according to PIDS.<br/>
+        // Obtain port according to PIDS.
         // Can only be used to connect to the local service console.
         //
 

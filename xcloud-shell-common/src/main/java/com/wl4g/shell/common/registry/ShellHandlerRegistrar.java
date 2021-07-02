@@ -61,6 +61,8 @@ public class ShellHandlerRegistrar implements Serializable {
      * Registion shell component of bean
      * 
      * @param bean
+     *            Target method object
+     * @return This handler registrar object.
      */
     public ShellHandlerRegistrar register(Object bean) {
         notNull(bean, "bean is null, please check configure");
@@ -88,7 +90,9 @@ public class ShellHandlerRegistrar implements Serializable {
      * Internal registion shell bean stored
      * 
      * @param mainOpt
+     *            main shell option
      * @param tm
+     *            Target method wrapper
      */
     private void register0(String mainOpt, TargetMethodWrapper tm) {
         state(registry.putIfAbsent(mainOpt, tm) == null, String.format("Repeatedly defined shell method: '%s'", mainOpt));

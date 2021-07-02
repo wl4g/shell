@@ -84,14 +84,17 @@ public class TargetMethodWrapper implements Serializable {
     private final List<TargetParameter> parameters = new ArrayList<>(4);
 
     /**
-     * Constructor target method.<br/>
+     * Constructor target method.
      * 
      * See: <a href=
      * "https://www.cnblogs.com/guangshan/p/4660564.html">https://www.cnblogs.com/guangshan/p/4660564.html</a>
      * 
      * @param sm
+     *            shell method.
      * @param method
+     *            target method.
      * @param target
+     *            target shell console object.
      */
     public TargetMethodWrapper(ShellMethod sm, Method method, Object target) {
         notNull(sm, "Shell method must not be null");
@@ -140,7 +143,8 @@ public class TargetMethodWrapper implements Serializable {
      * Acutal method parameter name or index
      * 
      * @param argname
-     * @return
+     *            main command name.
+     * @return Ensured parameter name.
      */
     public String getSureParamName(String argname) {
         for (TargetParameter parameter : getParameters()) {
@@ -178,8 +182,6 @@ public class TargetMethodWrapper implements Serializable {
 
     /**
      * Initialization
-     * 
-     * @param method
      */
     private void initialize() {
         // Parameter annotations
@@ -233,7 +235,7 @@ public class TargetMethodWrapper implements Serializable {
      * Find shell option annotation configuration
      * 
      * @param paramAnnotations
-     * @return
+     * @return find shell command options.
      */
     private ShellOption findShellOption(Annotation[] paramAnnotations) {
         for (Annotation an : paramAnnotations) {
@@ -248,8 +250,11 @@ public class TargetMethodWrapper implements Serializable {
      * Validate shell option.
      * 
      * @param opt
+     *            shell option
      * @param m
+     *            target method
      * @param index
+     *            target method parameter index.
      */
     private void validateShellOption(ShellOption opt, Method m, int index) {
         state(nonNull(opt), String
@@ -288,8 +293,8 @@ public class TargetMethodWrapper implements Serializable {
         private transient final int index;
 
         /**
-         * Method parameter shell option annotation.<br/>
-         * Annotation for basic type parameters.
+         * Method parameter shell option annotation. Annotation for basic type
+         * parameters.
          */
         private final ShellOption shellOption;
 
@@ -379,7 +384,9 @@ public class TargetMethodWrapper implements Serializable {
          * Extract deep full propertys to targetParameter.
          * 
          * @param clazz
-         * @param attributes
+         *            target method clazz
+         * @param parameter
+         *            target method args wrapper
          */
         public static void populateArgumentDeepOptions(Class<?> clazz, TargetParameter parameter) {
             Class<?> cls = clazz;
@@ -392,7 +399,9 @@ public class TargetMethodWrapper implements Serializable {
          * Extract hierarchy propertys to targetParameter
          * 
          * @param clazz
-         * @param attributes
+         *            target method clazz
+         * @param parameter
+         *            target method args wrapper
          */
         private static void extractHierarchyFields(Class<?> clazz, TargetParameter parameter) {
             notNull(clazz, "The paramClazz must be null");

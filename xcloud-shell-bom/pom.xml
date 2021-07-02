@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>xcloud-shell-bom</artifactId>
 	<packaging>pom</packaging>
-	<name>XCloud Shell Dependencies BOM</name>
+	<name>XCloud Shell Dependencies</name>
 	<url>http://xcloud.wl4g.com</url>
 	<organization>
 		<name>wl4g</name>
@@ -154,6 +154,9 @@
 								<goals>
 									<goal>jar</goal>
 								</goals>
+								<configuration>
+                                    <additionalparam>-Xdoclint:none</additionalparam>
+                                </configuration>
 							</execution>
 						</executions>
 					</plugin>

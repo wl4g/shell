@@ -132,12 +132,18 @@ public abstract class GenericShellHandler implements ShellHandler {
      * Invocation execution command method.
      * 
      * @param line
+     *            input command line string.
      * @param commands
+     *            resolved input commands
      * @param mainArg
+     *            execution main command name.
      * @param tm
+     *            Execution target method wrapper.
      * @param args
-     * @return
+     *            Execution target method args.
+     * @return Invoked result output.
      * @throws Exception
+     *             Trigger when exception occurs
      */
     protected Object doInvoke(String line, List<String> commands, String mainArg, TargetMethodWrapper tm, List<Object> args)
             throws Exception {
@@ -148,20 +154,24 @@ public abstract class GenericShellHandler implements ShellHandler {
      * Resolve arguments to method parameters
      * 
      * @param commands
+     *            Input commands
      * @param tm
-     * @return
-     * @throws IllegalAccessException
+     *            Execution target method wrapper.
+     * @return resolved commands parameters array.
      * @throws IllegalArgumentException
+     *             Trigger when invoking exception occurs.
+     * @throws IllegalAccessException
+     *             Trigger when invoking exception occurs.
      * @throws InstantiationException
-     * @throws Exception
+     *             Trigger when invoking exception occurs.
      */
     protected List<Object> resolveParameters(List<String> commands, TargetMethodWrapper tm)
             throws IllegalArgumentException, IllegalAccessException, InstantiationException {
         notNull(tm, "Error, Should targetMethodWrapper not be null?");
 
         /*
-         * Commands to javaBean map and validate protected. <br/>
-         * (javaBean.fieldName or params.index(native type))->value
+         * Commands to javaBean map and validate protected. (javaBean.fieldName
+         * or params.index(native type))->value
          */
         final Map<String, String> beanMap = new HashMap<>();
         if (commands != null && !commands.isEmpty()) {
@@ -242,8 +252,10 @@ public abstract class GenericShellHandler implements ShellHandler {
     /**
      * Prepared resolving parameters before handle.
      * 
+     * @param commands
+     *            input commands array.
      * @param tm
-     * @param args
+     *            Execution target method wrapper.
      */
     protected void preHandleCommands(List<String> commands, TargetMethodWrapper tm) {
 
@@ -252,8 +264,12 @@ public abstract class GenericShellHandler implements ShellHandler {
     /**
      * It the resolving parameters before handle.
      * 
+     * @param commands
+     *            input commands array.
      * @param tm
+     *            Execution target method wrapper.
      * @param parameters
+     *            Execution mehtod args.
      */
     protected void beforeShellExecution(List<String> commands, TargetMethodWrapper tm, List<Object> parameters) {
     }
@@ -262,17 +278,20 @@ public abstract class GenericShellHandler implements ShellHandler {
      * Post invocation standard output message.
      * 
      * @param output
+     *            Execution result output.
      * @throws Exception
+     *             Trigger when exception occurs
      */
     protected void afterShellExecution(Object output) throws Exception {
-
     }
 
     /**
      * Convert argument to java bean actual param field name
      * 
      * @param argname
+     *            main command name.
      * @param tm
+     *            target command execution method wrapper.
      * @return java bean actual param field name or index(if native type)
      */
     protected String convertIfNecessary(String argname, TargetMethodWrapper tm) {
@@ -282,8 +301,9 @@ public abstract class GenericShellHandler implements ShellHandler {
     /**
      * Resolve source commands
      * 
-     * @param args
-     * @return
+     * @param line
+     *            input command line.
+     * @return resolved commands.
      */
     protected List<String> resolveCommands(String line) {
         List<String> commands = LineUtils.parse(line);
@@ -295,7 +315,8 @@ public abstract class GenericShellHandler implements ShellHandler {
      * Ensure resolve server listen port.
      * 
      * @param appName
-     * @return
+     *            application name.
+     * @return final determine server listen port.
      */
     protected int ensureDetermineServPort(String appName) {
         hasLength(appName, "appName must not be empty");
@@ -319,7 +340,9 @@ public abstract class GenericShellHandler implements ShellHandler {
      * Print errors info.
      * 
      * @param abnormal
+     *            abnormal string
      * @param th
+     *            execution exception
      */
     protected void printError(String abnormal, Throwable th) {
         if (DEBUG) {
@@ -333,6 +356,7 @@ public abstract class GenericShellHandler implements ShellHandler {
      * Print debug info.
      * 
      * @param msg
+     *            message string.
      */
     protected void printDebug(String msg) {
         if (DEBUG) {

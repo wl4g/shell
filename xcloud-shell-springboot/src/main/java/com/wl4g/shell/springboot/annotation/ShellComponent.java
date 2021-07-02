@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 /**
  * {@link ShellComponent}
  *
- * @author Wangl.sir <wanglsir@gmail.com, 983708408@qq.com>
+ * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
  * @version v1.0 2019-08-10
  * @since v1.0
  */

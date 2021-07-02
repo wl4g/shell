@@ -75,8 +75,9 @@ public abstract class BuiltInCommand {
      * Check contains defineKey whether it is naming conflict with built-in
      * commands
      * 
-     * @param defineKey
-     * @return
+     * @param defineKeys
+     *            define shell option name.
+     * @return whether contains keys in build-in.
      */
     public final static boolean contains(String... defineKeys) {
         for (String key : defineKeys) {
@@ -91,7 +92,8 @@ public abstract class BuiltInCommand {
      * Get GNU long option
      * 
      * @param defineKey
-     * @return
+     *            define shell option name.
+     * @return converted gnu-long style commands string.
      */
     public final static String getGNULong(String defineKey) {
         hasText(defineKey, "defineKey must not be emtpy");
@@ -102,7 +104,8 @@ public abstract class BuiltInCommand {
      * Get GNU short option
      * 
      * @param defineKey
-     * @return
+     *            define shell option name.
+     * @return converted gnu style commands string.
      */
     public final static String getGNUShort(String defineKey) {
         hasText(defineKey, "defineKey must not be emtpy");
@@ -112,8 +115,7 @@ public abstract class BuiltInCommand {
     /**
      * To internal command option all.
      * 
-     * @param defineKey
-     * @return
+     * @return converted commands result string.
      */
     public final static String asCmdsString() {
         StringBuffer cmds = new StringBuffer();

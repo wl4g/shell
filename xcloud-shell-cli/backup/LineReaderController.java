@@ -27,7 +27,7 @@ import org.jline.reader.LineReader;
  * 
  * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
  * @version 2021-06-29 v1.0.0
- * @see v1.0.0
+ * 
  */
 public class LineReaderController implements Runnable {
 

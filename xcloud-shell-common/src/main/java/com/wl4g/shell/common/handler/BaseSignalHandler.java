@@ -80,7 +80,9 @@ public abstract class BaseSignalHandler extends SignalHandler {
      * Write and flush echo to client
      * 
      * @param message
+     *            message string.
      * @throws IOException
+     *             Trigger when IO exception occurs
      */
     public void writeFlush(Object message) throws IOException {
         notNull(message, "Message is null, please check configure");
@@ -96,7 +98,7 @@ public abstract class BaseSignalHandler extends SignalHandler {
     /**
      * Is connect active
      * 
-     * @return
+     * @return current shell channel whether active.
      */
     public boolean isActive() {
         return socket.isConnected() && !socket.isClosed();

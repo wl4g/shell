@@ -34,42 +34,43 @@ import java.lang.annotation.Target;
 public @interface ShellMethod {
 
     /**
-     * Command names definition.<br/>
-     * 
+     * Command names definition.
      * e.g:
      * 
      * <pre>
      * $ &gt; mylist
      * </pre>
+     * 
+     * @return Command names definition.
      */
     String[] keys();
 
     /**
-     * Command group name.
+     * @return Command group name.
      */
     String group();
 
     /**
-     * Whether to allow command line execution to be interrupted.
+     * @return Whether to allow command line execution to be interrupted.
      */
     InterruptType interruptible() default InterruptType.NOT_ALLOW;
 
     /**
-     * The list of roles required by the access control mechanism takes effect
-     * only when the global ACL is enabled.
+     * @return The list of roles required by the access control mechanism takes
+     *         effect only when the global ACL is enabled.
      */
     String[] permissions() default {};
 
     /**
-     * If lock is true, it means that concurrent execution lock is enabled
-     * (cluster is supported if redis exists in classpath). Default: true, that
-     * is, any client executing a command must wait for the last execution
-     * (possibly other clients) to end.
+     * @return If lock is true, it means that concurrent execution lock is
+     *         enabled (cluster is supported if redis exists in classpath).
+     *         Default: true, that is, any client executing a command must wait
+     *         for the last execution (possibly other clients) to end.
      */
     boolean lock() default true;
 
     /**
-     * Command help description.
+     * @return Command help description.
      */
     String help();
 

@@ -41,13 +41,14 @@ import org.apache.commons.exec.PumpStreamHandler;
  */
 public abstract class LineUtils {
 
-    final public static Charset UTF_8 = Charset.forName("UTF-8");
+    public static final Charset UTF_8 = Charset.forName("UTF-8");
 
     /**
      * Resolve source commands
      * 
      * @param line
-     * @return
+     *            input commands line string.
+     * @return Parsed commands array.
      */
     public static LinkedList<String> parse(String line) {
         if (isBlank(line)) {
@@ -61,7 +62,8 @@ public abstract class LineUtils {
      * Resolve source commands
      * 
      * @param args
-     * @return
+     *            input commands line array.
+     * @return Parsed commands array.
      */
     public static LinkedList<String> parse(String[] args) {
         LinkedList<String> commands = new LinkedList<>();
@@ -94,7 +96,8 @@ public abstract class LineUtils {
      * Execution shell commands
      * 
      * @param line
-     * @return
+     *            input commands line string.
+     * @return Parsed commands array.
      */
     public static String execAsString(String line) {
         return execAsString(line, 30 * 1000, "UTF-8");
@@ -104,9 +107,12 @@ public abstract class LineUtils {
      * Execution shell commands
      * 
      * @param line
+     *            input commands line string.
      * @param timeout
+     *            timeout ms
      * @param charset
-     * @return
+     *            charsets string
+     * @return Execution result.
      */
     public static String execAsString(String line, long timeout, String charset) {
         // Standard output
@@ -136,11 +142,11 @@ public abstract class LineUtils {
     }
 
     /**
-     * Clean opt.<br/>
-     * '--arg1' or '-x' => x
+     * Clean opt. '--arg1' or '-x' =&gt; x
      * 
      * @param argname
-     * @return
+     *            main command name.
+     * @return cleaned command name.
      */
     public static String clean(String argname) {
         if (startsWith(argname, "-")) {
@@ -150,15 +156,16 @@ public abstract class LineUtils {
     }
 
     /**
-     * Repair input line.<br/>
+     * Repair input line.
      * 
      * <pre>
-     * e.g. arg1 -l x1, x2 -m a1=b1, a2 = b2 -p aa1=bb1,aa2= bb2 -s x3, , x4 <br/>
+     * e.g. arg1 -l x1, x2 -m a1=b1, a2 = b2 -p aa1=bb1,aa2= bb2 -s x3, , x4 
      * =>  arg1 -l x1,x2 -m a1=b1,a2=b2 -p aa1=bb1,aa2=bb2 -s x3,,x4
      * </pre>
      * 
      * @param line
-     * @return
+     *            input commands line string.
+     * @return repaired line string.
      */
     private static String repairLineSpace(String line) {
         line = trimToEmpty(line);

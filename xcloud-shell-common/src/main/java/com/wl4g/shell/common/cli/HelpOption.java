@@ -25,7 +25,7 @@ import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.*;
 
 /**
- * Help option.<br/>
+ * Help option.
  * 
  * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
  * @version v1.0 2019-5月12日

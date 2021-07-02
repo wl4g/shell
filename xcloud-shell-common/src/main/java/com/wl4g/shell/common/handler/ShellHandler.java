@@ -24,12 +24,15 @@ package com.wl4g.shell.common.handler;
  */
 public interface ShellHandler {
 
-	/**
-	 * Read commands to processing
-	 * 
-	 * @param line
-	 * @Exception
-	 */
-	Object process(String line) throws Exception;
+    /**
+     * Read commands to processing
+     * 
+     * @param line
+     *            input commands line string.
+     * @return Execution result.
+     * @throws Exception
+     *             Trigger when exception occurs.
+     */
+    Object process(String line) throws Exception;
 
 }

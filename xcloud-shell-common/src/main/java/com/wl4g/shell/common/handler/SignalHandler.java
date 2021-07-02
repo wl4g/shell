@@ -54,14 +54,16 @@ public abstract class SignalHandler implements Runnable, Closeable {
      * Write and flush echo to client
      * 
      * @param message
+     *            message string.
      * @throws IOException
+     *             Trigger when IO exception occurs.
      */
     public abstract void writeFlush(Object message) throws ChannelShellException, IOException;
 
     /**
      * Is connect active
      * 
-     * @return
+     * @return current shell channel whether active.
      */
     public abstract boolean isActive();
 

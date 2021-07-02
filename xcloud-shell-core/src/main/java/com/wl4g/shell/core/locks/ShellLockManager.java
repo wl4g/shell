@@ -42,7 +42,7 @@ import com.wl4g.shell.core.cache.ShellCache;
  * 
  * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
  * @version 2021-07-01 v1.0.0
- * @see v1.0.0 {@link com.wl4g.component.support.cache.locks.JedisLockManager}
+ *  {@link com.wl4g.component.support.cache.locks.JedisLockManager}
  */
 public class ShellLockManager {
     protected final SmartLogger log = getLogger(getClass());
@@ -83,7 +83,7 @@ public class ShellLockManager {
     }
 
     /**
-     * Get current thread unique process ID. <br/>
+     * Get current thread unique process ID. 
      * 
      * <pre>
      * Host serial + local processId + threadId
@@ -96,8 +96,8 @@ public class ShellLockManager {
     }
 
     /**
-     * Fast unsafe reentrant unfair redlock implemented by REDIS cluster.<br/>
-     * <br/>
+     * Fast unsafe reentrant unfair redlock implemented by REDIS cluster.
+     * 
      * <font color=red style="text-decoration:underline;">Note: This
      * implementation is not strictly strong consistency. It is recommended to
      * use this distributed lock for scenarios with high performance
@@ -109,7 +109,7 @@ public class ShellLockManager {
      * copying to the slave or when the master and slave die together, there
      * will be serious consequences of locking.</font>
      * 
-     * @author Wangl.sir <wanglsir@gmail.com, 983708408@qq.com>
+     * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
      * @version v1.0 2019-3月21日
      * @since v1.0
      * @see <a href=
@@ -132,7 +132,7 @@ public class ShellLockManager {
         /** Current locker expired time(MS). */
         protected final long expiredMs;
         /**
-         * Current locker reentrant counter.<br/>
+         * Current locker reentrant counter.
          * <font color=red>Special Note: assuming that the situation of retry to
          * obtain lock occurs, it must be in the same JVM process.</font>
          */
@@ -228,7 +228,7 @@ public class ShellLockManager {
         }
 
         /**
-         * Execution try acquire locker by reentrant info.<br/>
+         * Execution try acquire locker by reentrant info.
          * 
          * @see ShellLockManager.java
          * @return

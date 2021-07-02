@@ -159,8 +159,8 @@ abstract class BaseShellContext implements ShellContext {
 
     /**
      * Complete processing the current command line channel, effect: the client
-     * will reopen the console prompt.<br/>
-     * <br/>
+     * will reopen the console prompt.
+     * 
      * <b><font color=red>Note: Don't forget to execute it, or the client
      * console will pause until it timeout.</font><b>
      * 
@@ -175,7 +175,7 @@ abstract class BaseShellContext implements ShellContext {
     /**
      * Are you currently in an interrupt state? (if the current thread does not
      * open the shell channel, it will return false, that is, uninterrupted)
-     * <br/>
+     * 
      * 
      * @return
      * @throws NoSupportedInterruptShellException

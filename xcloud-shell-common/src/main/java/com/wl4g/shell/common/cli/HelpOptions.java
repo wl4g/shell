@@ -20,24 +20,23 @@ import org.apache.commons.cli.Options;
 import com.wl4g.shell.common.annotation.ShellMethod;
 
 /**
- * Help option.<br/>
- * See:{@link com.wl4g.devops.shell.command.DefaultInternalCommand#help()}[MARK0]
+ * Help option.
  * 
  * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
  * @version v1.0 2019-5月4日
  * @since v1.0
  */
 public class HelpOptions extends Options {
-	private static final long serialVersionUID = 2206030510132539771L;
+    private static final long serialVersionUID = 2206030510132539771L;
 
-	final private ShellMethod shellMethod;
+    final private ShellMethod shellMethod;
 
-	public HelpOptions(ShellMethod shellMethod) throws IllegalArgumentException {
-		this.shellMethod = shellMethod;
-	}
+    public HelpOptions(ShellMethod shellMethod) throws IllegalArgumentException {
+        this.shellMethod = shellMethod;
+    }
 
-	public ShellMethod getShellMethod() {
-		return shellMethod;
-	}
+    public ShellMethod getShellMethod() {
+        return shellMethod;
+    }
 
 }

@@ -82,8 +82,8 @@ public class ProgressShellContext extends BaseShellContext {
 
 	/**
 	 * Complete command execution manually, for example, when receiving an
-	 * interrupt event, call it to output the message for the last time. <br/>
-	 * <br/>
+	 * interrupt event, call it to output the message for the last time. 
+	 * 
 	 * <b><font color=red>Note: Don't forget to execute it, or the client
 	 * console will pause until it timeout.</font><b>
 	 * 
@@ -162,7 +162,7 @@ public class ProgressShellContext extends BaseShellContext {
 		}
 
 		/**
-		 * Got current bind {@link ProgressShellContext}. <br/>
+		 * Got current bind {@link ProgressShellContext}. 
 		 * 
 		 * @see {@link EmbeddedServerShellHandler#run()#MARK1}
 		 * @return

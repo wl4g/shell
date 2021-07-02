@@ -18,7 +18,7 @@ package com.wl4g.shell.common.registry;
 import com.wl4g.shell.common.registry.TargetMethodWrapper.TargetParameter;
 
 /**
- * Built-in injectable parameters, such as ShellContext.<br/>
+ * Built-in injectable parameters, such as ShellContext.
  * {@link TargetParameter#extractHierarchyFields}
  * 
  * @author wangl.sir

@@ -26,41 +26,39 @@ import java.lang.annotation.Target;
 @Documented
 public @interface ShellOption {
 
-	/**
-	 * GNU commands short option prefix.
-	 */
-	final public static String GNU_CMD_SHORT = "-";
+    /**
+     * GNU commands short option prefix.
+     */
+    public static final String GNU_CMD_SHORT = "-";
 
-	/**
-	 * GNU commands long option prefix.
-	 */
-	final public static String GNU_CMD_LONG = "--";
+    /**
+     * GNU commands long option prefix.
+     */
+    public static final String GNU_CMD_LONG = "--";
 
-	/**
-	 * Commands short option.
-	 */
-	String opt();
+    /**
+     * @return Commands short option.
+     */
+    String opt();
 
-	/**
-	 * Commands long option.
-	 */
-	String lopt();
+    /**
+     * @return Commands long option.
+     */
+    String lopt();
 
-	/**
-	 * Default value for shell option argument.
-	 */
-	String defaultValue() default "";
+    /**
+     * @return Default value for shell option argument.
+     */
+    String defaultValue() default "";
 
-	/**
-	 * Specifying shell options is required.
-	 */
-	boolean required() default true;
+    /**
+     * @return Specifying shell options is required.
+     */
+    boolean required() default true;
 
-	/**
-	 * Specify shell option parameters to help explain.
-	 * 
-	 * @return
-	 */
-	String help();
+    /**
+     * @return Specify shell option parameters to help explain.
+     */
+    String help();
 
 }

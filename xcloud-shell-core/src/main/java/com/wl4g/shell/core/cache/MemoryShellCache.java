@@ -33,7 +33,7 @@ import com.wl4g.shell.core.config.ServerShellProperties;
  * 
  * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
  * @version 2021-06-30 v1.0.0
- * @see v1.0.0
+ * 
  */
 @SuppressWarnings("unchecked")
 public class MemoryShellCache extends AbstractRedisShellCache {

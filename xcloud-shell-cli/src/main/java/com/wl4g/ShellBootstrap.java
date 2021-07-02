@@ -28,7 +28,7 @@ import com.wl4g.shell.cli.handler.InteractiveClientShellHandler;
 public class ShellBootstrap {
 
 	/**
-	 * For examples:<br/>
+	 * For examples:
 	 * 
 	 * <pre>
 	 * [Way1]:

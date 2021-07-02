@@ -129,10 +129,15 @@
 						<artifactId>maven-javadoc-plugin</artifactId>
 						<executions>
 							<execution>
+								<id>attach-javadocs</id>
 								<phase>package</phase>
 								<goals>
 									<goal>jar</goal>
 								</goals>
+								<configuration>
+									<additionalOptions>-Xdoclint:none</additionalOptions> <!-- 3.0.0+ -->
+									<!-- <additionalparam>-Xdoclint:none</additionalparam> --> <!-- 2.0.0 -->
+								</configuration>
 							</execution>
 						</executions>
 					</plugin>
