@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.wl4g</groupId>
 	<artifactId>xcloud-shell</artifactId>
-	<version>3.0.0</version>
+	<version>3.1.0</version>
 	<packaging>pom</packaging>
 	<name>XCloud Shell</name>
 	<description>A Open Source command-line tool based on spring boot service, which is similar to the way spark-shell works.</description>
