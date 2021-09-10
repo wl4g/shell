@@ -19,6 +19,9 @@ import static com.wl4g.component.common.collection.CollectionUtils2.safeSet;
 import static com.wl4g.component.common.lang.Assert2.notNull;
 import static com.wl4g.component.common.log.SmartLoggerFactory.getLogger;
 import static java.lang.System.getProperty;
+import static java.util.Locale.US;
+import static java.util.Objects.nonNull;
+import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 
 import java.util.Locale;
 import java.util.Properties;
@@ -35,8 +38,8 @@ import com.wl4g.component.common.resource.resolver.ClassPathResourcePatternResol
  */
 public class I18nResourceMessageBundles {
     private static final SmartLogger log = getLogger(I18nResourceMessageBundles.class);
-    private static final String LANG = getProperty("lang", Locale.getDefault().toString());
-    private static final Properties localeResource = new Properties();
+    private static final String LOCAL_LANG = getProperty("lang", Locale.getDefault().toString());
+    private static final Properties mergedResource = new Properties();
 
     static {
         try {
@@ -44,36 +47,41 @@ public class I18nResourceMessageBundles {
             String classpath = I18nResourceMessageBundles.class.getName()
                     .replace(I18nResourceMessageBundles.class.getSimpleName(), "").replace(".", "/");
 
-            // Default resources.
+            // load default resources.
             Properties defaultResource = new Properties();
             String defaultPattern = "classpath*:/".concat(classpath).concat("messages.properties");
             StreamResource r1 = safeSet(resolver.getResources(defaultPattern)).stream().findFirst().orElse(null);
-            notNull(r1, "Not found i18n messages resource: %s", r1);
+            notNull(r1, "Can't find i18n messages default resource of pattern: %s", defaultPattern);
             defaultResource.load(r1.getInputStream());
 
-            // Configuration Language resources.
+            // load current OS language resources.
             Properties langResource = new Properties();
-            if (!LANG.equalsIgnoreCase(Locale.US.toString())) {
-                String langPattern = "classpath*:/".concat(classpath).concat("messages_").concat(LANG).concat(".properties");
-                StreamResource r2 = safeSet(resolver.getResources(langPattern)).stream().findFirst().orElse(null);
-                notNull(r1, "Not found i18n messages resource: %s", r2);
-                langResource.load(r2.getInputStream());
+            if (!equalsIgnoreCase(LOCAL_LANG, US.toString())) {
+                String pattern = "classpath*:/".concat(classpath).concat("messages_").concat(LOCAL_LANG).concat(".properties");
+                StreamResource r2 = safeSet(resolver.getResources(pattern)).stream().findFirst().orElse(null);
+                if (nonNull(r2)) {
+                    langResource.load(r2.getInputStream());
+                } else {
+                    log.warn("Cannot find i18n messages locale resource of pattern: {}, The default i18n resource will be used!",
+                            pattern);
+                }
             }
 
             // Merge resources.
-            localeResource.putAll(defaultResource);
-            localeResource.putAll(langResource);
+            mergedResource.putAll(defaultResource);
+            mergedResource.putAll(langResource);
 
-            if (localeResource.isEmpty()) {
-                log.warn("Unable initialzation read i18n resources. scan pattern: {}", defaultPattern);
+            if (mergedResource.isEmpty()) {
+                log.warn("Cannot to use i18n resources because it is empty after merged!");
             }
         } catch (Exception e) {
+            log.error("", e);
             throw new IllegalStateException(e);
         }
     }
 
     public static String getMessage(String key, Object... args) {
-        String msg = (String) localeResource.getOrDefault(key, key);
+        String msg = (String) mergedResource.getOrDefault(key, key);
         return String.format(msg, args);
     }
 
