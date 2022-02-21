@@ -3,15 +3,15 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.wl4g</groupId>
-	<artifactId>xcloud-shell</artifactId>
-	<version>3.1.0</version>
+	<artifactId>dopaas-shell</artifactId>
+	<version>3.5.0</version>
 	<packaging>pom</packaging>
-	<name>XCloud Shell</name>
+	<name>DoPaaS Shell</name>
 	<description>A Open Source command-line tool based on spring boot service, which is similar to the way spark-shell works.</description>
-	<url>https://xcloud.wl4g.com</url>
+	<url>https://shell.dopaas.wl4g.com</url>
 	<organization>
 		<name>wl4g</name>
-		<url>https://xcloud.wl4g.com</url>
+		<url>https://shell.dopaas.wl4g.com</url>
 	</organization>
 	<licenses>
 		<license>
@@ -21,14 +21,14 @@
 		</license>
 	</licenses>
 	<scm>
-		<connection>scm:git:git@github.com:wl4g/xcloud-shell.git</connection>
-		<developerConnection>scm:git:git@github.com:wl4g/xcloud-shell.git</developerConnection>
-		<url>https://github.com/wl4g/xcloud-shell</url>
+		<connection>scm:git:git@github.com:wl4g/dopaas-shell.git</connection>
+		<developerConnection>scm:git:git@github.com:wl4g/dopaas-shell.git</developerConnection>
+		<url>https://github.com/wl4g/dopaas-shell</url>
 		<tag>HEAD</tag>
 	</scm>
 	<issueManagement>
 		<system>github</system>
-		<url>https://github.com/wl4g/xcloud-shell/issues</url>
+		<url>https://github.com/wl4g/dopaas-shell/issues</url>
 	</issueManagement>
 	<developers>
 		<developer>
@@ -54,12 +54,12 @@
 		</developer>
 	</developers>
 	<modules>
-		<module>xcloud-shell-bom</module>
-		<module>xcloud-shell-common</module>
-		<module>xcloud-shell-core</module>
-		<module>xcloud-shell-springboot</module>
-		<module>xcloud-shell-cli</module>
-		<!-- <module>xcloud-shell-example</module> -->
+		<module>dopaas-shell-bom</module>
+		<module>dopaas-shell-common</module>
+		<module>dopaas-shell-core</module>
+		<module>dopaas-shell-springboot</module>
+		<module>dopaas-shell-cli</module>
+		<!-- <module>dopaas-shell-example</module> -->
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -105,7 +105,7 @@
 		<dependencies>
 			<dependency>
 				<groupId>com.wl4g</groupId>
-				<artifactId>xcloud-component-bom</artifactId>
+				<artifactId>dopaas-infra-bom</artifactId>
 				<version>2.0.0</version>
 				<type>pom</type>
 				<scope>import</scope>

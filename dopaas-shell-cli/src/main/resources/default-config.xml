@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<server>localhost</server>
+	<portRange>66100:66200</portRange>
+	<banner><![CDATA[
+Welcom to :
+ ___  _         _  _   ___  _  _ 
+/ __>| |_  ___ | || | |  _>| |<_>
+\__ \| . |/ ._>| || | | <__| || |
+<___/|_|_|\___.|_||_| `___/|_||_|
+
+Wiki: https://github.com/wl4g/dopaas-shell/blob/master/README.md or https://gitee.com/wl4g/dopaas-shell/blob/master/README_CN.md
+Authors: <wanglsir@gmail.com, 983708408@qq.com>]]></banner>
+</configuration>
