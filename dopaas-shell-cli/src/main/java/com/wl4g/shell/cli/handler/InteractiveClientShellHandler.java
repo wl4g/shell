@@ -15,8 +15,8 @@
  */
 package com.wl4g.shell.cli.handler;
 
-import static com.wl4g.component.common.cli.ProcessUtils.printProgress;
-import static com.wl4g.component.common.lang.StringUtils2.isEmpty;
+import static com.wl4g.infra.common.cli.ProcessUtils.printProgress;
+import static com.wl4g.infra.common.lang.StringUtils2.isEmpty;
 import static com.wl4g.shell.cli.config.ClientShellHandlerRegistrar.getSingle;
 import static com.wl4g.shell.common.cli.BuiltInCommand.CMD_EX;
 import static com.wl4g.shell.common.cli.BuiltInCommand.CMD_EXIT;

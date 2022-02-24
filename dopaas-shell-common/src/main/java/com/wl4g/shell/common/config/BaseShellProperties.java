@@ -15,9 +15,9 @@
  */
 package com.wl4g.shell.common.config;
 
-import static com.wl4g.component.common.lang.Assert2.hasText;
-import static com.wl4g.component.common.lang.Assert2.isTrue;
-import static com.wl4g.component.common.serialize.JacksonUtils.toJSONString;
+import static com.wl4g.infra.common.lang.Assert2.hasText;
+import static com.wl4g.infra.common.lang.Assert2.isTrue;
+import static com.wl4g.infra.common.serialize.JacksonUtils.toJSONString;
 import static java.lang.Integer.parseInt;
 import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.isNumeric;

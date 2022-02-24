@@ -15,10 +15,10 @@
  */
 package com.wl4g.shell.core.locks;
 
-import static com.wl4g.component.common.lang.Assert2.hasTextOf;
-import static com.wl4g.component.common.lang.Assert2.notNullOf;
-import static com.wl4g.component.common.lang.SystemUtils2.GLOBAL_PROCESS_SERIAL;
-import static com.wl4g.component.common.log.SmartLoggerFactory.getLogger;
+import static com.wl4g.infra.common.lang.Assert2.hasTextOf;
+import static com.wl4g.infra.common.lang.Assert2.notNullOf;
+import static com.wl4g.infra.common.lang.SystemUtils2.GLOBAL_PROCESS_SERIAL;
+import static com.wl4g.infra.common.log.SmartLoggerFactory.getLogger;
 import static java.lang.String.format;
 import static java.lang.Thread.currentThread;
 import static java.lang.Thread.interrupted;
@@ -34,7 +34,7 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 
 import com.google.common.annotations.Beta;
-import com.wl4g.component.common.log.SmartLogger;
+import com.wl4g.infra.common.log.SmartLogger;
 import com.wl4g.shell.core.cache.ShellCache;
 
 /**
@@ -42,7 +42,7 @@ import com.wl4g.shell.core.cache.ShellCache;
  * 
  * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
  * @version 2021-07-01 v1.0.0
- *  {@link com.wl4g.component.support.cache.locks.JedisLockManager}
+ *  {@link com.wl4g.infra.support.cache.locks.JedisLockManager}
  */
 public class ShellLockManager {
     protected final SmartLogger log = getLogger(getClass());

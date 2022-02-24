@@ -15,7 +15,7 @@
  */
 package com.wl4g.shell.core.utils;
 
-import static com.wl4g.component.common.collection.CollectionUtils2.isEmptyArray;
+import static com.wl4g.infra.common.collection.CollectionUtils2.isEmptyArray;
 import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 
 import java.util.UUID;

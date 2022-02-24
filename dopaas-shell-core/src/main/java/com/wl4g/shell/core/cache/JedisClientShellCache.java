@@ -15,17 +15,17 @@
  */
 package com.wl4g.shell.core.cache;
 
-import static com.wl4g.component.common.collection.CollectionUtils2.safeMap;
-import static com.wl4g.component.common.lang.Assert2.notNullOf;
-import static com.wl4g.component.common.serialize.JacksonUtils.parseJSON;
-import static com.wl4g.component.common.serialize.JacksonUtils.toJSONString;
+import static com.wl4g.infra.common.collection.CollectionUtils2.safeMap;
+import static com.wl4g.infra.common.lang.Assert2.notNullOf;
+import static com.wl4g.infra.common.serialize.JacksonUtils.parseJSON;
+import static com.wl4g.infra.common.serialize.JacksonUtils.toJSONString;
 import static java.util.Collections.singletonList;
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
 
-import com.wl4g.component.support.cache.jedis.JedisClient;
+import com.wl4g.infra.support.cache.jedis.JedisClient;
 import com.wl4g.shell.core.config.ServerShellProperties;
 
 import redis.clients.jedis.params.SetParams;

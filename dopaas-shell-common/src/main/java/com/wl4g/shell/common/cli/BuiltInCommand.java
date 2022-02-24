@@ -15,7 +15,7 @@
  */
 package com.wl4g.shell.common.cli;
 
-import static com.wl4g.component.common.lang.Assert2.hasText;
+import static com.wl4g.infra.common.lang.Assert2.hasText;
 import static com.wl4g.shell.common.utils.LineUtils.clean;
 import static org.apache.commons.lang3.StringUtils.startsWithAny;
 

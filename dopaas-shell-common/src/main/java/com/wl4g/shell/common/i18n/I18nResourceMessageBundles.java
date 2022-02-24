@@ -15,9 +15,9 @@
  */
 package com.wl4g.shell.common.i18n;
 
-import static com.wl4g.component.common.collection.CollectionUtils2.safeSet;
-import static com.wl4g.component.common.lang.Assert2.notNull;
-import static com.wl4g.component.common.log.SmartLoggerFactory.getLogger;
+import static com.wl4g.infra.common.collection.CollectionUtils2.safeSet;
+import static com.wl4g.infra.common.lang.Assert2.notNull;
+import static com.wl4g.infra.common.log.SmartLoggerFactory.getLogger;
 import static java.lang.System.getProperty;
 import static java.util.Locale.US;
 import static java.util.Objects.nonNull;
@@ -26,9 +26,9 @@ import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 import java.util.Locale;
 import java.util.Properties;
 
-import com.wl4g.component.common.log.SmartLogger;
-import com.wl4g.component.common.resource.StreamResource;
-import com.wl4g.component.common.resource.resolver.ClassPathResourcePatternResolver;
+import com.wl4g.infra.common.log.SmartLogger;
+import com.wl4g.infra.common.resource.StreamResource;
+import com.wl4g.infra.common.resource.resolver.ClassPathResourcePatternResolver;
 
 /**
  * {@link I18nResourceMessageBundles}

@@ -15,10 +15,10 @@
  */
 package com.wl4g.shell.cli.command;
 
-import static com.wl4g.component.common.cli.StandardFormatter.getHelpFormat;
-import static com.wl4g.component.common.lang.Assert2.hasText;
-import static com.wl4g.component.common.lang.Assert2.notNull;
-import static com.wl4g.component.common.lang.Assert2.state;
+import static com.wl4g.infra.common.cli.StandardFormatter.getHelpFormat;
+import static com.wl4g.infra.common.lang.Assert2.hasText;
+import static com.wl4g.infra.common.lang.Assert2.notNull;
+import static com.wl4g.infra.common.lang.Assert2.state;
 import static java.lang.System.err;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;

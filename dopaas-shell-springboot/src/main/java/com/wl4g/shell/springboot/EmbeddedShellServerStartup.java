@@ -15,8 +15,8 @@
  */
 package com.wl4g.shell.springboot;
 
-import static com.wl4g.component.common.lang.Assert2.notNullOf;
-import static com.wl4g.component.common.log.SmartLoggerFactory.getLogger;
+import static com.wl4g.infra.common.lang.Assert2.notNullOf;
+import static com.wl4g.infra.common.log.SmartLoggerFactory.getLogger;
 import static com.wl4g.shell.core.cache.ShellCache.Factory.JEDIS_CLASS;
 import static com.wl4g.shell.core.cache.ShellCache.Factory.JEDIS_CLIENT_CLASS;
 import static com.wl4g.shell.core.cache.ShellCache.Factory.JEDIS_CLUSTER_CLASS;
@@ -31,7 +31,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.ApplicationContext;
 
-import com.wl4g.component.common.log.SmartLogger;
+import com.wl4g.infra.common.log.SmartLogger;
 import com.wl4g.shell.core.EmbeddedShellServerBuilder;
 import com.wl4g.shell.core.cache.MemoryShellCache;
 import com.wl4g.shell.core.cache.ShellCache;

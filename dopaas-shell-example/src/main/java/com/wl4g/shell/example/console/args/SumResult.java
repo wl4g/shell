@@ -17,7 +17,7 @@ package com.wl4g.shell.example.console.args;
 
 import java.io.Serializable;
 
-import com.wl4g.component.common.cli.annotation.PropertyDescription;
+import com.wl4g.infra.common.cli.annotation.PropertyDescription;
 
 public class SumResult implements Serializable {
 

@@ -15,10 +15,10 @@
  */
 package com.wl4g.shell.core.handler;
 
-import static com.wl4g.component.common.lang.Assert2.isTrue;
-import static com.wl4g.component.common.lang.Assert2.notNull;
-import static com.wl4g.component.common.lang.Exceptions.getRootCausesString;
-import static com.wl4g.component.common.log.SmartLoggerFactory.getLogger;
+import static com.wl4g.infra.common.lang.Assert2.isTrue;
+import static com.wl4g.infra.common.lang.Assert2.notNull;
+import static com.wl4g.infra.common.lang.Exceptions.getRootCausesString;
+import static com.wl4g.infra.common.log.SmartLoggerFactory.getLogger;
 import static com.wl4g.shell.common.annotation.ShellMethod.InterruptType.ALLOW;
 import static com.wl4g.shell.common.annotation.ShellMethod.InterruptType.NOT_ALLOW;
 import static com.wl4g.shell.common.signal.ChannelState.COMPLETED;

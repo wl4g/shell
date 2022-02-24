@@ -15,10 +15,10 @@
  */
 package com.wl4g.shell.cli.handler;
 
-import static com.wl4g.component.common.lang.Assert2.isTrue;
-import static com.wl4g.component.common.lang.Assert2.notNull;
-import static com.wl4g.component.common.lang.Assert2.state;
-import static com.wl4g.component.common.lang.Exceptions.getStackTraceAsString;
+import static com.wl4g.infra.common.lang.Assert2.isTrue;
+import static com.wl4g.infra.common.lang.Assert2.notNull;
+import static com.wl4g.infra.common.lang.Assert2.state;
+import static com.wl4g.infra.common.lang.Exceptions.getStackTraceAsString;
 import static com.wl4g.shell.cli.config.ClientShellHandlerRegistrar.getSingle;
 import static com.wl4g.shell.common.annotation.ShellOption.GNU_CMD_LONG;
 import static com.wl4g.shell.common.cli.BuiltInCommand.CMD_HE;

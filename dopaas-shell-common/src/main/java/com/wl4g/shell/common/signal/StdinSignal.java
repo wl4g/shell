@@ -15,7 +15,7 @@
  */
 package com.wl4g.shell.common.signal;
 
-import static com.wl4g.component.common.lang.Assert2.hasText;
+import static com.wl4g.infra.common.lang.Assert2.hasText;
 
 /**
  * Line commands message

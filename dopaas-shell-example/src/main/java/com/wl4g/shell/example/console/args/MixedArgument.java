@@ -15,7 +15,7 @@
  */
 package com.wl4g.shell.example.console.args;
 
-import static com.wl4g.component.common.serialize.JacksonUtils.toJSONString;
+import static com.wl4g.infra.common.serialize.JacksonUtils.toJSONString;
 
 import java.io.Serializable;
 import java.util.List;

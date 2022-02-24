@@ -15,10 +15,10 @@
  */
 package com.wl4g.shell.common.utils;
 
-import static com.wl4g.component.common.reflect.TypeUtils2.instantiateCollectionType;
-import static com.wl4g.component.common.reflect.TypeUtils2.instantiateSimpleType;
-import static com.wl4g.component.common.reflect.TypeUtils2.isSimpleCollectionType;
-import static com.wl4g.component.common.reflect.TypeUtils2.isSimpleType;
+import static com.wl4g.infra.common.reflect.TypeUtils2.instantiateCollectionType;
+import static com.wl4g.infra.common.reflect.TypeUtils2.instantiateSimpleType;
+import static com.wl4g.infra.common.reflect.TypeUtils2.isSimpleCollectionType;
+import static com.wl4g.infra.common.reflect.TypeUtils2.isSimpleType;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -30,8 +30,8 @@ import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Map;
 
-import com.wl4g.component.common.bean.BeanUtils2;
-import com.wl4g.component.common.reflect.ReflectionUtils2.FieldFilter;
+import com.wl4g.infra.common.bean.BeanUtils2;
+import com.wl4g.infra.common.reflect.ReflectionUtils2.FieldFilter;
 import com.wl4g.shell.common.annotation.ShellOption;
 
 /**

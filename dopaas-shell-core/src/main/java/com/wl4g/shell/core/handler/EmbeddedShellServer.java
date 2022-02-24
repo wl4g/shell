@@ -15,10 +15,10 @@
  */
 package com.wl4g.shell.core.handler;
 
-import static com.wl4g.component.common.lang.Assert2.isInstanceOf;
-import static com.wl4g.component.common.lang.Assert2.notNull;
-import static com.wl4g.component.common.lang.Assert2.notNullOf;
-import static com.wl4g.component.common.lang.Assert2.state;
+import static com.wl4g.infra.common.lang.Assert2.isInstanceOf;
+import static com.wl4g.infra.common.lang.Assert2.notNull;
+import static com.wl4g.infra.common.lang.Assert2.notNullOf;
+import static com.wl4g.infra.common.lang.Assert2.state;
 import static com.wl4g.shell.common.cli.BuiltInCommand.CMD_LO;
 import static com.wl4g.shell.common.cli.BuiltInCommand.CMD_LOGIN;
 import static com.wl4g.shell.common.i18n.I18nResourceMessageBundles.getMessage;

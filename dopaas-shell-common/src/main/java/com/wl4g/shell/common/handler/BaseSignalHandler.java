@@ -15,7 +15,7 @@
  */
 package com.wl4g.shell.common.handler;
 
-import static com.wl4g.component.common.lang.Assert2.notNull;
+import static com.wl4g.infra.common.lang.Assert2.notNull;
 import static java.lang.String.format;
 import static java.lang.System.err;
 import static org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace;

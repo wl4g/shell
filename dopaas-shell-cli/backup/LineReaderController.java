@@ -15,8 +15,8 @@
  */
 package com.wl4g.shell.cli.handler;
 
-import static com.wl4g.component.common.lang.Assert2.isTrueOf;
-import static com.wl4g.component.common.lang.Assert2.notNullOf;
+import static com.wl4g.infra.common.lang.Assert2.isTrueOf;
+import static com.wl4g.infra.common.lang.Assert2.notNullOf;
 import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 

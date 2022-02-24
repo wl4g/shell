@@ -15,7 +15,7 @@
  */
 package com.wl4g.shell.cli.config;
 
-import static com.wl4g.component.common.lang.Assert2.state;
+import static com.wl4g.infra.common.lang.Assert2.state;
 import static java.lang.String.format;
 
 import java.util.Map;

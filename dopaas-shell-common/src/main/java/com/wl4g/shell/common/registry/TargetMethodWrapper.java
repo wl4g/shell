@@ -15,13 +15,13 @@
  */
 package com.wl4g.shell.common.registry;
 
-import static com.wl4g.component.common.lang.Assert2.hasText;
-import static com.wl4g.component.common.lang.Assert2.isTrue;
-import static com.wl4g.component.common.lang.Assert2.notNull;
-import static com.wl4g.component.common.lang.Assert2.state;
-import static com.wl4g.component.common.reflect.ReflectionUtils2.isGenericModifier;
-import static com.wl4g.component.common.reflect.TypeUtils2.isSimpleCollectionType;
-import static com.wl4g.component.common.reflect.TypeUtils2.isSimpleType;
+import static com.wl4g.infra.common.lang.Assert2.hasText;
+import static com.wl4g.infra.common.lang.Assert2.isTrue;
+import static com.wl4g.infra.common.lang.Assert2.notNull;
+import static com.wl4g.infra.common.lang.Assert2.state;
+import static com.wl4g.infra.common.reflect.ReflectionUtils2.isGenericModifier;
+import static com.wl4g.infra.common.reflect.TypeUtils2.isSimpleCollectionType;
+import static com.wl4g.infra.common.reflect.TypeUtils2.isSimpleType;
 import static com.wl4g.shell.common.cli.BuiltInCommand.asCmdsString;
 import static com.wl4g.shell.common.cli.BuiltInCommand.contains;
 import static com.wl4g.shell.common.registry.TargetMethodWrapper.TargetParameter.populateArgumentDeepOptions;

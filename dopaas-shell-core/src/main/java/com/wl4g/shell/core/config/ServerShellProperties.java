@@ -16,8 +16,8 @@
 package com.wl4g.shell.core.config;
 
 import static com.google.common.base.Charsets.UTF_8;
-import static com.wl4g.component.common.lang.Assert2.hasText;
-import static com.wl4g.component.common.lang.Assert2.isTrue;
+import static com.wl4g.infra.common.lang.Assert2.hasText;
+import static com.wl4g.infra.common.lang.Assert2.isTrue;
 import static java.security.MessageDigest.isEqual;
 import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 

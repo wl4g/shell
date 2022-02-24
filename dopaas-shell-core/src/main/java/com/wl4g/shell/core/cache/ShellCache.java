@@ -15,7 +15,7 @@
  */
 package com.wl4g.shell.core.cache;
 
-import static com.wl4g.component.common.lang.ClassUtils2.resolveClassNameNullable;
+import static com.wl4g.infra.common.lang.ClassUtils2.resolveClassNameNullable;
 import static java.util.Objects.nonNull;
 
 import java.util.List;
@@ -107,7 +107,7 @@ public interface ShellCache {
         }
 
         public static final Class<?> JEDIS_CLIENT_CLASS = resolveClassNameNullable(
-                "com.wl4g.component.support.cache.jedis.JedisClient");
+                "com.wl4g.infra.support.cache.jedis.JedisClient");
         public static final Class<?> JEDIS_CLUSTER_CLASS = resolveClassNameNullable("redis.clients.jedis.JedisCluster");
         public static final Class<?> JEDIS_CLASS = resolveClassNameNullable("redis.clients.jedis.Jedis");
         public static final Class<?> REDIS_TEMPLATE_CLASS = resolveClassNameNullable(

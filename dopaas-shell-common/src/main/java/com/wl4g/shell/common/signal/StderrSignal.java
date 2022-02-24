@@ -15,7 +15,7 @@
  */
 package com.wl4g.shell.common.signal;
 
-import static com.wl4g.component.common.lang.Assert2.notNull;
+import static com.wl4g.infra.common.lang.Assert2.notNull;
 import static org.apache.commons.lang3.exception.ExceptionUtils.getRootCauseMessage;
 
 /**

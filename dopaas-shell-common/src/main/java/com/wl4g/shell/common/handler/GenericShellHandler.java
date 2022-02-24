@@ -15,17 +15,17 @@
  */
 package com.wl4g.shell.common.handler;
 
-import static com.wl4g.component.common.lang.Assert2.hasLength;
-import static com.wl4g.component.common.lang.Assert2.hasText;
-import static com.wl4g.component.common.lang.Assert2.isTrue;
-import static com.wl4g.component.common.lang.Assert2.notEmpty;
-import static com.wl4g.component.common.lang.Assert2.notNull;
-import static com.wl4g.component.common.lang.Assert2.notNullOf;
-import static com.wl4g.component.common.lang.Exceptions.getRootCauses;
-import static com.wl4g.component.common.lang.Exceptions.getRootCausesString;
-import static com.wl4g.component.common.lang.SystemUtils2.LOCAL_PROCESS_ID;
-import static com.wl4g.component.common.reflect.ReflectionUtils2.doFullWithFields;
-import static com.wl4g.component.common.reflect.ReflectionUtils2.isGenericModifier;
+import static com.wl4g.infra.common.lang.Assert2.hasLength;
+import static com.wl4g.infra.common.lang.Assert2.hasText;
+import static com.wl4g.infra.common.lang.Assert2.isTrue;
+import static com.wl4g.infra.common.lang.Assert2.notEmpty;
+import static com.wl4g.infra.common.lang.Assert2.notNull;
+import static com.wl4g.infra.common.lang.Assert2.notNullOf;
+import static com.wl4g.infra.common.lang.Exceptions.getRootCauses;
+import static com.wl4g.infra.common.lang.Exceptions.getRootCausesString;
+import static com.wl4g.infra.common.lang.SystemUtils2.LOCAL_PROCESS_ID;
+import static com.wl4g.infra.common.reflect.ReflectionUtils2.doFullWithFields;
+import static com.wl4g.infra.common.reflect.ReflectionUtils2.isGenericModifier;
 import static com.wl4g.shell.common.i18n.I18nResourceMessageBundles.getMessage;
 import static com.wl4g.shell.common.utils.ShellUtils.instantiateWithInitOptionValue;
 import static java.lang.String.format;
@@ -50,7 +50,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.zip.CRC32;
 
-import com.wl4g.component.common.reflect.TypeUtils2;
+import com.wl4g.infra.common.reflect.TypeUtils2;
 import com.wl4g.shell.common.annotation.ShellOption;
 import com.wl4g.shell.common.config.BaseShellProperties;
 import com.wl4g.shell.common.exception.ShellException;
