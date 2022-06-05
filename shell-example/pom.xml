@@ -1,13 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>dopaas-shell-example</artifactId>
+	<artifactId>shell-example</artifactId>
 	<packaging>jar</packaging>
-	<name>DoPaaS Shell Example</name>
-	<url>http://shell.dopaas.wl4g.com</url>
+	<name>Shell Example</name>
+	<url>http://shell.wl4g.com</url>
 	<organization>
 		<name>wl4g</name>
-		<url>https://shell.dopaas.wl4g.com</url>
+		<url>https://shell.wl4g.com</url>
 	</organization>
 	<licenses>
 		<license>
@@ -17,14 +17,14 @@
 		</license>
 	</licenses>
 	<scm>
-		<connection>scm:git:git@github.com:wl4g/dopaas-shell.git</connection>
-		<developerConnection>scm:git:git@github.com:wl4g/dopaas-shell.git</developerConnection>
-		<url>https://github.com/wl4g/dopaas-shell</url>
+		<connection>scm:git:git@github.com:wl4g/shell.git</connection>
+		<developerConnection>scm:git:git@github.com:wl4g/shell.git</developerConnection>
+		<url>https://github.com/wl4g/shell</url>
 		<tag>HEAD</tag>
 	</scm>
 	<issueManagement>
 		<system>github</system>
-		<url>https://github.com/wl4g/dopaas-shell/issues</url>
+		<url>https://github.com/wl4g/shell/issues</url>
 	</issueManagement>
 	<developers>
 		<developer>
@@ -51,7 +51,7 @@
 	</developers>
 	<parent>
 		<groupId>com.wl4g</groupId>
-		<artifactId>dopaas-shell</artifactId>
+		<artifactId>shell</artifactId>
 		<version>3.5.0</version>
 	</parent>
 	<properties>
@@ -61,7 +61,7 @@
 		<dependencies>
 			<dependency>
 				<groupId>com.wl4g</groupId>
-				<artifactId>dopaas-shell-bom</artifactId>
+				<artifactId>shell-bom</artifactId>
 				<version>${project.parent.version}</version>
 				<scope>import</scope>
 			</dependency>
@@ -70,17 +70,17 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.wl4g</groupId>
-			<artifactId>dopaas-shell-cli</artifactId>
+			<artifactId>shell-cli</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.wl4g</groupId>
-			<artifactId>dopaas-shell-springboot</artifactId>
+			<artifactId>shell-springboot</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.wl4g</groupId>
-			<artifactId>dopaas-infra-support</artifactId>
+			<artifactId>infra-support</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

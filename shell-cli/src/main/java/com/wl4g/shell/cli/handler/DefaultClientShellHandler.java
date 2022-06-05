@@ -248,7 +248,7 @@ public abstract class DefaultClientShellHandler extends GenericShellHandler impl
      */
     private LineReader createLineReader() {
         try {
-            return LineReaderBuilder.builder().appName("DoPaaS Shell").completer(new DynamicCompleter(getSingle()))
+            return LineReaderBuilder.builder().appName("Shell").completer(new DynamicCompleter(getSingle()))
                     .terminal(TerminalBuilder.terminal()).build();
         } catch (IOException e) {
             throw new IllegalStateException(e);
