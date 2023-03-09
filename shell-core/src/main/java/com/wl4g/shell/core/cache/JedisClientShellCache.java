@@ -25,7 +25,7 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.List;
 
-import com.wl4g.infra.support.cache.jedis.JedisClient;
+import com.wl4g.infra.common.jedis.JedisClient;
 import com.wl4g.shell.core.config.ServerShellProperties;
 
 import redis.clients.jedis.params.SetParams;

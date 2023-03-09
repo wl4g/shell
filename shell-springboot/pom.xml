@@ -53,7 +53,7 @@
 	<parent>
 		<groupId>com.wl4g</groupId>
 		<artifactId>shell</artifactId>
-		<version>3.5.0</version>
+		<version>3.5.1</version>
 	</parent>
 	<properties>
 		<java.version>1.8</java.version>
@@ -63,6 +63,10 @@
 			<groupId>com.wl4g</groupId>
 			<artifactId>shell-core</artifactId>
 			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.wl4g</groupId>
+			<artifactId>infra-common</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>

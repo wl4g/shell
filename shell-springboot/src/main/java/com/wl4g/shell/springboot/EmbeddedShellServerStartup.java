@@ -16,7 +16,6 @@
 package com.wl4g.shell.springboot;
 
 import static com.wl4g.infra.common.lang.Assert2.notNullOf;
-import static com.wl4g.infra.common.log.SmartLoggerFactory.getLogger;
 import static com.wl4g.shell.core.cache.ShellCache.Factory.JEDIS_CLASS;
 import static com.wl4g.shell.core.cache.ShellCache.Factory.JEDIS_CLIENT_CLASS;
 import static com.wl4g.shell.core.cache.ShellCache.Factory.JEDIS_CLUSTER_CLASS;
@@ -31,13 +30,14 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.ApplicationContext;
 
-import com.wl4g.infra.common.log.SmartLogger;
 import com.wl4g.shell.core.EmbeddedShellServerBuilder;
 import com.wl4g.shell.core.cache.MemoryShellCache;
 import com.wl4g.shell.core.cache.ShellCache;
 import com.wl4g.shell.core.config.ServerShellProperties;
 import com.wl4g.shell.core.handler.EmbeddedShellServer;
 import com.wl4g.shell.springboot.config.AnnotationShellHandlerRegistrar;
+
+import lombok.CustomLog;
 
 /**
  * {@link EmbeddedShellServerStartup}
@@ -46,8 +46,8 @@ import com.wl4g.shell.springboot.config.AnnotationShellHandlerRegistrar;
  * @version v1.0 2020-08-10
  * @since v1.0
  */
+@CustomLog
 public class EmbeddedShellServerStartup implements ApplicationRunner, DisposableBean {
-    protected final SmartLogger log = getLogger(getClass());
 
     /** {@link ApplicationContext} */
     protected @Autowired ApplicationContext applicationContext;
@@ -93,7 +93,10 @@ public class EmbeddedShellServerStartup implements ApplicationRunner, Disposable
         // Build shell server.
         this.shellServer = EmbeddedShellServerBuilder.newBuilder()
                 .withAppName(applicationContext.getEnvironment().getRequiredProperty("spring.application.name"))
-                .withConfiguration(config).withRegistrar(registrar).withShellCache(shellCache).build();
+                .withConfiguration(config)
+                .withRegistrar(registrar)
+                .withShellCache(shellCache)
+                .build();
         this.shellServer.start();
     }
 
