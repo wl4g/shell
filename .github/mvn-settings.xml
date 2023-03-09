@@ -15,7 +15,7 @@
                  2. 其 master password 应加密存储在 ~/.m2/settings-security.xml, 由命令 mvn -encrypt-master-password 生成.
                  3. 其 repository server password 应加密存储在 ~/.m2/settings.xml, 由命令 mvn -encrypt-password 生成.
             -->
-            <!-- 密码后的 repository server password: {DW/AUoweegkHOFWqqT4zVv7cQYPfbH8TNbklwiPE5cM=} -->
+            <!-- 加密后的 repository server password: {DW/AUoweegkHOFWqqT4zVv7cQYPfbH8TNbklwiPE5cM=} -->
             <password>${env.MAVEN_PASSWORD}</password>
         </server>
         <!-- END OF Custom-->

@@ -84,7 +84,7 @@ jobs:
     if: github.repository == '${{ inputs.repository }}'
     runs-on: ${{ inputs.runs-on || 'ubuntu-latest' }}
     outputs:
-      pom_version: ${{ steps.build-outputs.outputs.pom_version }}
+      #pom_version: ${{ steps.build-outputs.outputs.pom_version }}
       cache_suffix: ${{ steps.build-outputs.outputs.cache_suffix }}
       repo_owner: ${{ steps.basic-outputs.outputs.repo_owner }}
       repo_name: ${{ steps.basic-outputs.outputs.repo_name }}
@@ -113,15 +113,15 @@ jobs:
           ref: ${{ inputs.branch || github.event.ref }}
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
-      - name: Get Maven POM version
-        id: build-outputs
-        run: |
-          ## see:https://cloud.tencent.com/developer/article/1476991
-          MAVEN_OPTS="-Xss64m -Xms1g -Xmx12g -XX:ReservedCodeCacheSize=1g -Dorg.slf4j.simpleLogger.defaultLogLevel=WARN -Dorg.slf4j.simpleLogger.log.org.apache.maven.plugins.help=INFO"
-          POM_VERSION=$(mvn -Dexec.executable='echo' -Dexec.args='${project.version}' --non-recursive exec:exec -q)
-          unset MAVEN_OPTS
-          echo "DEBUG: pom_version : $POM_VERSION"
-          echo "pom_version=$POM_VERSION" >> $GITHUB_OUTPUT
+      #- name: Get Maven POM version
+      #  id: build-outputs
+      #  run: |
+      #    ## see:https://cloud.tencent.com/developer/article/1476991
+      #    MAVEN_OPTS="-Xss64m -Xms1g -Xmx12g -XX:ReservedCodeCacheSize=1g -Dorg.slf4j.simpleLogger.defaultLogLevel=WARN -Dorg.slf4j.simpleLogger.log.org.apache.maven.plugins.help=INFO"
+      #    POM_VERSION=$(mvn -Dexec.executable='echo' -Dexec.args='${project.version}' --non-recursive exec:exec -q)
+      #    unset MAVEN_OPTS
+      #    echo "DEBUG: pom_version : $POM_VERSION"
+      #    echo "pom_version=$POM_VERSION" >> $GITHUB_OUTPUT
 
       ## see:https://docs.github.com/en/actions/learn-github-actions/contexts#github-context
       - name: Generate basic Variables
@@ -216,7 +216,7 @@ jobs:
           export MAVEN_OPTS="-Xss64m -Xmx2g -XX:ReservedCodeCacheSize=1g -Dorg.slf4j.simpleLogger.defaultLogLevel=WARN"
           #export MAVEN_CLI_OPTS="--no-transfer-progress"
           export JAVA_VERSION=${{ inputs.java }}
-          ./mvnw $MAVEN_CLI_OPTS --settings .github/mvn-settings.xml \
+          mvn $MAVEN_CLI_OPTS --settings .github/mvn-settings.xml \
             -Dmaven.repo.local=$HOME/.m2/repository \
             -DskipTests \
             -DskipITs \
@@ -301,7 +301,7 @@ jobs:
           mkdir -p ~/.m2/; cp ./.github/settings-security.xml ~/.m2/
           export MAVEN_OPTS="-Xss64m -Xmx2g -XX:ReservedCodeCacheSize=1g -Dorg.slf4j.simpleLogger.defaultLogLevel=WARN"
           export JAVA_VERSION=${{ inputs.java }}
-          ./mvnw --settings .github/mvn-settings.xml \
+          mvn --settings .github/mvn-settings.xml \
             -Dmaven.repo.local=$HOME/.m2/repository \
             -Dmaven.test.skip=true \
             -DskipTests \
