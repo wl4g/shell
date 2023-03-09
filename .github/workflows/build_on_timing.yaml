@@ -1,0 +1,29 @@
+## Copyright (c) 2017 ~ 2025, the original authors individual Inc,
+## All rights reserved. Contact us James Wong <jameswong1376@gmail.com>
+##
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS,
+## WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+## See the License for the specific language governing permissions and
+## limitations under the License.
+##
+## see:https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
+## see:https://github.com/apache/spark/blob/master/.github/workflows/build_main.yml
+
+name: "Build on Timing"
+
+on:
+  ## see:https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#onschedule
+  ## see:https://pubs.opengroup.org/onlinepubs/9699919799/utilities/crontab.html#tag_20_25_07
+  schedule:
+    - cron: '10 1 * * 0'
+
+jobs:
+  build-and-test:
+    permissions:
+      packages: write
+    name: Build and test
+    uses: './.github/workflows/run.yaml' ## This the calling to workflow.
+    if: github.repository == 'wl4g/shell'
+    secrets: ## see:https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#example-of-jobsjob_idsecrets
+      PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}

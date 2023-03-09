@@ -1,0 +1,44 @@
+## Copyright (c) 2017 ~ 2025, the original authors individual Inc,
+## All rights reserved. Contact us James Wong <jameswong1376@gmail.com>
+##
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS,
+## WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+## See the License for the specific language governing permissions and
+## limitations under the License.
+##
+## see:https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#example-of-jobsjob_idsecrets
+## see:https://github.com/apache/spark/blob/master/.github/workflows/build_main.yml
+
+name: "Release on Push"
+
+on:
+  release:
+    types: [ created ]
+  ## see:https://docs.github.com/en/actions/using-workflows/triggering-a-workflow#example-including-branches-and-tags
+  push:
+    branches:
+      - 'releases**'
+      - 'releases/**' # eg: 'releases/**' will match the refs/heads/releases/10 Git ref.
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - 'v**'
+      - 'V**'
+
+jobs:
+  build-and-release:
+    permissions:
+      packages: write
+    name: Build and release
+    uses: './.github/workflows/run.yaml'
+    if: github.repository == 'wl4g/shell'
+    secrets:
+      PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+      OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+      OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
+      MAVEN_GPG_PRIVATE_KEY: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+      MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+      #DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      #DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    with:
+      enable-deploy: true
